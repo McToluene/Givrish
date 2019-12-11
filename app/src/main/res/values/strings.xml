@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Givrish</string>
+    <string name="login_with_phone">login</string>
+    <string name="terms">terms and condition</string>
 </resources>
