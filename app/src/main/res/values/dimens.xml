@@ -6,5 +6,6 @@
     <dimen name="hint_size">18sp</dimen>
     <dimen name="pMt">5dp</dimen>
     <dimen name="pMb">20dp</dimen>
+    <dimen name="pmE">24dp</dimen>
 
 </resources>
