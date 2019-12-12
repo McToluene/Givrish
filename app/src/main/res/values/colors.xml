@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#332D82</color>
     <color name="colorAccent">#8D8D8D</color>
     <color name="colorSecondary">#332D82</color>
+    <color name="slightGrey">#FCFCFC</color>
+    <color name="signUp">#F1F1F1</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="colorError"></color>
