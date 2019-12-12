@@ -11,13 +11,7 @@
 
     <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/tv_phoneNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:editable="false"
-            android:inputType="none"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="148dp"
-            android:layout_marginEnd="30dp"
+            style="@style/phone_verify_edt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,11 +37,7 @@
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
-            android:visibility="gone"
+            style="@style/progressBar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/btn_phoneVerify"
             app:layout_constraintStart_toStartOf="@+id/btn_phoneVerify"
