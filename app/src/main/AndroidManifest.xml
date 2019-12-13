@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".PhoneVerifyActivity"></activity>
         <activity android:name=".PhoneLoginActivity" />
+        <activity android:name=".Dashboard"></activity>
         <activity android:name=".MainActivity">
 
             <intent-filter>
