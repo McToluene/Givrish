@@ -5,6 +5,11 @@
     <string name="sign_up">SignUp</string>
     <string name="password">Enter password</string>
     <string name="name">Full Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="lets_go">Lets go</string>
+    <string name="enter_code">Enter Code</string>
+    <string name="error_message">Valid number required</string>
+    <string name="connection_error">Check internet connection</string>
     <string name="main">Main</string>
     <string name="favorites">Favorites</string>
     <string name="title_dashboard">Dashboard</string>

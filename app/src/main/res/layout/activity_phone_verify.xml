@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".PhoneVerifyActivity">
+
+    <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tv_phoneNumber"
+            style="@style/phone_verify_edt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_phoneCode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="@string/enter_code"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="@+id/tv_phoneNumber"
+            app:layout_constraintStart_toStartOf="@+id/tv_phoneNumber"
+            app:layout_constraintTop_toBottomOf="@+id/tv_phoneNumber" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_phoneVerify"
+            style="@style/button_style"
+            app:layout_constraintEnd_toEndOf="@+id/edt_phoneCode"
+            app:layout_constraintStart_toStartOf="@+id/edt_phoneCode"
+            app:layout_constraintTop_toBottomOf="@+id/edt_phoneCode" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/progressBar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/btn_phoneVerify"
+            app:layout_constraintStart_toStartOf="@+id/btn_phoneVerify"
+            app:layout_constraintTop_toBottomOf="@+id/btn_phoneVerify" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
