@@ -8,6 +8,7 @@ public class User {
   private String email = "";
   private String reg_source = "3";
   private String app_version = "1.14.0";
+  private String mac_address;
 
   public User(String fullName, String number, String password) {
     this.fullname = fullName;
@@ -16,4 +17,8 @@ public class User {
   }
 
 
+  public User(String phone_number,String mac_address) {
+    this.phone_number = phone_number;
+    this.mac_address = mac_address;
+  }
 }
