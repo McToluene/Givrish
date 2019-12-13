@@ -5,9 +5,12 @@
     <string name="sign_up">SignUp</string>
     <string name="password">Enter password</string>
     <string name="name">Full Name</string>
-    <string name="home">Home</string>
-    <string name="title_activity_dashboard">Dashboard</string>
-    <string name="title_home">Home</string>
+    <string name="main">Main</string>
+    <string name="favorites">Favorites</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="messages">Messages</string>
+    <string name="request">Request</string>
+    <string name="search">Search</string>
+    <string name="title_empty"></string>
+
 </resources>
