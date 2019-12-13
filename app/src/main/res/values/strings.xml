@@ -10,5 +10,5 @@
     <string name="enter_code">Enter Code</string>
     <string name="error_message">Valid number required</string>
     <string name="connection_error">Check internet connection</string>
-    <string name="bomb"></string>
+    <string name="hello_blank_fragment">Hey</string>
 </resources>
