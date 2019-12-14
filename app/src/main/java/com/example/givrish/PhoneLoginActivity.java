@@ -10,15 +10,26 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.givrish.models.User;
+import com.example.givrish.models.UserRegisterResponseDto;
+import com.example.givrish.network.ApiEndpointInterface;
+import com.example.givrish.network.RetrofitClientInstance;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PhoneLoginActivity extends AppCompatActivity {
     private AppCompatButton btnLogin;
     private TextInputEditText edtPhoneNumberLogin;
     public static final String phoneLoginKey = "com.example.givrish.phoneActivityKey";
-
+    private ApiEndpointInterface apiService;
+    private String phoneNumber;
+    //
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
@@ -36,6 +47,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 
         edtPhoneNumberLogin = findViewById(R.id.edt_phoneNumber);
         btnLogin = findViewById(R.id.btn_phoneLogin);
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,16 +61,41 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     Snackbar.make(view,getString(R.string.connection_error),Snackbar.LENGTH_LONG).show();
                 }
                 else{
-                    String phoneNumber = "+" + 234 + number;
-                    Intent intent = new Intent(PhoneLoginActivity.this, PhoneVerifyActivity.class);
+                    phoneNumber = "+" + 234 + number;
+                    OnSubmitCheckhandler(view, phoneNumber);
+                }
+            }
+        });
+    }
+
+    private void OnSubmitCheckhandler(final View view, final String phoneNumber) {
+        User userCheck = new User(phoneNumber,"40:ab:32:10:ao");
+        Gson gson = new Gson();
+         final String userStringcheck = gson.toJson(userCheck);
+
+        Call<UserRegisterResponseDto> callUser = apiService.checkUser(userStringcheck);
+        callUser.enqueue(new Callback<UserRegisterResponseDto>() {
+            @Override
+            public void onResponse(Call<UserRegisterResponseDto> call, Response<UserRegisterResponseDto> response) {
+                if(response.body().getResponseCode().equals("1")){
+                    Intent intent = new Intent(getApplicationContext(),Login.class);
                     intent.putExtra(PhoneLoginActivity.phoneLoginKey,phoneNumber);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                     startActivity(intent);
+                }else if(response.body().getResponseCode().equals("0")){
+                    Intent intent = new Intent(getApplicationContext(),PhoneVerifyActivity.class);
+                    intent.putExtra(PhoneLoginActivity.phoneLoginKey,phoneNumber);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
+            }
+            @Override
+            public void onFailure(Call<UserRegisterResponseDto> call, Throwable t) {
+
             }
         });
 
     }
-
     private boolean isConnectionActive() {
         ConnectivityManager connectivityManager =(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
