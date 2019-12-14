@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="elevation">6dp</dimen>
-    <dimen name="mStart">30dp</dimen>
-    <dimen name="mTop">148dp</dimen>
-    <dimen name="hint_size">18sp</dimen>
     <dimen name="pMt">5dp</dimen>
     <dimen name="pMb">20dp</dimen>
 

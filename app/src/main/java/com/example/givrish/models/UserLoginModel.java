@@ -1,11 +1,11 @@
 package com.example.givrish.models;
 
 public class UserLoginModel {
-  private String phone;
   private String password;
+  private String phone_number;
 
-  public UserLoginModel(String phone, String password) {
-    this.phone = phone;
+  public UserLoginModel(String number, String password) {
+    this.phone_number = number;
     this.password = password;
   }
 }

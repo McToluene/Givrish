@@ -1,6 +1,7 @@
 package com.example.givrish.network;
 
 import com.example.givrish.models.AuthResponseDto;
+import com.example.givrish.models.LoginResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -11,11 +12,10 @@ public interface ApiEndpointInterface {
     @POST("userlogin/add_user")
     Call<AuthResponseDto> createUser(@Query("jsonString") String jsonString);
 
-
     @GET("userlogin/get_user_login")
     Call<AuthResponseDto> checkUser(@Query("jsonString") String jsonString);
 
     @POST("userlogin/login_user")
-    Call<AuthResponseDto> login(@Query("jsonString") String jsonString);
+    Call<LoginResponse> login(@Query("jsonString") String jsonString);
 
 }
