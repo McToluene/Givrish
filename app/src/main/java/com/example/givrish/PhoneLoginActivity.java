@@ -73,7 +73,6 @@ public class PhoneLoginActivity extends AppCompatActivity {
     UserRegisterModel userRegisterModelCheck = new UserRegisterModel(phoneNumber,"40:ab:32:10:ao");
     Gson gson = new Gson();
     final String userStringCheck = gson.toJson(userRegisterModelCheck);
-  Log.i("BTN", "cLICKED");
     Call<AuthResponseDto> callUser = apiService.checkUser(userStringCheck);
     callUser.enqueue(new Callback<AuthResponseDto>() {
       @Override
