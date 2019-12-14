@@ -16,6 +16,7 @@
         android:elevation="@dimen/elevation"
         android:text="@string/login_with_phone"
         android:textColor="@android:color/white"
+        style="@style/buttonCustom"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"

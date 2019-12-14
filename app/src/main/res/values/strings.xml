@@ -18,4 +18,9 @@
     <string name="search">Search</string>
     <string name="title_empty"></string>
     <string name="hello_blank_fragment">Hey</string>
+    <string name="illustrate">illustrate</string>
+    <string name="privacy">By Logging in, you agree to our terms and conditions</string>
+    <string name="login">Login</string>
+    <string name="otp">OTP</string>
+    <string name="let_go">Let\'s go</string>
 </resources>
