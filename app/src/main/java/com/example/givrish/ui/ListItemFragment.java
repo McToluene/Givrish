@@ -1,4 +1,4 @@
-package com.example.givrish;
+package com.example.givrish.ui;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,16 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.givrish.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ProfileFragment.OnFragmentInteractionListener} interface
+ * {@link ListItemFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link ListItemFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class ListItemFragment extends Fragment {
   // TODO: Rename parameter arguments, choose names that match
   // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
   private static final String ARG_PARAM1 = "param1";
@@ -31,7 +33,7 @@ public class ProfileFragment extends Fragment {
 
   private OnFragmentInteractionListener mListener;
 
-  public ProfileFragment() {
+  public ListItemFragment() {
     // Required empty public constructor
   }
 
@@ -41,11 +43,11 @@ public class ProfileFragment extends Fragment {
    *
    * @param param1 Parameter 1.
    * @param param2 Parameter 2.
-   * @return A new instance of fragment ProfileFragment.
+   * @return A new instance of fragment ListItemFragment.
    */
   // TODO: Rename and change types and number of parameters
-  public static ProfileFragment newInstance(String param1, String param2) {
-    ProfileFragment fragment = new ProfileFragment();
+  public static ListItemFragment newInstance(String param1, String param2) {
+    ListItemFragment fragment = new ListItemFragment();
     Bundle args = new Bundle();
     args.putString(ARG_PARAM1, param1);
     args.putString(ARG_PARAM2, param2);
@@ -66,7 +68,7 @@ public class ProfileFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_profile, container, false);
+    return inflater.inflate(R.layout.fragment_list_item, container, false);
   }
 
   // TODO: Rename method, update argument and hook method into UI event

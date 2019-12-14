@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.givrish.models.AuthResponseDto;
 import com.example.givrish.models.LoginResponse;
 import com.example.givrish.models.UserLoginModel;
 import com.example.givrish.network.ApiEndpointInterface;
@@ -22,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
   private TextInputEditText phoneNumber;
   private TextInputEditText password;
   private  MaterialButton loginBtn;
@@ -68,7 +67,7 @@ public class Login extends AppCompatActivity {
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
-          startActivity(new Intent(Login.this, Dashboard.class));
+          startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
       }
 
