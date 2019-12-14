@@ -4,36 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".PhoneVerifyActivity">
 
-    <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/tv_phoneNumber"
-            style="@style/phone_verify_edt"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="350dp"
+            android:layout_height="261dp"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/illustrate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_illustratet1" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edt_phoneCode"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            style="@style/Input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:hint="@string/enter_code"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="@+id/tv_phoneNumber"
-            app:layout_constraintStart_toStartOf="@+id/tv_phoneNumber"
-            app:layout_constraintTop_toBottomOf="@+id/tv_phoneNumber" />
+            android:layout_marginTop="64dp"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_phoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone_number"
+                android:inputType="number" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/codeInputLayout"
+            style="@style/Input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_phoneCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/otp"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_phoneVerify"
-            style="@style/button_style"
-            app:layout_constraintEnd_toEndOf="@+id/edt_phoneCode"
-            app:layout_constraintStart_toStartOf="@+id/edt_phoneCode"
-            app:layout_constraintTop_toBottomOf="@+id/edt_phoneCode" />
+            style="@style/buttonCustom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/lets_go"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/codeInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/codeInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/codeInputLayout" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -42,6 +78,7 @@
             app:layout_constraintEnd_toEndOf="@+id/btn_phoneVerify"
             app:layout_constraintStart_toStartOf="@+id/btn_phoneVerify"
             app:layout_constraintTop_toBottomOf="@+id/btn_phoneVerify" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

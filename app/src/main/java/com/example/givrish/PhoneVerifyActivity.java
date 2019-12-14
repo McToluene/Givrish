@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,14 +25,14 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
     public class PhoneVerifyActivity extends AppCompatActivity {
-        public static final String phoneverifyKey = "com.example.givrish.KeyVerify";
-        private AppCompatEditText edtPhoneNumber;
-        private AppCompatEditText edtPhoneCode;
-        private String verificationId;
-     private AppCompatButton btnVerify;
-     private FirebaseAuth mAuth;
-     private ProgressBar progressBar;
-     private String phonenumber;
+      public static final String phoneverifyKey = "com.example.givrish.KeyVerify";
+      private TextInputEditText edtPhoneNumber;
+      private AppCompatEditText edtPhoneCode;
+      private String verificationId;
+      private MaterialButton btnVerify;
+      private FirebaseAuth mAuth;
+      private ProgressBar progressBar;
+      private String phonenumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
         mAuth = FirebaseAuth.getInstance();
          progressBar = findViewById(R.id.progressBar);
-        edtPhoneNumber = findViewById(R.id.tv_phoneNumber);
+        edtPhoneNumber = findViewById(R.id.ed_phoneNumber);
         edtPhoneCode = findViewById(R.id.edt_phoneCode);
 
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
