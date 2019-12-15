@@ -14,24 +14,24 @@ import android.view.ViewGroup;
 
 import com.example.givrish.R;
 
-public class AddItemFragment extends Fragment {
+public class ListFragment extends Fragment {
 
-  private AddItemViewModel mViewModel;
+  private ListViewModel mViewModel;
 
-  public static AddItemFragment newInstance() {
-    return new AddItemFragment();
+  public static ListFragment newInstance() {
+    return new ListFragment();
   }
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.add_item_fragment, container, false);
+    return inflater.inflate(R.layout.list_fragment, container, false);
   }
 
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(AddItemViewModel.class);
+    mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     // TODO: Use the ViewModel
   }
 
