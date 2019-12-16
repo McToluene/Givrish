@@ -19,7 +19,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -43,7 +42,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       private FirebaseAuth mAuth;
       private ProgressBar progressBar;
       private String phonenumber;
-        private ApiEndpointInterface apiService;
+      private ApiEndpointInterface apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +57,10 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
          if(phonenumber != null){edtPhoneNumber.setText(phonenumber);}
-        onCheckHandler(phonenumber);
+         onCheckHandler(phonenumber);
 
-         btnVerify = findViewById(R.id.btn_phoneVerify);
-         btnVerify.setOnClickListener(new View.OnClickListener() {
+        btnVerify = findViewById(R.id.btn_phoneVerify);
+        btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String code = edtPhoneCode.getText().toString().trim();
@@ -69,47 +68,43 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                     edtPhoneCode.setError("Enter code...");
                     edtPhoneCode.requestFocus();
                     return;
-                }else{btnVerify.setEnabled(false);
-                    verifyCode(code);}
-
+                }else{
+                    btnVerify.setEnabled(false);
+                    verifyCode(code);
+                }
             }
         });
     }
 
         private void onCheckHandler(final String phonenumber) {
-            UserRegisterModel userRegisterModelCheck = new UserRegisterModel(phonenumber,"40:ab:32:10:ao");
+            UserRegisterModel userRegisterModel = new UserRegisterModel(phonenumber,"40:ab:32:10:ao");
             Gson gson = new Gson();
-            String  userStringCheck = gson.toJson(userRegisterModelCheck);
+            String userStringCheck = gson.toJson(userRegisterModel);
             Call<AuthResponseDto> callUser = apiService.checkUser(userStringCheck);
             callUser.enqueue(new Callback<AuthResponseDto>() {
                 @Override
                 public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
                     if(response.body().getResponseCode().equals("1")){
-                        Intent intent = new Intent(PhoneVerifyActivity.this,Login.class);
+                        Intent intent = new Intent(PhoneVerifyActivity.this,LoginActivity.class);
                         intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                    }else{
-                        if(response.body().getResponseCode().equals("0")){
-                            sendVerificationCode(phonenumber);
-//                            Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
-//                            intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                            startActivity(intent);
-                        }}
+                    }else{ if(response.body().getResponseCode().equals("0")){
+                            sendVerificationCode(phonenumber);}
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<AuthResponseDto> call, Throwable t) {
-
+                   Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
         }
 
-        // Todo A method to verify code that is detected or entered by the user
+        //A method to verify code that is detected or entered by the user
         private void verifyCode(String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,code);
-       //Todo Allows the user to sign In
+       //Allows the user to sign In
         signInWithCredential(credential);
         }
 //
@@ -125,7 +120,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                    startActivity(intent);
                }else{
                    Toast.makeText(PhoneVerifyActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                   progressBar.setVisibility(View.INVISIBLE);
+                 progressBar.setVisibility(View.INVISIBLE);
                }
 
             }
@@ -168,8 +163,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         //Called when verification fails
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(PhoneVerifyActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
-           }
+            Toast.makeText(PhoneVerifyActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();}
 
     };
 }

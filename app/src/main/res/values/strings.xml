@@ -21,4 +21,6 @@
     <string name="login">Login</string>
     <string name="otp">OTP</string>
     <string name="let_go">Let\'s go</string>
+    <string name="image_desc">Product image</string>
+
 </resources>
