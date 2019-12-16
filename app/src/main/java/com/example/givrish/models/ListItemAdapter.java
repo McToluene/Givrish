@@ -7,19 +7,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
+import com.example.givrish.ui.ItemDetailsFragment;
 
 import java.util.List;
 
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
   private List<ProductModel> productModelList;
   private  LayoutInflater inflater;
+  private Context context;
 
   public ListItemAdapter(List<ProductModel> productModelList, Context context) {
     this.productModelList = productModelList;
     inflater = LayoutInflater.from(context);
+    this.context = context;
   }
 
   @NonNull
@@ -52,6 +58,21 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
       title = itemView.findViewById(R.id.tv_title);
       location = itemView.findViewById(R.id.tv_location);
+
+      itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          ItemDetailsFragment itemDetails = new ItemDetailsFragment();
+          loadDetail(itemDetails);
+        }
+
+        private void loadDetail(Fragment itemDetails) {
+          FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+          transaction.replace(R.id.dashboard_layout, itemDetails);
+          transaction.addToBackStack(null);
+          transaction.commit();
+        }
+      });
     }
   }
 }
