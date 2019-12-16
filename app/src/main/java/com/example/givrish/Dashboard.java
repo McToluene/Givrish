@@ -19,10 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
   BottomNavigationView bottomNavigationView;
-  private final ListFragment listFragment = new ListFragment();
-  private final FavouritesFragment favouritesFragment = new FavouritesFragment();
-  private final MessagesFragment messagesFragment = new MessagesFragment();
-  private final RequestsFragment requestsFragment = new RequestsFragment();
   private final AddItemFragment addItemFragment = new AddItemFragment();
 
   @Override
@@ -46,21 +42,26 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
+    Fragment fragment;
     switch (id) {
       case R.id.navigation_home:
-        loadFragments(listFragment);
+        fragment = new ListFragment();
+        loadFragments(fragment);
        return true;
 
       case R.id.navigation_favorite:
-        loadFragments(favouritesFragment);
+        fragment = new FavouritesFragment();
+        loadFragments(fragment);
         return true;
 
       case R.id.navigation_messages:
-        loadFragments(messagesFragment);
+        fragment = new MessagesFragment();
+        loadFragments(fragment);
         return true;
 
       case R.id.navigation_request:
-        loadFragments(requestsFragment);
+        fragment = new RequestsFragment();
+        loadFragments(fragment);
         return true;
     }
     return false;
