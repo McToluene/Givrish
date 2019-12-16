@@ -35,7 +35,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 //    protected void onStart() {
 //        super.onStart();
 //        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-//            Intent intent = new Intent(this,Login.class);
+//            Intent intent = new Intent(this,LoginActivity.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //            startActivity(intent);
 //        }
@@ -79,7 +79,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
         Log.i("SUccess", response.toString());
         if(response.body().getResponseCode().equals("1")){
-          Intent intent = new Intent(getApplicationContext(),Login.class);
+          Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
           intent.putExtra(PhoneLoginActivity.phoneLoginKey,phoneNumber);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
           startActivity(intent);
