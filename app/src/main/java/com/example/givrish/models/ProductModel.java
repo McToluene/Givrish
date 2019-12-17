@@ -6,6 +6,7 @@ public class ProductModel {
   private String title;
   private String location;
   private static int productsId = 0;
+  private static ArrayList<ProductModel> productModels;
 
   public ProductModel(String title, String location) {
     this.title = title;
@@ -21,7 +22,7 @@ public class ProductModel {
   }
 
   public static ArrayList<ProductModel> createProduct() {
-    ArrayList<ProductModel> productModels = new ArrayList<ProductModel>();
+    productModels = new ArrayList<ProductModel>();
     productModels.add(new ProductModel("Pairs of jean", "3km"));
     productModels.add(new ProductModel("Ipad pro", "10km"));
     productModels.add(new ProductModel("HP Folio 9470m", "5km"));
@@ -35,5 +36,9 @@ public class ProductModel {
     productModels.add(new ProductModel("Standing Fan", "10km"));
     productModels.add(new ProductModel("Mac Book Pro", "5km"));
     return productModels;
+  }
+
+  public static ProductModel getProduct(int position) {
+    return productModels.get(position);
   }
 }

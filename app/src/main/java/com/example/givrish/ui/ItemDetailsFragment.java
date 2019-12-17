@@ -8,9 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.givrish.R;
 
@@ -25,6 +27,9 @@ public class ItemDetailsFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    int position = getArguments().getInt("POSITION");
+    Log.i("POSITION", Integer.toString(position));
+
     return inflater.inflate(R.layout.item_details_fragment, container, false);
   }
 
@@ -33,6 +38,7 @@ public class ItemDetailsFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
     // TODO: Use the ViewModel
+    
   }
 
 }
