@@ -48,7 +48,7 @@ public class ListFragment extends Fragment {
     Log.i("Products", productsList.toString());
 
     RecyclerView listRecyclerView = getActivity().findViewById(R.id.listItem);
-    listRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+    listRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
     listRecyclerView.setAdapter( new ListItemAdapter(productsList, getContext()));
 

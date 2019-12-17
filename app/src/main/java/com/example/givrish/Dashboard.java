@@ -14,9 +14,12 @@ import com.example.givrish.ui.AddItemFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
 import com.example.givrish.ui.MessagesFragment;
+import com.example.givrish.ui.ProfileFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.example.givrish.ui.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -24,7 +27,7 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private AppCompatEditText edtSearch;
   private Fragment fragment;
-  ;
+  Fragment active;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,18 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
       @Override
       public void onClick(View v) {
         fragment = new SearchFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.dashboard_layout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+      }
+    });
+
+    CircleImageView profile = findViewById(R.id.profileImageView);
+    profile.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        fragment = new ProfileFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.dashboard_layout, fragment);
         transaction.addToBackStack(null);
@@ -62,6 +77,7 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
     switch (id) {
       case R.id.navigation_home:
         fragment = new ListFragment();
+        active = fragment;
         loadFragments(fragment);
        return true;
 
