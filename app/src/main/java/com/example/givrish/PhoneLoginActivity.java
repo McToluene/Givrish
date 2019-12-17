@@ -48,7 +48,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 
     edtPhoneNumberLogin = findViewById(R.id.edt_phoneNumber);
     btnCheck = findViewById(R.id.btn_check);
-//    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
     btnCheck.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -63,9 +63,10 @@ public class PhoneLoginActivity extends AppCompatActivity {
         }
         else{
           phoneNumber = "+" + 234 + number;
-          Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-          intent.putExtra(PhoneLoginActivity.phoneLoginKey,phoneNumber);
-          startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.putExtra(PhoneLoginActivity.phoneLoginKey,phoneNumber);
+            startActivity(intent);
+//          onCheckHandler(view, phoneNumber);
         }
       }
     });

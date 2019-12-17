@@ -53,12 +53,12 @@ public class PhoneVerifyActivity extends AppCompatActivity {
          progressBar = findViewById(R.id.progressBar);
         edtPhoneNumber = findViewById(R.id.ed_phoneNumber);
         edtPhoneCode = findViewById(R.id.edt_phoneCode);
+
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
          if(phonenumber != null){edtPhoneNumber.setText(phonenumber);}
-//        sendVerificationCode(phonenumber);
-        onCheckHandler(phonenumber);
+         onCheckHandler(phonenumber);
 
 
         btnVerify = findViewById(R.id.btn_phoneVerify);
@@ -70,20 +70,18 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                     edtPhoneCode.setError("Enter code...");
                     edtPhoneCode.requestFocus();
                     return;
-                }else{
-                    btnVerify.setEnabled(false);
-                    verifyCode(code);
-                }
+                }else{ btnVerify.setEnabled(false);verifyCode(code);}
 
             }
         });
     }
 
         private void onCheckHandler(final String phonenumber) {
+
             UserRegisterModel userRegisterModel = new UserRegisterModel(phonenumber,"40:ab:32:10:ao");
             Gson gson = new Gson();
-            String userStringCheck = gson.toJson(userRegisterModel);
-            Call<AuthResponseDto> callUser = apiService.checkUser(userStringCheck);
+            String userstringCheck = gson.toJson(userRegisterModel);
+            Call<AuthResponseDto> callUser = apiService.checkUser(userstringCheck);
             callUser.enqueue(new Callback<AuthResponseDto>() {
                 @Override
                 public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
@@ -92,14 +90,10 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                         intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                    }else if(response.body().getResponseCode().equals("0")){
+                    }
+
+                    else if(response.body().getResponseCode().equals("0")){
                         sendVerificationCode(phonenumber);
-                        Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
-                        intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-
-
                     }
                 }
 

@@ -2,12 +2,15 @@ package com.example.givrish;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.givrish.ui.AddItemFragment;
@@ -20,27 +23,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
   BottomNavigationView bottomNavigationView;
-  private final ListFragment listFragment = new ListFragment();
-  private final FavouritesFragment favouritesFragment = new FavouritesFragment();
-  private final MessagesFragment messagesFragment = new MessagesFragment();
-  private final RequestsFragment requestsFragment = new RequestsFragment();
   private final AddItemFragment addItemFragment = new AddItemFragment();
-  private Toolbar toolbar;
-
+  private AppCompatEditText edtSearch;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
 
-    toolbar = findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
+    edtSearch = findViewById(R.id.edt_search);
+    if(edtSearch.hasFocus()){edtSearch.setCursorVisible(true);}
     findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -54,21 +48,26 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
+    Fragment fragment;
     switch (id) {
       case R.id.navigation_home:
-        loadFragments(listFragment);
+        fragment = new ListFragment();
+        loadFragments(fragment);
        return true;
 
       case R.id.navigation_favorite:
-        loadFragments(favouritesFragment);
+        fragment = new FavouritesFragment();
+        loadFragments(fragment);
         return true;
 
       case R.id.navigation_messages:
-        loadFragments(messagesFragment);
+        fragment = new MessagesFragment();
+        loadFragments(fragment);
         return true;
 
       case R.id.navigation_request:
-        loadFragments(requestsFragment);
+        fragment = new RequestsFragment();
+        loadFragments(fragment);
         return true;
     }
     return false;
