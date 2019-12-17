@@ -3,6 +3,6 @@
     <dimen name="elevation">6dp</dimen>
     <dimen name="pMt">5dp</dimen>
     <dimen name="pMb">20dp</dimen>
-    <dimen name="recycler_padding">12dp</dimen>
+    <dimen name="recycler_padding">8dp</dimen>
 
 </resources>
