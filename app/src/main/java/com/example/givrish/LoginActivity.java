@@ -13,7 +13,6 @@ import com.example.givrish.models.UserLoginModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -67,9 +66,8 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("RES", response.body().getResponseStatus());
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
-        if(response.body().getResponseCode().equals("1")){ startActivity(new Intent(LoginActivity.this, Dashboard.class)); }else{
-          View view = findViewById(android.R.id.content);
-          Snackbar.make(view,response.body().getResponseStatus(),Snackbar.LENGTH_LONG);
+        if(response.body().getResponseCode().equals("1")){
+          startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
       }
 

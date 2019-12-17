@@ -42,7 +42,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       private FirebaseAuth mAuth;
       private ProgressBar progressBar;
       private String phonenumber;
-      private ApiEndpointInterface apiService;
+        private ApiEndpointInterface apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,9 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
          if(phonenumber != null){edtPhoneNumber.setText(phonenumber);}
-         onCheckHandler(phonenumber);
+//        sendVerificationCode(phonenumber);
+        onCheckHandler(phonenumber);
+
 
         btnVerify = findViewById(R.id.btn_phoneVerify);
         btnVerify.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +74,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                     btnVerify.setEnabled(false);
                     verifyCode(code);
                 }
+
             }
         });
     }
@@ -89,14 +92,20 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                         intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                    }else{ if(response.body().getResponseCode().equals("0")){
-                            sendVerificationCode(phonenumber);}
+                    }else if(response.body().getResponseCode().equals("0")){
+                        sendVerificationCode(phonenumber);
+                        Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
+                        intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+
+
                     }
                 }
 
                 @Override
                 public void onFailure(Call<AuthResponseDto> call, Throwable t) {
-                   Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_LONG).show();
+
                 }
             });
         }
@@ -119,8 +128,8 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                    startActivity(intent);
                }else{
+                   progressBar.setVisibility(View.INVISIBLE);
                    Toast.makeText(PhoneVerifyActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                 progressBar.setVisibility(View.INVISIBLE);
                }
 
             }

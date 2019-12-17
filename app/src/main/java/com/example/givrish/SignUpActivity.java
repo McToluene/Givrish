@@ -64,7 +64,6 @@ public class SignUpActivity extends AppCompatActivity {
 
       }
 
-
       @Override
       public void onFailure(Call<AuthResponseDto> call, Throwable t) {
         Snackbar snackBar = Snackbar .make(v, "Please try again", Snackbar.LENGTH_LONG);

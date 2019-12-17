@@ -3,89 +3,82 @@ package com.example.givrish;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.example.givrish.ui.AddItemFragment;
+import com.example.givrish.ui.FavouritesFragment;
+import com.example.givrish.ui.ListFragment;
+import com.example.givrish.ui.MessagesFragment;
+import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
-    BottomNavigationView bottomNavigationView;
-    ImageView profileId, menuId;
-    EditText searchId;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+  BottomNavigationView bottomNavigationView;
+  private final ListFragment listFragment = new ListFragment();
+  private final FavouritesFragment favouritesFragment = new FavouritesFragment();
+  private final MessagesFragment messagesFragment = new MessagesFragment();
+  private final RequestsFragment requestsFragment = new RequestsFragment();
+  private final AddItemFragment addItemFragment = new AddItemFragment();
+  private Toolbar toolbar;
 
 
-        CategoryFragment categoryFragment = new CategoryFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_dashboard);
+
+    toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
+    bottomNavigationView = findViewById(R.id.navigation);
+    bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+    findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        loadFragments(addItemFragment);
+      }
+    });
+
+  }
 
 
-        profileId = findViewById(R.id.profile_id);
-        profileId.setOnClickListener(this);
+  @Override
+  public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    int id = item.getItemId();
+    switch (id) {
+      case R.id.navigation_home:
+        loadFragments(listFragment);
+       return true;
 
-        menuId = findViewById(R.id.menu_id);
-        menuId.setOnClickListener(this);
+      case R.id.navigation_favorite:
+        loadFragments(favouritesFragment);
+        return true;
 
-        searchId = findViewById(R.id.search_id);
+      case R.id.navigation_messages:
+        loadFragments(messagesFragment);
+        return true;
 
-        bottomNavigationView = findViewById(R.id.navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+      case R.id.navigation_request:
+        loadFragments(requestsFragment);
+        return true;
     }
+    return false;
+  }
 
+  private void loadFragments(Fragment fragment) {
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    transaction.replace(R.id.frame_container, fragment);
+    transaction.addToBackStack(null);
+    transaction.commit();
+  }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-
-            case R.id.navigation_home:
-                Toast.makeText(this, "This is Main menu", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.navigation_favorite:
-                Toast.makeText(this, "This is Favorite Menu", Toast.LENGTH_SHORT).show();
-                return true;
-
-//            case R.id.nav:
-//                Toast.makeText(this, "this is give menu", Toast.LENGTH_SHORT).show();
-//                return true;
-
-            case R.id.navigation_messages:
-                Toast.makeText(this, "This is Message Menu", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.navigation_request:
-                Toast.makeText(this, "This is Request menu", Toast.LENGTH_SHORT).show();
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.profile_id:
-                Toast.makeText(this, "My profile", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.menu_id:
-                Toast.makeText(this, "Menu", Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
 }
