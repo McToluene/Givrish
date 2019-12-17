@@ -94,6 +94,10 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
                     else if(response.body().getResponseCode().equals("0")){
                         sendVerificationCode(phonenumber);
+//                        Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
+//                            intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            startActivity(intent);
                     }
                 }
 

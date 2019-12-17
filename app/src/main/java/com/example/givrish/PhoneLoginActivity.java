@@ -63,7 +63,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
         }
         else{
           phoneNumber = "+" + 234 + number;
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PhoneVerifyActivity.class);
             intent.putExtra(PhoneLoginActivity.phoneLoginKey,phoneNumber);
             startActivity(intent);
 //          onCheckHandler(view, phoneNumber);
