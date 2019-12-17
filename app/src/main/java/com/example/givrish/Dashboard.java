@@ -18,6 +18,7 @@ import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
 import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
+import com.example.givrish.ui.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
@@ -25,6 +26,7 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
   BottomNavigationView bottomNavigationView;
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private AppCompatEditText edtSearch;
+  private Fragment fragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,14 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     edtSearch = findViewById(R.id.edt_search);
     if(edtSearch.hasFocus()){edtSearch.setCursorVisible(true);}
+    edtSearch.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        fragment = new SearchFragment();
+        loadFragments(fragment);
+      }
+    });
+
     findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -48,7 +58,6 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
-    Fragment fragment;
     switch (id) {
       case R.id.navigation_home:
         fragment = new ListFragment();
