@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.givrish.models.AuthResponseDto;
+import com.example.givrish.models.UserRegisterModel;
+import com.example.givrish.network.ApiEndpointInterface;
+import com.example.givrish.network.RetrofitClientInstance;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -21,10 +25,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
-    public class PhoneVerifyActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class PhoneVerifyActivity extends AppCompatActivity {
       public static final String phoneverifyKey = "com.example.givrish.KeyVerify";
       private TextInputEditText edtPhoneNumber;
       private AppCompatEditText edtPhoneCode;
@@ -33,6 +42,7 @@ import java.util.concurrent.TimeUnit;
       private FirebaseAuth mAuth;
       private ProgressBar progressBar;
       private String phonenumber;
+        private ApiEndpointInterface apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +54,12 @@ import java.util.concurrent.TimeUnit;
         edtPhoneNumber = findViewById(R.id.ed_phoneNumber);
         edtPhoneCode = findViewById(R.id.edt_phoneCode);
 
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
-        sendVerificationCode(phonenumber);
-        edtPhoneNumber.setText(phonenumber);
+         if(phonenumber != null){edtPhoneNumber.setText(phonenumber);}
+         onCheckHandler(phonenumber);
+
 
         btnVerify = findViewById(R.id.btn_phoneVerify);
         btnVerify.setOnClickListener(new View.OnClickListener() {
@@ -57,12 +70,45 @@ import java.util.concurrent.TimeUnit;
                     edtPhoneCode.setError("Enter code...");
                     edtPhoneCode.requestFocus();
                     return;
-                }
-                verifyCode(code);
+                }else{ btnVerify.setEnabled(false);verifyCode(code);}
+
             }
         });
     }
-            //A method to verify code that is detected or entered by the user
+
+        private void onCheckHandler(final String phonenumber) {
+
+            UserRegisterModel userRegisterModel = new UserRegisterModel(phonenumber,"40:ab:32:10:ao");
+            Gson gson = new Gson();
+            String userstringCheck = gson.toJson(userRegisterModel);
+            Call<AuthResponseDto> callUser = apiService.checkUser(userstringCheck);
+            callUser.enqueue(new Callback<AuthResponseDto>() {
+                @Override
+                public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
+                    if(response.body().getResponseCode().equals("1")){
+                        Intent intent = new Intent(PhoneVerifyActivity.this,LoginActivity.class);
+                        intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+
+                    else if(response.body().getResponseCode().equals("0")){
+                        sendVerificationCode(phonenumber);
+//                        Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
+//                            intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AuthResponseDto> call, Throwable t) {
+
+                }
+            });
+        }
+
+        //A method to verify code that is detected or entered by the user
         private void verifyCode(String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,code);
        //Allows the user to sign In
@@ -70,6 +116,7 @@ import java.util.concurrent.TimeUnit;
         }
 //
         private void signInWithCredential(PhoneAuthCredential credential) {
+        btnVerify.setEnabled(true);
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -79,6 +126,7 @@ import java.util.concurrent.TimeUnit;
                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                    startActivity(intent);
                }else{
+                   progressBar.setVisibility(View.INVISIBLE);
                    Toast.makeText(PhoneVerifyActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
                }
 

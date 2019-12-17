@@ -2,11 +2,15 @@ package com.example.givrish;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.givrish.ui.AddItemFragment;
@@ -20,6 +24,7 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
 
   BottomNavigationView bottomNavigationView;
   private final AddItemFragment addItemFragment = new AddItemFragment();
+  private AppCompatEditText edtSearch;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,8 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
 
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
+    edtSearch = findViewById(R.id.edt_search);
+    if(edtSearch.hasFocus()){edtSearch.setCursorVisible(true);}
     findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
