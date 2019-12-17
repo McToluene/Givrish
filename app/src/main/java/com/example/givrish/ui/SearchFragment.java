@@ -23,14 +23,14 @@ import java.util.ArrayList;
 public class SearchFragment extends Fragment{
 
   private SearchViewModel mViewModel;
-  //changes are made in productModel and MyAdapter; search_list_row, search_fragment, and SearchFragment
+  //changes are made in productModel and SearchAdapter; search_list_row, search_fragment, and SearchFragment
 
   //declaring variables
   private SearchView edtSearch;
   private RecyclerView recyclerView;
 
   private RecyclerView.LayoutManager layoutManager;
-  private MyAdapter myAdapter;
+  private SearchAdapter searchAdapter;
 
   private ArrayList<String> listString = ProductModel.getAllTitle();
 
@@ -59,8 +59,8 @@ public class SearchFragment extends Fragment{
     layoutManager = new LinearLayoutManager(this.getContext());
     recyclerView.setLayoutManager(layoutManager);
 
-    myAdapter = new MyAdapter(listString);
-    recyclerView.setAdapter(myAdapter);
+    searchAdapter = new SearchAdapter(listString);
+    recyclerView.setAdapter(searchAdapter);
 
     // on typing:
     edtSearch = getActivity().findViewById(R.id.searchView);
@@ -76,11 +76,11 @@ public class SearchFragment extends Fragment{
       @Override
       public boolean onQueryTextChange(String newText) {
           /* String text=newText;
-    myAdapter.filterChanges(text);
+    searchAdapter.filterChanges(text);
     return false;*/
 
           if(newText.isEmpty()){
-            myAdapter.filterChanges(listString);
+            searchAdapter.filterChanges(listString);
           }else {
             //new array list that will hold the filtered data
             ArrayList<String> searchList = new ArrayList<>();
@@ -95,7 +95,7 @@ public class SearchFragment extends Fragment{
             }
 
             //calling a method of the adapter class and passing the filtered list
-            myAdapter.filterChanges(searchList);
+            searchAdapter.filterChanges(searchList);
           }
         return true;
       }
