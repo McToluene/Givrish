@@ -43,7 +43,6 @@ public class ListFragment extends Fragment {
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     // TODO: Use the ViewModel
 
-
     List <ProductModel> productsList = ProductModel.createProduct();
     Log.i("Products", productsList.toString());
 

@@ -26,6 +26,7 @@ public class ProductModel {
 
  static ArrayList<ProductModel> productModels = new ArrayList<>();
   public static ArrayList<ProductModel> createProduct() {
+      productModels.clear();
     productModels.add(new ProductModel("Pairs of jean", "3km"));
     productModels.add(new ProductModel("Tablet", "10km"));
     productModels.add(new ProductModel("HP Folio 9470m", "5km"));
@@ -34,6 +35,7 @@ public class ProductModel {
 
   static ArrayList<String> titles=new ArrayList<>();
   public static ArrayList<String> getAllTitle(){
+      titles.clear();
     titles.add("Pairs of jean");
     titles.add("Tablet");
     titles.add("HP Folio 9470m");
