@@ -3,10 +3,15 @@ package com.example.givrish;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -24,7 +29,8 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private AppCompatEditText edtSearch;
   private Fragment fragment;
-  ;
+  private Toolbar toolbar;
+  private ConstraintLayout top;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +39,26 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
 
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+
     edtSearch = findViewById(R.id.edt_search);
-//    if(edtSearch.hasFocus()){edtSearch.setCursorVisible(true);}
+    toolbar=findViewById(R.id.toolbar);
+
+    //going to search fragment
     edtSearch.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        fragment = new SearchFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.dashboard_layout, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-      }
+        @Override
+        public void onClick(View v) {
+            try {
+                fragment = new SearchFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.frame_container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                //make toolbar to be invisible
+                toolbar.setVisibility(View.INVISIBLE);
+            }catch (Exception e){
+            }
+        }
     });
 
     findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
@@ -55,8 +70,14 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
 
   }
 
+  //make toolbar visible again
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        toolbar.setVisibility(View.VISIBLE);
+    }
 
-  @Override
+    @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
     switch (id) {

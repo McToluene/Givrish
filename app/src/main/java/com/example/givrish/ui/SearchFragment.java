@@ -7,16 +7,33 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.givrish.R;
+import com.example.givrish.models.ProductModel;
 
-public class SearchFragment extends Fragment {
+import java.util.ArrayList;
+
+public class SearchFragment extends Fragment{
 
   private SearchViewModel mViewModel;
+  //changes are made in productModel and MyAdapter; search_list_row, search_fragment, and SearchFragment
+
+  //declaring variables
+  private SearchView edtSearch;
+  private RecyclerView recyclerView;
+
+  private RecyclerView.LayoutManager layoutManager;
+  private MyAdapter myAdapter;
+
+  private ArrayList<String> listString = ProductModel.getAllTitle();
+
 
   public static SearchFragment newInstance() {
     return new SearchFragment();
@@ -28,11 +45,60 @@ public class SearchFragment extends Fragment {
     return inflater.inflate(R.layout.search_fragment, container, false);
   }
 
+
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
     // TODO: Use the ViewModel
-  }
 
+
+    recyclerView = getActivity().findViewById(R.id.recyclerSearchList);
+    recyclerView.setHasFixedSize(true);
+
+    layoutManager = new LinearLayoutManager(this.getContext());
+    recyclerView.setLayoutManager(layoutManager);
+
+    myAdapter = new MyAdapter(listString);
+    recyclerView.setAdapter(myAdapter);
+
+    // on typing:
+    edtSearch = getActivity().findViewById(R.id.searchView);
+
+    edtSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        return false;
+      }
+
+
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+          /* String text=newText;
+    myAdapter.filterChanges(text);
+    return false;*/
+
+          if(newText.isEmpty()){
+            myAdapter.filterChanges(listString);
+          }else {
+            //new array list that will hold the filtered data
+            ArrayList<String> searchList = new ArrayList<>();
+
+            //for in looping through existing elements
+            for (String str : listString) {
+              //if the existing elements contains the search input
+              if (str.toLowerCase().contains(newText.toLowerCase())) {
+                //adding the element to filtered list accumulator
+                searchList.add(str);
+              }
+            }
+
+            //calling a method of the adapter class and passing the filtered list
+            myAdapter.filterChanges(searchList);
+          }
+        return true;
+      }
+    });
+  }
 }
