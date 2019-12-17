@@ -65,7 +65,6 @@ public class CategoryFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    View catRootView = inflater.inflate(R.layout.fragment_category,container,false);
 
 
 
