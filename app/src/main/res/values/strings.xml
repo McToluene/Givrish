@@ -23,4 +23,7 @@
     <string name="let_go">Let\'s go</string>
     <string name="image_desc">Product image</string>
     <string name="search_items">Search for items</string>
+    <string name="otp_mess">Verification code has been sent to you on your mobile </string>
+    <string name="otp_mess_end"> please enter it below.</string>
+    <string name="resend_code">Resend Code</string>
 </resources>
