@@ -58,13 +58,13 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		@Override
 		public void onClick(View v) {
 			 
-				options = Options.init()																//Custom Path For Image Storage
-									  .setRequestCode(100)                                                 //Request code for activity results
-									  .setCount(3)                                                         //Number of images to restict selection count
-									  .setFrontfacing(false)                                                //Front Facing camera on start
-									  .setImageQuality(ImageQuality.REGULAR)                                  //Image Quality
-									  .setPreSelectedUrls(returnValue)                                     //Pre selected Image Urls
-									  .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)           //Orientaion
+				options = Options.init()
+									  .setRequestCode(100)
+									  .setCount(3)
+									  .setFrontfacing(false)
+									  .setImageQuality(ImageQuality.REGULAR)
+									  .setPreSelectedUrls(returnValue)
+									  .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)
 									  .setPath("/pix/images");
 			
 			Pix.start(getActivity(), options);
