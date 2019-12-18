@@ -1,6 +1,7 @@
 package com.example.givrish.models;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     ProductModel product = productModelList.get(position);
     holder.title.setText(product.getTitle());
     holder.location.setText(product.getLocation());
+    holder.position = position;
   }
 
   @Override
@@ -52,6 +54,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
     private final TextView title;
     private final TextView location;
+    private int position;
 
     public ListItemHolder(@NonNull View itemView) {
       super(itemView);
@@ -62,7 +65,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+          Bundle bundle = new Bundle();
+          bundle.putInt("POSITION", position);
           ItemDetailsFragment itemDetails = new ItemDetailsFragment();
+          itemDetails.setArguments(bundle);
           loadDetail(itemDetails);
         }
 

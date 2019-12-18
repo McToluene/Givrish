@@ -24,14 +24,28 @@
             app:srcCompat="@drawable/ic_illustratet1" />
 
 
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/ccp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="77dp"
+            app:ccpDialog_fastScroller_bubbleColor="@color/colorPrimaryDark"
+            app:ccpDialog_showCloseIcon="true"
+            app:ccpDialog_showFastScroller="true"
+            app:ccp_autoDetectCountry="true"
+            app:ccp_defaultPhoneCode="234"
+            app:ccp_showNameCode="false"
+            app:layout_constraintStart_toStartOf="@+id/imageView4"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/phone_ed"
             style="@style/Input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
+            app:layout_constraintStart_toEndOf="@+id/ccp"
             app:layout_constraintEnd_toEndOf="@+id/imageView4"
-            app:layout_constraintStart_toStartOf="@+id/imageView4"
             app:layout_constraintTop_toBottomOf="@+id/imageView4">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -53,7 +67,7 @@
             android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/phone_ed"
-            app:layout_constraintStart_toStartOf="@+id/phone_ed"
+            app:layout_constraintStart_toStartOf="@+id/ccp"
             app:layout_constraintTop_toBottomOf="@+id/phone_ed" />
 
 
