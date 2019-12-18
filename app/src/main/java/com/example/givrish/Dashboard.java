@@ -9,9 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,7 +28,7 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
   BottomNavigationView bottomNavigationView;
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private AppCompatEditText edtSearch;
-  private Fragment fragment;
+  private Fragment fragment = new  ListFragment();
   private Toolbar toolbar;
   private ConstraintLayout top;
 
@@ -55,11 +52,9 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
             try {
                 fragment = new SearchFragment();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.dashboard_layout, fragment);
-                transaction.addToBackStack(null);
+                transaction.add(R.id.dashboard_layout, fragment);
+                transaction.addToBackStack("Dashboard");
                 transaction.commit();
-                //make toolbar to be invisible
-                toolbar.setVisibility(View.INVISIBLE);
             }catch (Exception e){
             }
         }
@@ -83,15 +78,9 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
         loadFragments(addItemFragment);
       }
     });
-
+    loadFragments(fragment);
   }
 
-  //make toolbar visible again
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        toolbar.setVisibility(View.VISIBLE);
-    }
 
     @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {

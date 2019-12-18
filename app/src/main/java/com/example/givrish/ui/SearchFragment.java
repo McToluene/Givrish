@@ -1,5 +1,7 @@
 package com.example.givrish.ui;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 
 import com.example.givrish.R;
@@ -21,7 +24,7 @@ import com.example.givrish.models.SearchAdapter;
 
 import java.util.ArrayList;
 
-public class SearchFragment extends Fragment{
+public class SearchFragment extends Fragment implements View.OnClickListener{
 
   private SearchViewModel mViewModel;
   //changes are made in productModel and MyAdapter; search_list_row, search_fragment, and SearchFragment
@@ -43,6 +46,7 @@ public class SearchFragment extends Fragment{
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+
     return inflater.inflate(R.layout.search_fragment, container, false);
   }
 
@@ -53,6 +57,11 @@ public class SearchFragment extends Fragment{
     mViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
     // TODO: Use the ViewModel
 
+//    ((AppCompatActivity) getActivity()).getSupportActionBar(toolbar).setDisplayHomeAsUpEnabled(true);
+//    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    ImageButton backButton = getActivity().findViewById(R.id.back_button);
+    backButton.setOnClickListener(this);
 
     recyclerView = getActivity().findViewById(R.id.recyclerSearchList);
     recyclerView.setHasFixedSize(true);
@@ -71,7 +80,6 @@ public class SearchFragment extends Fragment{
       public boolean onQueryTextSubmit(String query) {
         return false;
       }
-
 
 
       @Override
@@ -101,5 +109,10 @@ public class SearchFragment extends Fragment{
         return true;
       }
     });
+  }
+
+  @Override
+  public void onClick(View v) {
+
   }
 }

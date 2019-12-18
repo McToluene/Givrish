@@ -26,4 +26,5 @@
     <string name="otp_mess">Verification code has been sent to you on your mobile </string>
     <string name="otp_mess_end"> please enter it below.</string>
     <string name="resend_code">Resend code</string>
+    <string name="back_button">Back Button</string>
 </resources>
