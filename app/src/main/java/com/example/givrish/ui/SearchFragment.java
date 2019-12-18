@@ -69,7 +69,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
     layoutManager = new LinearLayoutManager(this.getContext());
     recyclerView.setLayoutManager(layoutManager);
 
-    myAdapter = new SearchAdapter(listString);
+    myAdapter = new SearchAdapter(listString, getContext());
     recyclerView.setAdapter(myAdapter);
 
     // on typing:
