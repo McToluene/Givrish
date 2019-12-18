@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.models.AuthResponseDto;
@@ -42,7 +43,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       private FirebaseAuth mAuth;
       private ProgressBar progressBar;
       private String phonenumber;
-        private ApiEndpointInterface apiService;
+      private ApiEndpointInterface apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +51,20 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_phone_verify);
 
         mAuth = FirebaseAuth.getInstance();
-         progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
         edtPhoneNumber = findViewById(R.id.ed_phoneNumber);
         edtPhoneCode = findViewById(R.id.edt_phoneCode);
+        TextView otpMessage = findViewById(R.id.tv_otpMessage);
+
 
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
-         if(phonenumber != null){edtPhoneNumber.setText(phonenumber);}
+         if(phonenumber != null) {
+           edtPhoneNumber.setText(phonenumber);
+           otpMessage.setText(buildMessage(phonenumber));
+         }
          onCheckHandler(phonenumber);
-
 
         btnVerify = findViewById(R.id.btn_phoneVerify);
         btnVerify.setOnClickListener(new View.OnClickListener() {
@@ -173,4 +178,8 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             Toast.makeText(PhoneVerifyActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();}
 
     };
+
+    private String buildMessage(String phonenumber) {
+      return String.format("Verification code has been sent to you on your mobile %s please enter it below.", phonenumber);
+    }
 }

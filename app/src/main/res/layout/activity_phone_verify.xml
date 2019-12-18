@@ -28,10 +28,11 @@
             style="@style/Input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView">
+            android:layout_marginTop="16dp"
+            android:enabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/tv_otpMessage"
+            app:layout_constraintStart_toStartOf="@+id/tv_otpMessage"
+            app:layout_constraintTop_toBottomOf="@+id/tv_otpMessage">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/ed_phoneNumber"
@@ -47,7 +48,7 @@
             style="@style/Input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
@@ -66,9 +67,8 @@
             style="@style/buttonCustom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             android:text="@string/lets_go"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/codeInputLayout"
             app:layout_constraintStart_toStartOf="@+id/codeInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/codeInputLayout" />
@@ -76,7 +76,30 @@
         <ProgressBar
             android:id="@+id/progressBar"
             style="@style/progressBar"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_resend_code"
+            app:layout_constraintStart_toStartOf="@+id/tv_resend_code"
+            app:layout_constraintTop_toBottomOf="@+id/tv_resend_code" />
+
+        <TextView
+            android:id="@+id/tv_otpMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
+            android:id="@+id/tv_resend_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:enabled="false"
+            android:text="@string/resend_code"
             app:layout_constraintEnd_toEndOf="@+id/btn_phoneVerify"
             app:layout_constraintStart_toStartOf="@+id/btn_phoneVerify"
             app:layout_constraintTop_toBottomOf="@+id/btn_phoneVerify" />
