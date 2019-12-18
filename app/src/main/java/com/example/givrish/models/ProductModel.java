@@ -12,6 +12,10 @@ public class ProductModel {
     this.location = location;
   }
 
+  public ProductModel(String title){
+    this.title = title;
+  }
+
   public String getTitle() {
     return title;
   }
@@ -27,4 +31,25 @@ public class ProductModel {
     productModels.add(new ProductModel("HP Folio 9470m", "5km"));
     return productModels;
   }
+
+
+
+  public static ArrayList<ProductModel> createProductCategory(){
+    ArrayList<ProductModel> productCategory = new ArrayList<>();
+    productCategory.add(new ProductModel("Pairs of jean"));
+    productCategory.add(new ProductModel("Tablets"));
+    productCategory.add(new ProductModel("HP Folio 9470m"));
+      productCategory.add(new ProductModel("Pairs of jean"));
+      productCategory.add(new ProductModel("Tablets"));
+      productCategory.add(new ProductModel("HP Folio 9470m"));
+      productCategory.add(new ProductModel("Pairs of jean"));
+      productCategory.add(new ProductModel("Tablets"));
+      productCategory.add(new ProductModel("HP Folio 9470m"));
+      productCategory.add(new ProductModel("Pairs of jean"));
+      productCategory.add(new ProductModel("Tablets"));
+      productCategory.add(new ProductModel("HP Folio 9470m"));
+    return productCategory;
+
+  }
+
 }

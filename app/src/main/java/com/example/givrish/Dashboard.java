@@ -4,21 +4,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.givrish.ui.AddItemFragment;
+import com.example.givrish.ui.CategoryFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
 import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -35,6 +35,21 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     edtSearch = findViewById(R.id.edt_search);
     if(edtSearch.hasFocus()){edtSearch.setCursorVisible(true);}
+
+    findViewById(R.id.category_burger).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Snackbar.make(view,"My Category RecyclerView",Snackbar.LENGTH_LONG).show();
+        CategoryFragment categoryFragment = new CategoryFragment();
+        loadCategory(categoryFragment);
+//        CategoryFragment categoryFragment = new CategoryFragment();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.dashboard_layout, categoryFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+      }
+    });
+
     findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -42,6 +57,14 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
       }
     });
 
+  }
+
+  private void loadCategory(CategoryFragment categoryFragment) {
+
+    FragmentTransaction transaction = ((FragmentActivity)Dashboard.this).getSupportFragmentManager().beginTransaction();
+    transaction.replace(R.id.frame_container, categoryFragment);
+    transaction.addToBackStack(null);
+    transaction.commit();
   }
 
 

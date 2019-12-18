@@ -50,15 +50,16 @@
                 android:hint="Search"
                 android:inputType="text|textFilter"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView3"
+                app:layout_constraintEnd_toStartOf="@+id/category_burger"
                 app:layout_constraintStart_toEndOf="@+id/circleImageView"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="4dp"
+                android:id="@+id/category_burger"
+                android:layout_width="30dp"
                 android:layout_height="16dp"
                 android:layout_marginEnd="10dp"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
