@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,8 +45,10 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       private ProgressBar progressBar;
       private String phonenumber;
       private ApiEndpointInterface apiService;
+      private String resendCodeString = "Resend code ";
+  private TextView resendCode;
 
-    @Override
+  @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
@@ -55,6 +58,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         edtPhoneNumber = findViewById(R.id.ed_phoneNumber);
         edtPhoneCode = findViewById(R.id.edt_phoneCode);
         TextView otpMessage = findViewById(R.id.tv_otpMessage);
+        resendCode = findViewById(R.id.tv_resend_code);
 
 
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
@@ -79,6 +83,8 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
             }
         });
+
+        getCoundDown();
     }
 
         private void onCheckHandler(final String phonenumber) {
@@ -181,5 +187,18 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     private String buildMessage(String phonenumber) {
       return String.format("Verification code has been sent to you on your mobile %s please enter it below.", phonenumber);
+    }
+
+    private CountDownTimer getCoundDown(){
+      return new CountDownTimer(60000, 1000) {
+        public void onTick(long millisUntilFinished) {
+          resendCode.setText(resendCodeString + millisUntilFinished / 1000);
+        }
+
+        public void onFinish() {
+          resendCode.setText(resendCodeString);
+          resendCode.setEnabled(true);
+        }
+      }.start();
     }
 }
