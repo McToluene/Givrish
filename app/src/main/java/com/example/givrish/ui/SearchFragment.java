@@ -114,5 +114,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
   @Override
   public void onClick(View v) {
 
+
   }
 }
