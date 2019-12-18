@@ -34,6 +34,7 @@ public class AddItemFragment extends Fragment {
 private AddItemViewModel mViewModel;
 private int RequestCode = 100;
 private Options options;
+private LinearLayout layout;
 private ArrayList<String> returnValue = new ArrayList<>();
 
 
@@ -70,6 +71,7 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 			
 		}
 	});
+	
 }
 
 	@Override
@@ -83,7 +85,8 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 	}
 
 private void loadImage(ArrayList<String> returnValue) {
-	LinearLayout layout = (LinearLayout)getActivity().findViewById(R.id.addImageLinearLayout);
+	
+	layout = (LinearLayout)getActivity().findViewById(R.id.addImageLinearLayout);
 	for(int i=0;i<returnValue.size();i++)
 	{
 		ImageView image = new ImageView(getActivity());

@@ -23,4 +23,7 @@
     <string name="let_go">Let\'s go</string>
     <string name="image_desc">Product image</string>
     <string name="add_item_header">Add an item</string>
+    <string name="Item_name">Name of the item</string>
+    <string name="item_description">Describe the item</string>
+    <string name="item_tag">Add tags to your item( e.g sneakers, addidas)</string>
 </resources>
