@@ -27,4 +27,5 @@
     <string name="otp_mess_end"> please enter it below.</string>
     <string name="resend_code">Resend code</string>
     <string name="back_button">Back Button</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>
