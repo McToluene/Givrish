@@ -72,7 +72,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
     myAdapter = new SearchAdapter(listString, getContext());
     recyclerView.setAdapter(myAdapter);
 
-    // on typing:
+
+
+
+    // on searching typing:
     edtSearch = getActivity().findViewById(R.id.searchView);
 
     edtSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -84,9 +87,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
       @Override
       public boolean onQueryTextChange(String newText) {
-          /* String text=newText;
-    myAdapter.filterChanges(text);
-    return false;*/
 
           if(newText.isEmpty()){
             myAdapter.filterChanges(listString);

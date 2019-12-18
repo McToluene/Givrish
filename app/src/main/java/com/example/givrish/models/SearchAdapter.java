@@ -52,6 +52,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
   public class ViewHolder extends RecyclerView.ViewHolder {
     TextView txtList;
     private int position;
+
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
       txtList = itemView.findViewById(R.id.txtDataRow);
@@ -61,12 +62,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public void onClick(View v) {
           Bundle bundle = new Bundle();
           bundle.putInt("POSITION", position);
+          bundle.putString("itemClick", txtList.getText().toString());
           ItemDetailsFragment itemDetails = new ItemDetailsFragment();
           itemDetails.setArguments(bundle);
           loadDetail(itemDetails);
         }
-
-
       });
     }
   }
