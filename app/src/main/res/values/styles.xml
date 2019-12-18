@@ -70,5 +70,9 @@
         <item name="android:layout_marginTop">@dimen/pMt</item>
         <item name="android:layout_marginBottom">@dimen/pMb</item>
     </style>
+    <style name="addItemLayouts" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:padding">8dp</item>
+        <item name="layout_editor_absoluteX">48dp</item>
+    </style>
 
 </resources>

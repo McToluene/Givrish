@@ -1,13 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.AddItemFragment">
 
-    <TextView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="16dp">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/headerCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/constraintLayout">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:background="@color/colorPrimary">
+
+                    <ImageView
+                        android:id="@+id/AddheaderImage"
+                        android:layout_width="31dp"
+                        android:layout_height="32dp"
+                        android:tint="#3F51B5"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_card_giftcard_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/tvCourse_Name"
+                        android:layout_width="228dp"
+                        android:layout_height="26dp"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/add_item_header"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:layout_constraintStart_toEndOf="@+id/AddheaderImage"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/saveItemtv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:clickable="true"
+                        android:text="Save"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tvCourse_Name"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/mainCategory_layout"
+                style="@style/addItemLayouts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/headerCardView">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/mainCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/subCategory_layout"
+                style="@style/addItemLayouts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/mainCategory_layout">
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/subCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ItemNameLayout"
+                style="@style/addItemLayouts"
+                app:layout_constraintTop_toBottomOf="@id/subCategory_layout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ItemName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/addItemLayouts"
+                android:id="@+id/ItemDescriptionLayout"
+                app:layout_constraintTop_toBottomOf="@id/ItemNameLayout">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:id="@+id/ItemDescription"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/addImageLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/addItemLayouts"
+                app:layout_constraintTop_toBottomOf="@id/ItemDescriptionLayout">
+                imafge goes here
+
+                <LinearLayout
+                    android:id="@+id/addImageLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/addImagebtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:src="@android:drawable/ic_input_add"
+                        app:backgroundTint="@color/colorPrimary"
+                        app:borderWidth="0.1dp" />
+                </LinearLayout>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/selectColorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/addItemLayouts"
+                app:layout_constraintTop_toBottomOf="@id/addImageLayout">
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/ItemColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/selectColorLayout"
+                style="@style/addItemLayouts">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ItemTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
