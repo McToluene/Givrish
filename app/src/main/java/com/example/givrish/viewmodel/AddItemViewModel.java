@@ -1,4 +1,4 @@
-package com.example.givrish.ui;
+package com.example.givrish.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 

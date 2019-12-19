@@ -12,11 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.givrish.R;
 import com.example.givrish.models.ProductModel;
+import com.example.givrish.viewmodel.ItemDetailsViewModel;
 
 import java.util.ArrayList;
 
