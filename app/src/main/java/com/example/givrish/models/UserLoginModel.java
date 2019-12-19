@@ -8,4 +8,5 @@ public class UserLoginModel {
     this.phone_number = number;
     this.password = password;
   }
+
 }

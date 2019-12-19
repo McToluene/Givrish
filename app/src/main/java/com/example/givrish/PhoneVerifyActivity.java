@@ -44,9 +44,9 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       private FirebaseAuth mAuth;
       private ProgressBar progressBar;
       private String phonenumber;
-      private ApiEndpointInterface apiService;
       private String resendCodeString = "Resend code ";
   private TextView resendCode;
+  private String realUserNumber;
 
   @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +61,16 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         resendCode = findViewById(R.id.tv_resend_code);
 
 
-        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-
-         phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
+         phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKeyFirebase);
          if(phonenumber != null) {
            edtPhoneNumber.setText(phonenumber);
            otpMessage.setText(buildMessage(phonenumber));
          }
-         onCheckHandler(phonenumber);
+
+         String realUserNumberR = "+" + phonenumber;
+         realUserNumber = 0 + phonenumber.substring(3);
+         sendVerificationCode(realUserNumberR);
+         getCoundDown();
 
         btnVerify = findViewById(R.id.btn_phoneVerify);
         btnVerify.setOnClickListener(new View.OnClickListener() {
@@ -80,44 +82,10 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                     edtPhoneCode.requestFocus();
                     return;
                 }else{ btnVerify.setEnabled(false);verifyCode(code);}
-
             }
         });
-
-        getCoundDown();
     }
 
-        private void onCheckHandler(final String phonenumber) {
-
-            UserRegisterModel userRegisterModel = new UserRegisterModel(phonenumber,"40:ab:32:10:ao");
-            Gson gson = new Gson();
-            String userstringCheck = gson.toJson(userRegisterModel);
-            Call<AuthResponseDto> callUser = apiService.checkUser(userstringCheck);
-            callUser.enqueue(new Callback<AuthResponseDto>() {
-                @Override
-                public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
-                    if(response.body().getResponseCode().equals("1")){
-                        Intent intent = new Intent(PhoneVerifyActivity.this,LoginActivity.class);
-                        intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-
-                    else if(response.body().getResponseCode().equals("0")){
-                        sendVerificationCode(phonenumber);
-//                        Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
-//                            intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                            startActivity(intent);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<AuthResponseDto> call, Throwable t) {
-
-                }
-            });
-        }
 
         //A method to verify code that is detected or entered by the user
         private void verifyCode(String code){
@@ -127,13 +95,13 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         }
 //
         private void signInWithCredential(PhoneAuthCredential credential) {
-        btnVerify.setEnabled(true);
+      btnVerify.setEnabled(true);
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                if(task.isSuccessful()){
                    Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
-                   intent.putExtra(PhoneVerifyActivity.phoneverifyKey,phonenumber);
+                   intent.putExtra(PhoneVerifyActivity.phoneverifyKey,realUserNumber);
                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                    startActivity(intent);
                }else{
@@ -175,12 +143,14 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                 //If detected automatically
                 edtPhoneCode.setText(code);
                 verifyCode(code);
+                btnVerify.setEnabled(false);
             }
         }
 
         //Called when verification fails
         @Override
         public void onVerificationFailed(FirebaseException e) {
+            progressBar.setVisibility(View.INVISIBLE);
             Toast.makeText(PhoneVerifyActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();}
 
     };
@@ -193,6 +163,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       return new CountDownTimer(60000, 1000) {
         public void onTick(long millisUntilFinished) {
           resendCode.setText(resendCodeString + millisUntilFinished / 1000);
+
         }
 
         public void onFinish() {

@@ -1,5 +1,6 @@
 package com.example.givrish.ui;
 
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
@@ -24,13 +25,22 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.givrish.R;
+import com.example.givrish.models.ItemCategoryModel;
+import com.example.givrish.models.ItemCategoryResponse;
+import com.example.givrish.network.ApiEndpointInterface;
+import com.example.givrish.network.RetrofitClientInstance;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
 import com.fxn.utility.PermUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddItemFragment extends Fragment {
 
@@ -39,6 +49,7 @@ private int RequestCode = 100;
 private Options options;
 private LinearLayout layout;
 private ArrayList<String> returnValue = new ArrayList<>();
+private  static final String apiKey= "com.example.givrish.ui.APIKEY";
 
 
 public static AddItemFragment newInstance() {
@@ -57,6 +68,11 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 	mViewModel = ViewModelProviders.of(this).get(AddItemViewModel.class);
 	// TODO: Use the ViewModel
 	FloatingActionButton addButton = (FloatingActionButton) getActivity().findViewById(R.id.addImagebtn);
+	apiResponseList(apiKey);
+	
+	
+	
+	
 	addButton.setOnClickListener(new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -77,7 +93,28 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 	
 }
 
-	@Override
+private void apiResponseList(String key) {
+	ItemCategoryModel itemCategoryModel = new ItemCategoryModel(key);
+	ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+	Gson gson = new Gson();
+	String itemString = gson.toJson(itemCategoryModel);
+	Call<ItemCategoryResponse> callItem = apiService.getCategory(itemString);
+	callItem.enqueue(new Callback<ItemCategoryResponse>() {
+		@Override
+		public void onResponse(Call<ItemCategoryResponse> call, Response<ItemCategoryResponse> response) {
+			if(response.body().getResponseCode().equals("1")){
+				Toast.makeText(getContext(), response.body().getResponseStatus(), Toast.LENGTH_LONG).show();
+			}
+		}
+		
+		@Override
+		public void onFailure(Call<ItemCategoryResponse> call, Throwable t) {
+		
+		}
+	});
+}
+
+@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		

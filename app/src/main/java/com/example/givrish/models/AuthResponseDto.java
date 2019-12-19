@@ -14,6 +14,8 @@ public class AuthResponseDto {
     @SerializedName("data")
     private List<String> data;
 
+
+
     public String getResponseCode() {
         return responseCode;
     }

@@ -33,12 +33,12 @@
                 android:layout_marginEnd="32dp"
                 android:text="Button"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/textView7"
-                app:layout_constraintStart_toStartOf="@+id/textView7"
-                app:layout_constraintTop_toBottomOf="@+id/textView7" />
+                app:layout_constraintEnd_toEndOf="@+id/txtProductNameDetail"
+                app:layout_constraintStart_toStartOf="@+id/txtProductNameDetail"
+                app:layout_constraintTop_toBottomOf="@+id/txtProductNameDetail" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textView6"
+                android:id="@+id/txtProductLocationDetail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -49,7 +49,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textView7"
+                android:id="@+id/txtProductNameDetail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
