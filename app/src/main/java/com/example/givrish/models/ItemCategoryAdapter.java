@@ -16,10 +16,7 @@ import com.example.givrish.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.zip.Inflater;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ItemCategoryHolder> {
     private List<ItemCategoryData> itemCategoryData;

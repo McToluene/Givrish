@@ -1,5 +1,7 @@
 package com.example.givrish.models;
 
+import androidx.annotation.NonNull;
+
 public class ItemCategoryData {
     private String item_category_id;
     private String item_category_name;
@@ -32,4 +34,10 @@ public class ItemCategoryData {
     public String getItem_category_date() {
         return item_category_date;
     }
+
+@NonNull
+@Override
+public String toString() {
+	return item_category_name;
+}
 }
