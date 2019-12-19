@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.givrish.models.LoginResponse;
+import com.example.givrish.models.UserData;
 import com.example.givrish.models.UserLoginModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
@@ -27,6 +28,15 @@ public class LoginActivity extends AppCompatActivity {
   private TextInputEditText password;
   private  MaterialButton loginBtn;
   private ProgressBar progressBar;
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if(UserDataPreference.getInstance(this).isLoggedIn().equals("1")){
+      startActivity(new Intent(LoginActivity.this, Dashboard.class));
+
+    }
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +78,10 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
+          UserDataPreference.getInstance(LoginActivity.this)
+                  .saveUser((UserData) response.body().getData());
+
+
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
         else if(response.body().getResponseCode().equals("0")){

@@ -99,7 +99,6 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                if(task.isSuccessful()){
-                   btnVerify.setEnabled(false);
                    Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
                    intent.putExtra(PhoneVerifyActivity.phoneverifyKey,realUserNumber);
                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -142,7 +141,6 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             if(code != null){
                 //If detected automatically
                 edtPhoneCode.setText(code);
-                btnVerify.setEnabled(false);
                 verifyCode(code);
             }
         }

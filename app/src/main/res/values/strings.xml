@@ -27,4 +27,8 @@
     <string name="otp_mess_end"> please enter it below.</string>
     <string name="resend_code">Resend code</string>
     <string name="code_error">Verification code seems to have time-out or invalid, Resend code.</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="user_phone_number">UserPhoneNumber</string>
+    <string name="user_phone_password">UserPhonePassword</string>
+
 </resources>
