@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class ProductModel {
   private String title;
   private String location;
+
   private static int productsId = 0;
   private static ArrayList<ProductModel> productModels;
   static ArrayList<String> titles=new ArrayList<>();
@@ -28,6 +29,7 @@ public class ProductModel {
 
   public static ArrayList<ProductModel> createProduct() {
     ArrayList<ProductModel> productModels = new ArrayList<ProductModel>();
+    productModels.clear();
     productModels.add(new ProductModel("Pairs of jean", "3km"));
     productModels.add(new ProductModel("Ipad pro", "10km"));
     productModels.add(new ProductModel("HP Folio 9470m", "5km"));
@@ -44,9 +46,21 @@ public class ProductModel {
   }
 
   public static ArrayList<String> getAllTitle(){
+    titles.clear();
     titles.add("Pairs of jean");
-    titles.add("Tablet");
+    titles.add("Ipad pro");
     titles.add("HP Folio 9470m");
+    titles.add("Television");
+    titles.add("Table");
+    titles.add("Pro XD display");
+    titles.add("JBL Headset");
+    titles.add("Pencil");
+    titles.add("Biro");
+    titles.add("Shelves");
+    titles.add("Standing Fan");
+    titles.add("Mac Book Pro");
+
+ //   titles.add("");
     return titles;
   }
 
