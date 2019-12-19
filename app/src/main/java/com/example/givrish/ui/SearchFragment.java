@@ -33,7 +33,7 @@ public class SearchFragment extends Fragment{
   private RecyclerView.LayoutManager layoutManager;
   private SearchAdapter myAdapter;
 
-  private ArrayList<String> listString = ProductModel.getAllTitle();
+  private ArrayList<String> listString;// = ProductModel.getAllTitle;
 
 
   public static SearchFragment newInstance() {

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Givrish</string>
-    <string name="login_with_phone">login with phone</string>
+    <string name="login_with_phone">Login with phone</string>
     <string name="terms">Caught the flu already? We rise by lifting others</string>
     <string name="sign_up">SignUp</string>
     <string name="password">Enter password</string>
@@ -22,4 +22,9 @@
     <string name="otp">OTP</string>
     <string name="let_go">Let\'s go</string>
     <string name="image_desc">Product image</string>
+    <string name="search_items">Search for items</string>
+    <string name="otp_mess">Verification code has been sent to you on your mobile </string>
+    <string name="otp_mess_end"> please enter it below.</string>
+    <string name="resend_code">Resend code</string>
+    <string name="code_error">Verification code seems to have time-out or invalid, Resend code.</string>
 </resources>

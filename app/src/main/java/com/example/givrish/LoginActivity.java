@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
   }
 
   private void getNumber() {
-    String incomingNumber = getIntent().getStringExtra(PhoneVerifyActivity.phoneverifyKey);
+    String incomingNumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
     if (incomingNumber != null) phoneNumber.setText(incomingNumber);
   }
 }
