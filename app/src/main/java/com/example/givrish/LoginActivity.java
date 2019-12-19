@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.givrish.models.LoginResponse;
 import com.example.givrish.models.UserLoginModel;
@@ -69,6 +70,9 @@ public class LoginActivity extends AppCompatActivity {
         if(response.body().getResponseCode().equals("1")){
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
+        else if(response.body().getResponseCode().equals("0")){
+            Toast.makeText(LoginActivity.this,response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
+        }
       }
 
       @Override
@@ -81,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
   }
 
   private void getNumber() {
-    String incomingNumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
+    String incomingNumber = getIntent().getStringExtra(PhoneVerifyActivity.phoneverifyKey);
     if (incomingNumber != null) phoneNumber.setText(incomingNumber);
   }
 }

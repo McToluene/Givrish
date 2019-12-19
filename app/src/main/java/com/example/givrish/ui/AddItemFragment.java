@@ -13,9 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -81,11 +84,15 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		if (resultCode == Activity.RESULT_OK && requestCode == RequestCode) {
 			ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
 			loadImage(returnValue);
+			
 		}else{ }
 	}
 
 private void loadImage(ArrayList<String> returnValue) {
-	
+//	ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.cell, returnValue);
+//	GridView gridView = (GridView) getActivity().findViewById(R.id.addImageGrid);
+//	arrayAdapter.setDropDownViewResource(R.layout.cell);
+//	gridView.setAdapter(arrayAdapter);
 	layout = (LinearLayout)getActivity().findViewById(R.id.addImageLinearLayout);
 	for(int i=0;i<returnValue.size();i++)
 	{
