@@ -21,9 +21,10 @@ import com.example.givrish.network.RetrofitClientInstance;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
-
+import com.google.firebase.auth.FirebaseAuth;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,22 +38,55 @@ public class PhoneLoginActivity extends AppCompatActivity {
   public static final String phoneLoginKeyFirebase = "com.example.givrish.phoneActivityKeyFireBase";
   private ApiEndpointInterface apiService;
   private String phoneNumber;
+  private FirebaseAuth mAuth;
   CountryCodePicker cpp;
   private String registeredUser;
   private String registeringUserToFirebase;
    ProgressDialog progressDialog;
 
 
-  //
+//
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
 //        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+//
 //            Intent intent = new Intent(this,LoginActivity.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //            startActivity(intent);
 //        }
 //    }
+
+
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    if(retreiveUserLoginDetails() == true){
+            startActivity(new Intent(PhoneLoginActivity.this, Dashboard.class)); }
+    else if(retreiveUserRegistrationDetails() == true && retreiveUserLoginDetails() != true){
+      startActivity(new Intent(PhoneLoginActivity.this, LoginActivity.class)); }
+    else if(FirebaseAuth.getInstance().getCurrentUser() != null && retreiveUserRegistrationDetails() != true && retreiveUserLoginDetails() != true){
+      startActivity(new Intent(PhoneLoginActivity.this, SignUpActivity.class)); }
+  }
+
+
+  private boolean retreiveUserRegistrationDetails(){
+    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_fullname));
+    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
+    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
+    return true;
+  }
+
+
+
+  private boolean retreiveUserLoginDetails(){
+    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
+    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
+    return true;
+  }
+
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +109,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
         if(cpp.isValidFullNumber() != true){
             Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();
             edtPhoneNumberLogin.requestFocus();
-            return;
-        }
-//        if (registeredUser.isEmpty()) {
-//          edtPhoneNumberLogin.setError(getString(R.string.error_message));
-//        }
+            return; }
         else if (!isConnectionActive()) {
           Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show();
         }

@@ -45,6 +45,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       private ProgressBar progressBar;
       private String phonenumber;
       private String resendCodeString = "Resend code ";
+    private PhoneAuthProvider.ForceResendingToken mResendToken;
   private TextView resendCode;
   private String realUserNumber;
 
@@ -67,12 +68,22 @@ public class PhoneVerifyActivity extends AppCompatActivity {
            otpMessage.setText(buildMessage(phonenumber));
          }
 
-         String realUserNumberR = "+" + phonenumber;
+         final String realUserNumberR = "+" + phonenumber;
          realUserNumber = 0 + phonenumber.substring(3);
          sendVerificationCode(realUserNumberR);
          getCoundDown();
 
-        btnVerify = findViewById(R.id.btn_phoneVerify);
+
+          resendCode.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              resendVerificationCode(realUserNumberR,mResendToken);
+
+          }
+      });
+
+
+      btnVerify = findViewById(R.id.btn_phoneVerify);
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,8 +97,18 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         });
     }
 
+    private void resendVerificationCode(String realUserNumberR, PhoneAuthProvider.ForceResendingToken mResendToken) {
+         PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                 realUserNumberR,
+                 60,
+                 TimeUnit.SECONDS,
+                 this,
+                 mCallBack,
+                 mResendToken
+         );
+    }
 
-        //A method to verify code that is detected or entered by the user
+    //A method to verify code that is detected or entered by the user
         private void verifyCode(String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,code);
        //Allows the user to sign In
@@ -106,7 +127,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                    startActivity(intent);
                }else{
                    progressBar.setVisibility(View.INVISIBLE);
-                   Toast.makeText(PhoneVerifyActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                   Toast.makeText(PhoneVerifyActivity.this,getString(R.string.code_error),Toast.LENGTH_LONG).show();
                }
 
             }
@@ -133,6 +154,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             verificationId = s;
+            mResendToken = forceResendingToken;
         }
 
         //Called when verification is completed
@@ -151,7 +173,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         @Override
         public void onVerificationFailed(FirebaseException e) {
             progressBar.setVisibility(View.INVISIBLE);
-            Toast.makeText(PhoneVerifyActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();}
+            Toast.makeText(PhoneVerifyActivity.this,getString(R.string.code_error),Toast.LENGTH_LONG).show();}
 
     };
 
@@ -163,7 +185,6 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       return new CountDownTimer(60000, 1000) {
         public void onTick(long millisUntilFinished) {
           resendCode.setText(resendCodeString + millisUntilFinished / 1000);
-
         }
 
         public void onFinish() {

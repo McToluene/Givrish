@@ -35,11 +35,6 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
     }
 
 
-
-    public ItemCategoryAdapter(ArrayList<ItemCategoryData> items) {
-         this.Aitem = items;
-    }
-
     public ItemCategoryAdapter(List<ItemCategoryData> items) {
       this.itemCategoryData = items;
     }
@@ -83,10 +78,7 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
 
     @Override
     public int getItemCount() {
-//return Aitem == null ? 0 : Aitem.size();
-//        return Aitem.size();
         return itemCategoryData == null ? 0 : itemCategoryData.size();
-//        return productModelCat == null ? 0 : productModelCat.size();
     }
 
     public class ItemCategoryHolder extends RecyclerView.ViewHolder {

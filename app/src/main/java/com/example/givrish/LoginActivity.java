@@ -29,13 +29,20 @@ public class LoginActivity extends AppCompatActivity {
   private  MaterialButton loginBtn;
   private ProgressBar progressBar;
 
+//  @Override
+////  protected void onStart() {
+////    super.onStart();
+////    if(UserDataPreference.getInstance(this).isLoggedIn()){
+////      startActivity(new Intent(LoginActivity.this, Dashboard.class));
+////
+////    }
+////  }
+
   @Override
   protected void onStart() {
     super.onStart();
-    if(UserDataPreference.getInstance(this).isLoggedIn().equals("1")){
-      startActivity(new Intent(LoginActivity.this, Dashboard.class));
 
-    }
+
   }
 
   @Override
@@ -63,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
   }
 
-  private void onSubmitHandler(String number, String pass) {
+  private void onSubmitHandler(final String number, final String pass) {
     UserLoginModel userLogin = new UserLoginModel(number, pass);
     ApiEndpointInterface  apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
@@ -78,9 +85,8 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
-          UserDataPreference.getInstance(LoginActivity.this)
-                  .saveUser((UserData) response.body().getData());
-
+          UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),number);
+          UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
 
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }

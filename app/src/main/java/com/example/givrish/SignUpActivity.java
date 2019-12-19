@@ -57,7 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
     });
   }
 
-  private void onSubmitHandler( final View v, String name, String phone, String pass) {
+  private void onSubmitHandler(final View v, final String name, final String phone, final String pass) {
     UserRegisterModel userRegisterModel = new UserRegisterModel(name, phone, pass);
     Gson gson = new Gson();
     String userString = gson.toJson(userRegisterModel);
@@ -66,8 +66,11 @@ public class SignUpActivity extends AppCompatActivity {
     call.enqueue(new Callback<AuthResponseDto>() {
       @Override
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
-        if (response.body().getResponseCode().equals("1")) startActivity(new Intent(SignUpActivity.this, Dashboard.class));
-
+        if (response.body().getResponseCode().equals("1"))
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_fullname),name);
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),phone);
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
+          startActivity(new Intent(SignUpActivity.this, Dashboard.class));
       }
 
       @Override

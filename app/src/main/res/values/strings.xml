@@ -28,5 +28,8 @@
     <string name="resend_code">Resend code</string>
     <string name="back_button">Back Button</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="code_error">Verification code seems to have time-out or invalid, Resend code.</string>
+    <string name="code_error">The sms code has expired. Please resend the verification code to try again.</string>
+    <string name="user_phone_number_Keystore">UserPhoneNumber</string>
+    <string name="user_phone_password_Keystore">UserPhonePassword</string>
+    <string name="user_fullname">UserFullname</string>
 </resources>
