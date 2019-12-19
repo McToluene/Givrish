@@ -1,7 +1,6 @@
 package com.example.givrish.ui;
 
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
@@ -15,21 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.givrish.ItemSubCategoryData;
 import com.example.givrish.R;
-import com.example.givrish.models.ItemCategoryAdapter;
 import com.example.givrish.models.ItemCategoryData;
 import com.example.givrish.models.ItemCategoryModel;
 import com.example.givrish.models.ItemCategoryResponse;
@@ -58,11 +53,11 @@ private int RequestCode = 100;
 private Options options;
 private LinearLayout layout;
 private ArrayList<String> returnValue = new ArrayList<>();
-private List<ItemCategoryData> itemCategoryData;
+private List<ItemCategoryData> itemCategoryDataList;
 AppCompatSpinner mainCategory;
 AppCompatSpinner subCategory;
 private  static final String apiKey= "com.example.givrish.ui.APIKEY";
-private List<ItemSubCategoryData> itemSubCategoryData;
+private List<ItemSubCategoryData> itemSubCategoryDataList;
 private TextInputLayout mainCategoryLayout;
 private int selectedPosition;
 private String SelectedCategory ="";
@@ -81,6 +76,8 @@ public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup c
 @Override
 public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 	super.onActivityCreated(savedInstanceState);
+	mainCategory = (AppCompatSpinner) getActivity().findViewById(R.id.mainCategory);
+	subCategory = (AppCompatSpinner) getActivity().findViewById(R.id.subCategory);
 	mViewModel = ViewModelProviders.of(this).get(AddItemViewModel.class);
 	// TODO: Use the ViewModel
 	FloatingActionButton addButton = (FloatingActionButton) getActivity().findViewById(R.id.addImagebtn);
@@ -108,16 +105,10 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 			try {
-				if (position != 0) {
-					mainCategoryLayout.setErrorEnabled(false);
 					selectedPosition = position;
 //					SelectedCategory = mainCategory.getItemAtPosition(position).toString();
-					apiSubCategoryList(apiKey, selectedPosition);
-				}else if(position==0){
-//					Toast.makeText(CreateProfile.this, "hey", Toast.LENGTH_LONG).show();
-					mainCategoryLayout.setErrorEnabled(true);
-					mainCategoryLayout.setError("Invalid selection");
-				}else {}
+					apiSubCategoryList(String.valueOf(selectedPosition+1));
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -132,11 +123,12 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 }
 
 
-private void apiSubCategoryList(String apiKey, int selectedCategory) {
+private void apiSubCategoryList(final String selectedCategory) {
 	
-	ArrayList<String> SubCategoryOfCategory = new ArrayList<String>();
-	subCategory = (AppCompatSpinner) getActivity().findViewById(R.id.subCategory);
+	
+	
 	ItemCategoryModel itemCategoryModel = new ItemCategoryModel(apiKey);
+	final List<ItemSubCategoryData> SubCategoryOfCategory = new ArrayList<>();
 	ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 	Gson gson = new Gson();
 	String itemString = gson.toJson(itemCategoryModel);
@@ -145,8 +137,24 @@ private void apiSubCategoryList(String apiKey, int selectedCategory) {
 		@Override
 		public void onResponse(Call<ItemSubCategoryResponse> call, Response<ItemSubCategoryResponse> response) {
 			if (response.body().getResponseCode().equals("1")) {
-				itemSubCategoryData = response.body().getData();
-				ArrayAdapter<ItemSubCategoryData> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, itemSubCategoryData);
+				itemSubCategoryDataList = response.body().getData();
+				String getWhatINeed;
+				
+				for(int i = 0; i< itemSubCategoryDataList.size(); i++){
+					getWhatINeed = itemSubCategoryDataList.get(i).getItem_category_id();
+					if(i== itemSubCategoryDataList.size()) {
+						break;
+						
+					}else {
+						if (getWhatINeed.equals(selectedCategory)) {
+							SubCategoryOfCategory.add(itemSubCategoryDataList.get(i));
+
+						}
+					}
+					
+				}
+				
+				ArrayAdapter<ItemSubCategoryData> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, SubCategoryOfCategory);
 				arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 				subCategory.setAdapter(arrayAdapter);
 			}
@@ -160,8 +168,6 @@ private void apiSubCategoryList(String apiKey, int selectedCategory) {
 }
 
 private void apiCategoryList(String key) {
-	
-	mainCategory = (AppCompatSpinner) getActivity().findViewById(R.id.mainCategory);
 	ItemCategoryModel itemCategoryModel = new ItemCategoryModel(key);
 	ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 	Gson gson = new Gson();
@@ -171,8 +177,8 @@ private void apiCategoryList(String key) {
 		@Override
 		public void onResponse(Call<ItemCategoryResponse> call, Response<ItemCategoryResponse> response) {
 			if (response.body().getResponseCode().equals("1")) {
-				itemCategoryData = response.body().getData();
-				ArrayAdapter<ItemCategoryData> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, itemCategoryData);
+				itemCategoryDataList = response.body().getData();
+				ArrayAdapter<ItemCategoryData> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, itemCategoryDataList);
 				arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
 				mainCategory.setAdapter(arrayAdapter);
 			}
