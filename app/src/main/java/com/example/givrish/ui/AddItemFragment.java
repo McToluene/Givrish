@@ -85,8 +85,6 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 	// TODO: Use the ViewModel
 	FloatingActionButton addButton = (FloatingActionButton) getActivity().findViewById(R.id.addImagebtn);
 	apiCategoryList(apiKey);
-	apiSubCategoryList(apiKey);
-	
 	
 	
 	addButton.setOnClickListener(new View.OnClickListener() {
@@ -113,8 +111,8 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 				if (position != 0) {
 					mainCategoryLayout.setErrorEnabled(false);
 					selectedPosition = position;
-					SelectedCategory = mainCategory.getItemAtPosition(position).toString();
-					getSubCategory(SelectedCategory);
+//					SelectedCategory = mainCategory.getItemAtPosition(position).toString();
+					apiSubCategoryList(apiKey, selectedPosition);
 				}else if(position==0){
 //					Toast.makeText(CreateProfile.this, "hey", Toast.LENGTH_LONG).show();
 					mainCategoryLayout.setErrorEnabled(true);
@@ -133,29 +131,10 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 	
 }
 
-private void getSubCategory(String selectedCategory) {
-//	ArrayList<String> SubCategory= new ArrayList<String>();
-//	SubCategories = DataCentric.getInstance().getDepartmentEntityList();
-//	for(int i= 0; i<departments.size(); i++){
-//		if(i==departments.size()) {
-//			break;
-//
-//		}else {
-//			if (departments.get(i).getDepartmentID().equals(collegeFromSpinner)) {
-//				String res = departments.get(i).toString();
-//				Depts.add(res);
-//
-//			}
-//		}
-//
-//	}
-//	Log.d(TAG, "getListOfDepartments: " + Depts);
-//	ArrayAdapter<String> departmentArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,  Depts);
-//	departmentArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//	department.setAdapter(departmentArrayAdapter);
-}
 
-private void apiSubCategoryList(String apiKey) {
+private void apiSubCategoryList(String apiKey, int selectedCategory) {
+	
+	ArrayList<String> SubCategoryOfCategory = new ArrayList<String>();
 	subCategory = (AppCompatSpinner) getActivity().findViewById(R.id.subCategory);
 	ItemCategoryModel itemCategoryModel = new ItemCategoryModel(apiKey);
 	ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
