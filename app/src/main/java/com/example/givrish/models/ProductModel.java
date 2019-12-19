@@ -1,10 +1,18 @@
 package com.example.givrish.models;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+
+import com.example.givrish.R;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class ProductModel {
   private String title;
   private String location;
+  private String productImg;
+
 
   private static int productsId = 0;
   private static ArrayList<ProductModel> productModels;
@@ -68,4 +76,13 @@ public class ProductModel {
   public static ProductModel getProduct(int position) {
     return productModels.get(position);
   }
+
+  public void setProductImg(String prodImg) {
+    this.productImg = prodImg.replace(" ","").toLowerCase();
+  }
+
+  public int getProductImgResourcesId(Context context){
+    return context.getResources().getIdentifier(this.productImg, "drawable", context.getPackageName());
+  }
+
 }
