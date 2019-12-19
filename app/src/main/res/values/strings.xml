@@ -28,4 +28,5 @@
     <string name="resend_code">Resend code</string>
     <string name="back_button">Back Button</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="code_error">Verification code seems to have time-out or invalid, Resend code.</string>
 </resources>

@@ -8,33 +8,21 @@
     tools:context=".Dashboard">
 
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/custom_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <FrameLayout
         android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
+        app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+        app:layout_constraintTop_toTopOf="@+id/coordinatorLayout" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame_container">
+        android:layout_height="match_parent"
+    >
 
 
         <com.google.android.material.bottomappbar.BottomAppBar
@@ -44,6 +32,8 @@
             android:layout_height="wrap_content"
             app:contentInsetEnd="0dp"
             app:contentInsetLeft="0dp"
+            app:fabCradleMargin="10dp"
+            android:layout_gravity="bottom"
             app:contentInsetRight="0dp"
             app:contentInsetStart="0dp"
             app:fabAlignmentMode="center"
@@ -70,7 +60,7 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorSkyBlue"
+            android:backgroundTint="@color/colorPrimary"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/gift_box"
