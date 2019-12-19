@@ -3,8 +3,9 @@ package com.example.givrish;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
@@ -12,19 +13,25 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.givrish.ui.AddItemFragment;
-import com.example.givrish.ui.CategoryFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
 import com.example.givrish.ui.MessagesFragment;
+import com.example.givrish.ui.ProfileFragment;
 import com.example.givrish.ui.RequestsFragment;
+import com.example.givrish.ui.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
   BottomNavigationView bottomNavigationView;
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private AppCompatEditText edtSearch;
+  private Fragment fragment = new  ListFragment();
+  private Toolbar toolbar;
+  private ConstraintLayout top;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +40,35 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
 
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
-    edtSearch = findViewById(R.id.edt_search);
-    if(edtSearch.hasFocus()){edtSearch.setCursorVisible(true);}
 
-    findViewById(R.id.category_burger).setOnClickListener(new View.OnClickListener() {
+
+    edtSearch = findViewById(R.id.edt_search);
+    toolbar=findViewById(R.id.toolbar);
+
+    //going to search fragment
+    edtSearch.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                fragment = new SearchFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.dashboard_layout, fragment);
+                transaction.addToBackStack("Dashboard");
+                transaction.commit();
+            }catch (Exception e){
+            }
+        }
+    });
+
+    CircleImageView profile = findViewById(R.id.profileImageView);
+    profile.setOnClickListener(new View.OnClickListener() {
       @Override
-      public void onClick(View view) {
-        Snackbar.make(view,"My Category RecyclerView",Snackbar.LENGTH_LONG).show();
-        CategoryFragment categoryFragment = new CategoryFragment();
-        loadCategory(categoryFragment);
-//        CategoryFragment categoryFragment = new CategoryFragment();
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.dashboard_layout, categoryFragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
+      public void onClick(View v) {
+        fragment = new ProfileFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.dashboard_layout, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
       }
     });
 
@@ -56,22 +78,13 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
         loadFragments(addItemFragment);
       }
     });
-
-  }
-
-  private void loadCategory(CategoryFragment categoryFragment) {
-
-    FragmentTransaction transaction = ((FragmentActivity)Dashboard.this).getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.frame_container, categoryFragment);
-    transaction.addToBackStack(null);
-    transaction.commit();
+    loadFragments(fragment);
   }
 
 
-  @Override
+    @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
-    Fragment fragment;
     switch (id) {
       case R.id.navigation_home:
         fragment = new ListFragment();

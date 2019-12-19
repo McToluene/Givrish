@@ -1,22 +1,30 @@
 package com.example.givrish.models;
+import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
+import com.example.givrish.ui.ItemDetailsFragment;
 
 import java.util.ArrayList;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
   private ArrayList<String> listString;
+  private Context context;
 
-  public SearchAdapter(ArrayList<String> listStr) {
+  public SearchAdapter(ArrayList<String> listStr, Context context) {
     listString = listStr;
+    this.context = context;
   }
 
 
@@ -33,6 +41,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     holder.txtList.setText(listString.get(position));
+    holder.position = position;
   }
 
   @Override
@@ -42,9 +51,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
   public class ViewHolder extends RecyclerView.ViewHolder {
     TextView txtList;
+    private int position;
+
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
       txtList = itemView.findViewById(R.id.txtDataRow);
+
+      itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          Bundle bundle = new Bundle();
+          bundle.putInt("POSITION", position);
+          bundle.putString("itemClick", txtList.getText().toString());
+          ItemDetailsFragment itemDetails = new ItemDetailsFragment();
+          itemDetails.setArguments(bundle);
+          loadDetail(itemDetails);
+        }
+      });
     }
   }
 
@@ -55,6 +78,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     this.listString=searchList;
     notifyDataSetChanged();
 
+  }
+
+  private void loadDetail(Fragment itemDetails) {
+    FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+    transaction.replace(R.id.search_layout, itemDetails);
+    transaction.addToBackStack(null);
+    transaction.commit();
   }
 
 }

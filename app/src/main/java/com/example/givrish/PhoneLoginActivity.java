@@ -73,29 +73,29 @@ public class PhoneLoginActivity extends AppCompatActivity {
         registeredUser = 0 + cpp.getFullNumber().substring(3);
 
         if(cpp.isValidFullNumber() != true){
-            Snackbar.make(view, "InvalidNumber", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();
+            edtPhoneNumberLogin.requestFocus();
+            return;
         }
-//        Snackbar.make(view, registeringUserToFirebase, Snackbar.LENGTH_LONG).show();
-        if (registeredUser.isEmpty()) {
-          edtPhoneNumberLogin.setError(getString(R.string.error_message));
-          edtPhoneNumberLogin.requestFocus();
-          return;
-        } else if (!isConnectionActive()) {
+//        if (registeredUser.isEmpty()) {
+//          edtPhoneNumberLogin.setError(getString(R.string.error_message));
+//        }
+        else if (!isConnectionActive()) {
           Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show();
         }
-//        else {
-//            progressDialogMethod();
-//          new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//              try{
-//                onCheckHandler(view,registeredUser);
-//              }catch (Exception e){e.printStackTrace();}
-//
-//            }
-//          }).start();
-////          onCheckHandler(view, registeredUser);
-//        }
+        else {
+            progressDialogMethod();
+          new Thread(new Runnable() {
+            @Override
+            public void run() {
+              try{
+                onCheckHandler(view,registeredUser);
+              }catch (Exception e){e.printStackTrace();}
+
+            }
+          }).start();
+//          onCheckHandler(view, registeredUser);
+        }
       }
     });
   }

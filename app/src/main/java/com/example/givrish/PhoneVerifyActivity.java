@@ -77,7 +77,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String code = edtPhoneCode.getText().toString().trim();
-                if (code.isEmpty() || code.length() != 6) {
+                if (code.isEmpty() || code.length() < 6) {
                     edtPhoneCode.setError("Enter code...");
                     edtPhoneCode.requestFocus();
                     return;
@@ -95,6 +95,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         }
 //
         private void signInWithCredential(PhoneAuthCredential credential) {
+      btnVerify.setEnabled(true);
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -105,7 +106,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                    startActivity(intent);
                }else{
                    progressBar.setVisibility(View.INVISIBLE);
-                   Toast.makeText(PhoneVerifyActivity.this,getString(R.string.code_error),Toast.LENGTH_LONG).show();
+                   Toast.makeText(PhoneVerifyActivity.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
                }
 
             }
@@ -142,13 +143,15 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                 //If detected automatically
                 edtPhoneCode.setText(code);
                 verifyCode(code);
+                btnVerify.setEnabled(false);
             }
         }
 
         //Called when verification fails
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(PhoneVerifyActivity.this,getString(R.string.code_error),Toast.LENGTH_LONG).show();}
+            progressBar.setVisibility(View.INVISIBLE);
+            Toast.makeText(PhoneVerifyActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();}
 
     };
 
@@ -160,6 +163,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
       return new CountDownTimer(60000, 1000) {
         public void onTick(long millisUntilFinished) {
           resendCode.setText(resendCodeString + millisUntilFinished / 1000);
+
         }
 
         public void onFinish() {
