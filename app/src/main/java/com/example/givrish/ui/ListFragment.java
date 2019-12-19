@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.example.givrish.R;
 import com.example.givrish.models.ListItemAdapter;
 import com.example.givrish.models.ProductModel;
+import com.example.givrish.viewmodel.ListViewModel;
 
 import java.util.List;
 

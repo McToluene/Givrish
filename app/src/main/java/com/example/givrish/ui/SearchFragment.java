@@ -1,7 +1,5 @@
 package com.example.givrish.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -21,6 +19,7 @@ import android.widget.SearchView;
 import com.example.givrish.R;
 import com.example.givrish.models.ProductModel;
 import com.example.givrish.models.SearchAdapter;
+import com.example.givrish.viewmodel.SearchViewModel;
 
 import java.util.ArrayList;
 
