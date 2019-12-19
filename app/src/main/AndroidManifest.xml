@@ -17,10 +17,10 @@
         </activity>
         <activity android:name=".PhoneVerifyActivity"/>
         <activity android:name=".PhoneLoginActivity" />
-        <activity android:name=".Dashboard">
+        <activity android:name=".MainActivity">
 
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".Dashboard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

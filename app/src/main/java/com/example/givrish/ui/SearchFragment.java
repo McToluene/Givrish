@@ -27,7 +27,6 @@ import java.util.ArrayList;
 public class SearchFragment extends Fragment implements View.OnClickListener{
 
   private SearchViewModel mViewModel;
-  //changes are made in productModel and MyAdapter; search_list_row, search_fragment, and SearchFragment
 
   //declaring variables
   private SearchView edtSearch;
@@ -73,8 +72,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
     recyclerView.setAdapter(myAdapter);
 
 
-
-
     // on searching typing:
     edtSearch = getActivity().findViewById(R.id.searchView);
 
@@ -113,7 +110,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
   @Override
   public void onClick(View v) {
-
-
+    switch (v.getId()){
+        case R.id.back_button:
+     getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            break;
+    }
   }
 }

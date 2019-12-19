@@ -1,7 +1,11 @@
 package com.example.givrish.ui;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import com.example.givrish.R;
 import com.example.givrish.models.ProductModel;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class ItemDetailsFragment extends Fragment {
@@ -27,6 +32,8 @@ public class ItemDetailsFragment extends Fragment {
   private TextView prodLocationTextView;
   String prodLocation;
   String productName;
+  private ConstraintLayout detailsConstraint;
+
 
   public static ItemDetailsFragment newInstance() {
     return new ItemDetailsFragment();
@@ -39,7 +46,7 @@ public class ItemDetailsFragment extends Fragment {
     Log.i("POSITION", Integer.toString(position));
 
 
-    //    getting the data to show its details
+    //getting the data to show its details
     //get the textView clicked
     String item = getArguments().getString("itemClick");
     //instantiate the products
@@ -66,9 +73,17 @@ public class ItemDetailsFragment extends Fragment {
     //setting the item data
     prodNameTextView=getActivity().findViewById(R.id.txtProductNameDetail);
     prodLocationTextView=getActivity().findViewById(R.id.txtProductLocationDetail);
+    detailsConstraint=getActivity().findViewById(R.id.detailConstraint);
 
+    //setting text
     prodNameTextView.setText(productName);
     prodLocationTextView.setText(prodLocation);
+    //product picture
+    ProductModel productModel=new ProductModel();
+    productModel.setProductImg(productName);
+    int imgId=productModel.getProductImgResourcesId(getContext());
+    Drawable drawable=getResources().getDrawable(imgId);
+    detailsConstraint.setBackground(drawable);
 
   }
 
