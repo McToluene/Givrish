@@ -45,10 +45,16 @@ public class SignUpActivity extends AppCompatActivity {
         String name = fullName.getText().toString();
         String phone = number.getText().toString();
         String pass = password.getText().toString();
-        onSubmitHandler(v, name, phone, pass);
+        if (name.isEmpty()){
+          fullName.setError("Name cannot be empty!");
+        } else if (pass.isEmpty()){
+          password.setError("Password cannot be empty!");
+        }else {
+          onSubmitHandler(v, name, phone, pass);
+        }
+
       }
     });
-
   }
 
   private void onSubmitHandler( final View v, String name, String phone, String pass) {
