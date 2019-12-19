@@ -22,7 +22,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
-//import com.hbb20.CountryCodePicker;
+import com.hbb20.CountryCodePicker;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +37,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
   public static final String phoneLoginKeyFirebase = "com.example.givrish.phoneActivityKeyFireBase";
   private ApiEndpointInterface apiService;
   private String phoneNumber;
-//  CountryCodePicker cpp;
+  CountryCodePicker cpp;
   private String registeredUser;
   private String registeringUserToFirebase;
    ProgressDialog progressDialog;
@@ -59,48 +59,48 @@ public class PhoneLoginActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_phone_login);
 
-//    edtPhoneNumberLogin = findViewById(R.id.edt_phoneNumber);
-//    btnCheck = findViewById(R.id.btn_check);
-//    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-//    cpp = findViewById(R.id.ccp);
-//    cpp.registerCarrierNumberEditText(edtPhoneNumberLogin);
-//    cpp.setFullNumber(edtPhoneNumberLogin.getText().toString().trim());
-//
-//    btnCheck.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(final View view) {
-//        registeringUserToFirebase = cpp.getFullNumber();
-//        registeredUser = 0 + cpp.getFullNumber().substring(3);
-//
-//        if(cpp.isValidFullNumber() != true){
-//            Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();
-//            edtPhoneNumberLogin.requestFocus();
-//            return;
+    edtPhoneNumberLogin = findViewById(R.id.edt_phoneNumber);
+    btnCheck = findViewById(R.id.btn_check);
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+    cpp = findViewById(R.id.ccp);
+    cpp.registerCarrierNumberEditText(edtPhoneNumberLogin);
+    cpp.setFullNumber(edtPhoneNumberLogin.getText().toString().trim());
+
+    btnCheck.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(final View view) {
+        registeringUserToFirebase = cpp.getFullNumber();
+        registeredUser = 0 + cpp.getFullNumber().substring(3);
+
+        if(cpp.isValidFullNumber() != true){
+            Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();
+            edtPhoneNumberLogin.requestFocus();
+            return;
+        }
+//        if (registeredUser.isEmpty()) {
+//          edtPhoneNumberLogin.setError(getString(R.string.error_message));
 //        }
-////        if (registeredUser.isEmpty()) {
-////          edtPhoneNumberLogin.setError(getString(R.string.error_message));
-////        }
-//        else if (!isConnectionActive()) {
-//          Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show();
-//        }
-//        else {
-//            progressDialogMethod();
-//          new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//              try{
-//                onCheckHandler(view,registeredUser);
-//              }catch (Exception e){e.printStackTrace();}
-//
-//            }
-//          }).start();
-////          onCheckHandler(view, registeredUser);
-//        }
-//      }
-//    });
+        else if (!isConnectionActive()) {
+          Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show();
+        }
+        else {
+            progressDialogMethod();
+          new Thread(new Runnable() {
+            @Override
+            public void run() {
+              try{
+                onCheckHandler(view,registeredUser);
+              }catch (Exception e){e.printStackTrace();}
+
+            }
+          }).start();
+//          onCheckHandler(view, registeredUser);
+        }
+      }
+    });
   }
     private void progressDialogMethod() {
-//        progressDialog = new ProgressDialog(PhoneLoginActivity.this,R.style.progressDailogStyle);
+        progressDialog = new ProgressDialog(PhoneLoginActivity.this,R.style.progressDailogStyle);
         progressDialog.setMessage("Please wait..");
         progressDialog.setTitle("Welcome");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

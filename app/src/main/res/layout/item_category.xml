@@ -6,20 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-<!--    <com.google.android.material.textview.MaterialTextView-->
-<!--        android:id="@+id/cd_image_text"-->
-<!--        style="@style/categoryStyle"-->
-<!--        android:layout_width="40dp"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_marginStart="24dp"-->
-<!--        android:layout_marginTop="5dp"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        android:text="A"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textSize="15sp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/cd_image_text"
+        style="@style/categoryStyle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="A"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_cat_item"
