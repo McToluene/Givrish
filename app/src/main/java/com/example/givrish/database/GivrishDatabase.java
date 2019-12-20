@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {ItemCategoryData.class}, version = 1)
+@Database(entities = {ItemCategoryData.class}, version = 1, exportSchema = false)
 public abstract class GivrishDatabase extends RoomDatabase {
   public abstract CategoriesDao categoriesDao();
   private static final String DB_NAME = "Gi";

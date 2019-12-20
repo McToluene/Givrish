@@ -1,8 +1,8 @@
 package com.example.givrish.ui;
 
-import androidx.lifecycle.LiveData;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -38,6 +38,7 @@ import retrofit2.Response;
 
 public class CategoryFragment extends Fragment {
 
+    private Toolbar toolbar;
     private CategoryViewModel mViewModel;
     private RecyclerView recyclerView;
     private ItemCategoryAdapter itemCategoryAdapter;
@@ -50,6 +51,19 @@ public class CategoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        toolbar = getActivity().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+        toolbar.setNavigationIcon(R.drawable.ic_back_icon);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();;
+            }
+        });
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setTitle("Categories");
+
         return inflater.inflate(R.layout.category_fragment, container, false);
     }
 

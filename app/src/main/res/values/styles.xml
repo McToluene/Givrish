@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/white</item>
     </style>
+
+    <style name="toolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
     
     <style name="Input" parent="Widget.Design.TextInputLayout">
         <item name="hintTextAppearance">@style/HintText</item>
