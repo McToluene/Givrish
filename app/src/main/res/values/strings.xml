@@ -23,5 +23,10 @@
     <string name="resend_code">Resend code</string>
     <string name="back_button">Back Button</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="add_item_header">Add an item</string>
+    <string name="Item_name">Name of the item</string>
+    <string name="item_description">Describe the item</string>
+    <string name="item_tag">Add tags to your item( e.g sneakers, addidas)</string>
+    <string name="code_error">Verification code seems to have time-out or invalid, Resend code.</string>
     <string name="search_gift">Search gift</string>
 </resources>

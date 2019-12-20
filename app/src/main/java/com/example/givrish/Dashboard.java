@@ -1,6 +1,7 @@
 package com.example.givrish;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
@@ -8,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -118,4 +120,11 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
     transaction.commit();
   }
 
+@Override
+protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+	super.onActivityResult(requestCode, resultCode, data);
+	for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+		fragment.onActivityResult(requestCode, resultCode, data);
+	}
+}
 }

@@ -1,6 +1,6 @@
 package com.example.givrish.models;
 
-public class ItemSubCategoryModel {
+public class ItemSubCategoryData {
     private String item_sub_category_id;
     private String item_category_id;
     private String item_sub_category_name;
@@ -9,7 +9,7 @@ public class ItemSubCategoryModel {
     private String ref_code;
    private String item_sub_category_date;
 
-
+ItemSubCategoryData(){}
     public String getItem_sub_category_id() {
         return item_sub_category_id;
     }
