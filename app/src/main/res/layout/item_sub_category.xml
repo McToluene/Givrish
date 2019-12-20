@@ -27,28 +27,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="15dp"
         android:ellipsize="end"
         android:ems="9"
         android:maxLines="1"
         android:text="Agriculture and Food"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView6"
-        app:layout_constraintStart_toEndOf="@+id/sub_tv"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="24dp"
-        android:src="@drawable/ic_play_arrow_purple_24dp"
-        android:tint="@color/colorAccent"
-
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sub_tv"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -58,13 +44,6 @@
         android:background="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/sub_tv_name"
-        app:layout_constraintTop_toBottomOf="@+id/sub_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/sub_tv_name" />
 
-<!--    <view-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="1dp"-->
-<!--        android:background="#000000"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/tv_cat_item"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tv_cat_item" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

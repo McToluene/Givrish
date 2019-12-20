@@ -1,5 +1,7 @@
 package com.example.givrish.models;
 
+
+
 public class ItemCategoryModel {
     private String api_key;
 

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.givrish.ui.AddItemFragment;
+import com.example.givrish.ui.CategoryFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
 import com.example.givrish.ui.MessagesFragment;
@@ -43,34 +44,42 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
 
 
     edtSearch = findViewById(R.id.edt_search);
-    toolbar=findViewById(R.id.toolbar);
+//    toolbar=findViewById(R.id.toolbar);
+
+//    findViewById(R.id.imageView3).setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        fragment = new CategoryFragment();
+//        loadFragments(fragment);
+//      }
+//    });
 
     //going to search fragment
-    edtSearch.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            try {
-                fragment = new SearchFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.dashboard_layout, fragment);
-                transaction.addToBackStack("Dashboard");
-                transaction.commit();
-            }catch (Exception e){
-            }
-        }
-    });
+//    edtSearch.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            try {
+//                fragment = new SearchFragment();
+//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                transaction.add(R.id.dashboard_layout, fragment);
+//                transaction.addToBackStack("Dashboard");
+//                transaction.commit();
+//            }catch (Exception e){
+//            }
+//        }
+//    });
 
-    CircleImageView profile = findViewById(R.id.profileImageView);
-    profile.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        fragment = new ProfileFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.dashboard_layout, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-      }
-    });
+//    CircleImageView profile = findViewById(R.id.profileImageView);
+//    profile.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        fragment = new ProfileFragment();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.dashboard_layout, fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//      }
+//    });
 
     findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
       @Override

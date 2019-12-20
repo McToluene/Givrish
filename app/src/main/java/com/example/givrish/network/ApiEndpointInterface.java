@@ -22,5 +22,8 @@ public interface ApiEndpointInterface {
     @GET("itemcategory/get_category")
     Call<ItemCategoryResponse> getCategory(@Query("jsonString")String jsonString);
 
+    @GET("itemcategory/get_sub_category")
+    Call<ItemCategoryResponse> getSubCategory(@Query("json")String jsonString);
+
 
 }
