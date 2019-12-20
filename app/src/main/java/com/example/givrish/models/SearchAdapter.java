@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
   }
 
 
-
   @NonNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,10 +38,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     return vh;
   }
 
+  ProductModel productModel=new ProductModel();
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.txtList.setText(listString.get(position));
+      String prodName=listString.get(position);
+    holder.txtList.setText(prodName);
     holder.position = position;
+    //image to be shown
+    productModel.setProductImg(prodName);
+    holder.productImgAdp.setImageResource(productModel.getProductImgResourcesId(holder.productImgAdp.getContext()));
   }
 
   @Override
@@ -50,12 +55,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
+      //declered variables
     TextView txtList;
     private int position;
+    public ImageView productImgAdp;
 
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
       txtList = itemView.findViewById(R.id.txtDataRow);
+      productImgAdp = itemView.findViewById(R.id.imgProd);
 
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override

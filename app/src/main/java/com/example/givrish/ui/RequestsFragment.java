@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.givrish.R;
+import com.example.givrish.viewmodel.RequestsViewModel;
 
 public class RequestsFragment extends Fragment {
 

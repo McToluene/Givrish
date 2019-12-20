@@ -55,6 +55,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="6dp"
                             android:text="@string/add_item_header"
+                            android:textColor="@color/white"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             app:layout_constraintStart_toEndOf="@+id/AddheaderImage"
                             app:layout_constraintTop_toTopOf="parent" />

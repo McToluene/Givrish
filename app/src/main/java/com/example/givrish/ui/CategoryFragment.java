@@ -1,5 +1,8 @@
 package com.example.givrish.ui;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -23,10 +26,10 @@ import com.example.givrish.models.ItemCategoryModel;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
+import com.example.givrish.viewmodel.CategoryViewModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,9 +38,9 @@ import retrofit2.Response;
 
 public class CategoryFragment extends Fragment {
 
+    private Toolbar toolbar;
     private CategoryViewModel mViewModel;
     private RecyclerView recyclerView;
-    private List<ItemCategoryData> items;
     private ItemCategoryAdapter itemCategoryAdapter;
     public static final String api_key = "test";
 
@@ -46,8 +49,27 @@ public class CategoryFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        toolbar = getActivity().findViewById(R.id.cate_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+//        toolbar.setNavigationIcon(R.drawable.ic_back_icon);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setTitle("Categories");
+
         return inflater.inflate(R.layout.category_fragment, container, false);
     }
 
@@ -56,24 +78,23 @@ public class CategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         // TODO: Use the ViewModel
+
+        mViewModel.getAllCategories().observe(this, new Observer<List<ItemCategoryData>>() {
+            @Override
+            public void onChanged(List<ItemCategoryData> itemCategoryData) {
+                itemCategoryAdapter.setCategories(itemCategoryData);
+            }
+        });
         initiateView();
-
-
-//        List<ProductModel> productModelsCategory = ProductModel.createProductCategory();
-//        Log.i("Category",productModelsCategory.toString());
-//           LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        RecyclerView categoryRecycler = getActivity().findViewById(R.id.listItemCategory);
-//        categoryRecycler.setLayoutManager(layoutManager);
-
-//        categoryRecycler.setAdapter(new ItemCategoryAdapter(productModelsCategory,getContext()));
 
     }
 
     private void initiateView() {
         recyclerView = getActivity().findViewById(R.id.listItemCategory);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
+        itemCategoryAdapter = new ItemCategoryAdapter(getContext());
+        recyclerView.setAdapter(itemCategoryAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         loadCategoryItems(api_key);
     }
 
@@ -86,40 +107,20 @@ public class CategoryFragment extends Fragment {
         callItem.enqueue(new Callback<ItemCategoryResponse>() {
             @Override
             public void onResponse(Call<ItemCategoryResponse> call, Response<ItemCategoryResponse> response) {
-                             Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
+
                 if(response.body().getResponseCode().equals("1")){
-                    items = new ArrayList<>(response.body().getData());
-                    itemCategoryAdapter = new ItemCategoryAdapter(items);
-                    recyclerView.setAdapter(itemCategoryAdapter);
+                    mViewModel.insert(new ArrayList<>(response.body().getData()) );
                 }else
              Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
-//             dataItem = new ArrayList<>(Arrays.asList(response.body().getItem()));
-//             itemCategoryAdapter = new ItemCategoryAdapter(dataItem);
-////             recyclerView.setAdapter(itemCategoryAdapter);
 
-
-
-//
-//
-//
-//                items = new ArrayList<>(Arrays.asList((ItemCategoryData) response.body().getData()));
-//            itemCategoryAdapter = new ItemCategoryAdapter(items);
-//            recyclerView.setAdapter(itemCategoryAdapter);
             }
 
             @Override
             public void onFailure(Call<ItemCategoryResponse> call, Throwable t) {
                 Log.d("Error",t.getMessage());
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-
             }
         });
-
-//        Call<List<ItemCategoryData>> callItems = apiService.getCategory(itemString);
-
-
-
-
 
     }
 

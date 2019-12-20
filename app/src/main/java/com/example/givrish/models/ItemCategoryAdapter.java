@@ -20,83 +20,49 @@ import java.util.List;
 
 public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ItemCategoryHolder> {
     private List<ItemCategoryData> itemCategoryData;
-    private ItemCategoryData itemCategoryDataObject;
     private Context context;
     private LayoutInflater inflater;
-    private ArrayList<ItemCategoryData> Aitem;
 
-    public ItemCategoryAdapter(List<ItemCategoryData> itemCategoryData, Context context) {
-        this.itemCategoryData = itemCategoryData;
+    public ItemCategoryAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
-
-
-    public ItemCategoryAdapter(ArrayList<ItemCategoryData> items) {
-         this.Aitem = items;
-    }
-
-    public ItemCategoryAdapter(List<ItemCategoryData> items) {
-      this.itemCategoryData = items;
-    }
-
-
     @NonNull
     @Override
     public ItemCategoryAdapter.ItemCategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View itemView = inflater.inflate(R.layout.item_category,parent,false);
         return new ItemCategoryHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemCategoryAdapter.ItemCategoryHolder holder, int position) {
-        itemCategoryDataObject = itemCategoryData.get(position);
-        holder.itemCatTitle.setText(itemCategoryDataObject.getItem_category_name());
-        holder.fTitle.setText(itemCategoryDataObject.getItem_category_name().subSequence(0,1));
+        holder.itemCatTitle.setText(itemCategoryData.get(position).getItem_category_name());
+        holder.fTitle.setText(itemCategoryData.get(position).getItem_category_name().subSequence(0,1));
+        holder.position = position;
 
-//        holder.fTitle.setText(Aitem.get(position).getItem_category_name());
-//        holder.itemCatTitle.setText(Aitem.get(position).getItem_category_name().subSequence(0,1));
+    }
 
-//     holder.fTitle.setText(itemCategoryData.get(position).getItem_category_name().subSequence(0,1));
-//     holder.itemCatTitle.setText(itemCategoryData.get(position).getItem_category_name());
-
-
-//        holder.fTitle.setText(itemCategoryData.get(position).getItem_category_name().subSequence(0,1));
-//        holder.itemCatTitle.setText(itemCategoryData.get(position).getItem_category_name());
-//
-//     holder.itemCatTitle.setText(productCat.getTitle());
-//     holder.fTitle.setText(productCat.getTitle().subSequence(0,2));
-//        GradientDrawable drawable = (GradientDrawable) holder.fTitle.getBackground();
-//            Random randomBackgroundColor = new Random();
-//            int color = Color.argb(255,randomBackgroundColor.nextInt(256),randomBackgroundColor.nextInt(256),randomBackgroundColor.nextInt(256));
-//            drawable.setColor(color);
-
-//            holder.Position = position;
-
-
+    public void setCategories(List<ItemCategoryData> itemCategoryData){
+        this.itemCategoryData = itemCategoryData;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-//return Aitem == null ? 0 : Aitem.size();
-//        return Aitem.size();
         return itemCategoryData == null ? 0 : itemCategoryData.size();
-//        return productModelCat == null ? 0 : productModelCat.size();
     }
 
     public class ItemCategoryHolder extends RecyclerView.ViewHolder {
 
         private TextView fTitle;
         private AppCompatTextView itemCatTitle;
-        private int Position;
+        private int position;
 
         public ItemCategoryHolder(@NonNull View itemView) {
             super(itemView);
             fTitle =  itemView.findViewById(R.id.cd_image_text);
             itemCatTitle = itemView.findViewById(R.id.tv_cat_item);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
