@@ -20,6 +20,7 @@ import com.example.givrish.R;
 import com.example.givrish.models.ProductModel;
 import com.example.givrish.models.SearchAdapter;
 import com.example.givrish.viewmodel.SearchViewModel;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
   //declaring variables
   private SearchView edtSearch;
   private RecyclerView recyclerView;
+  private MaterialToolbar toolbar;
 
   private RecyclerView.LayoutManager layoutManager;
   private SearchAdapter myAdapter;
@@ -57,9 +59,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
 //    ((AppCompatActivity) getActivity()).getSupportActionBar(toolbar).setDisplayHomeAsUpEnabled(true);
 //    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-    ImageButton backButton = getActivity().findViewById(R.id.back_button);
-    backButton.setOnClickListener(this);
+//
+//    ImageButton backButton = getActivity().findViewById(R.id.back_button);
+//    backButton.setOnClickListener(this);
 
     recyclerView = getActivity().findViewById(R.id.recyclerSearchList);
     recyclerView.setHasFixedSize(true);
@@ -109,10 +111,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 
   @Override
   public void onClick(View v) {
-    switch (v.getId()){
-        case R.id.back_button:
-     getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-            break;
-    }
+//    switch (v.getId()){
+////        case R.id.back_button:
+////     getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//            break;
+//    }
   }
 }

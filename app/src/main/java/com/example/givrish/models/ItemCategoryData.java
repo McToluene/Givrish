@@ -47,4 +47,9 @@ public class ItemCategoryData {
     public String getItem_category_date() {
         return item_category_date;
     }
+
+    @Override
+    public String toString() {
+        return item_category_name;
+    }
 }
