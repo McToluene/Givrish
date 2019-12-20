@@ -28,6 +28,7 @@ import com.example.givrish.R;
 import com.example.givrish.models.ItemCategoryData;
 import com.example.givrish.models.ItemCategoryModel;
 import com.example.givrish.models.ItemCategoryResponse;
+import com.example.givrish.models.ItemColor;
 import com.example.givrish.models.ItemSubCategoryResponse;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
@@ -54,14 +55,14 @@ private Options options;
 private LinearLayout layout;
 private ArrayList<String> returnValue = new ArrayList<>();
 private List<ItemCategoryData> itemCategoryDataList;
-AppCompatSpinner mainCategory;
-AppCompatSpinner subCategory;
+private AppCompatSpinner mainCategory;
+private AppCompatSpinner subCategory;
+private AppCompatSpinner colorSpinner;
 private  static final String apiKey= "com.example.givrish.ui.APIKEY";
 private List<ItemSubCategoryData> itemSubCategoryDataList;
 private TextInputLayout mainCategoryLayout;
 private int selectedPosition;
 private String SelectedCategory ="";
-
 
 public static AddItemFragment newInstance() {
 	return new AddItemFragment();
@@ -78,12 +79,15 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 	super.onActivityCreated(savedInstanceState);
 	mainCategory = (AppCompatSpinner) getActivity().findViewById(R.id.mainCategory);
 	subCategory = (AppCompatSpinner) getActivity().findViewById(R.id.subCategory);
+	colorSpinner = (AppCompatSpinner) getActivity().findViewById(R.id.ItemColor);
 	mViewModel = ViewModelProviders.of(this).get(AddItemViewModel.class);
 	// TODO: Use the ViewModel
 	FloatingActionButton addButton = (FloatingActionButton) getActivity().findViewById(R.id.addImagebtn);
 	apiCategoryList(apiKey);
 	
-	
+	ArrayAdapter<ItemColor> colorArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, populateColor());
+	colorArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+	colorSpinner.setAdapter(colorArrayAdapter);
 	addButton.setOnClickListener(new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -120,6 +124,24 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		}
 	});
 	
+}
+
+private List populateColor() {
+	List<ItemColor> colors = new ArrayList<>();
+	colors.add(new ItemColor("0", "none"));
+	colors.add(new ItemColor("1", "red"));
+	colors.add(new ItemColor("2", "black"));
+	colors.add(new ItemColor("3", "white"));
+	colors.add(new ItemColor("4", "blue"));
+	colors.add(new ItemColor("5", "pink"));
+	colors.add(new ItemColor("6", "brown"));
+	colors.add(new ItemColor("7", "orange"));
+	colors.add(new ItemColor("8", "purple"));
+	colors.add(new ItemColor("9", "green"));
+	colors.add(new ItemColor("10", "yellow"));
+	colors.add(new ItemColor("11", "silver"));
+	colors.add(new ItemColor("12", "grey"));
+	return colors;
 }
 
 
@@ -186,7 +208,7 @@ private void apiCategoryList(String key) {
 		
 		@Override
 		public void onFailure(Call<ItemCategoryResponse> call, Throwable t) {
-		
+		Toast.makeText(getActivity(), "check your internet connection", Toast.LENGTH_SHORT).show();
 		}
 	});
 }
@@ -203,11 +225,7 @@ private void apiCategoryList(String key) {
 	}
 
 private void loadImage(ArrayList<String> returnValue) {
-//	ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.cell, returnValue);
-//	GridView gridView = (GridView) getActivity().findViewById(R.id.addImageGrid);
-//	arrayAdapter.setDropDownViewResource(R.layout.cell);
-//	gridView.setAdapter(arrayAdapter);
-	layout = (LinearLayout)getActivity().findViewById(R.id.addImageLinearLayout);
+	layout = getActivity().findViewById(R.id.addImageLinearLayout);
 	for(int i=0;i<returnValue.size();i++)
 	{
 		ImageView image = new ImageView(getActivity());
