@@ -49,20 +49,26 @@ public class CategoryFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar = getActivity().findViewById(R.id.cate_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
-        toolbar.setNavigationIcon(R.drawable.ic_back_icon);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();;
-            }
-        });
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Categories");
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+//        toolbar.setNavigationIcon(R.drawable.ic_back_icon);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setTitle("Categories");
 
         return inflater.inflate(R.layout.category_fragment, container, false);
     }
@@ -113,7 +119,6 @@ public class CategoryFragment extends Fragment {
             public void onFailure(Call<ItemCategoryResponse> call, Throwable t) {
                 Log.d("Error",t.getMessage());
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-
             }
         });
 

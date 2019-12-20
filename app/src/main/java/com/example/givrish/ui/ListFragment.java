@@ -76,17 +76,19 @@ public class ListFragment extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    Fragment fragment;
     switch (item.getItemId()) {
       case R.id.menu_hamburger:
-        loadCategories();
+        fragment = new CategoryFragment();
+        loadFragment(fragment);
         break;
     }
     return super.onOptionsItemSelected(item);
   }
 
-  private void loadCategories() {
+  private void loadFragment(Fragment fragment) {
     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.dashboard_layout, new CategoryFragment());
+    transaction.replace(R.id.dashboard_layout, fragment);
     transaction.addToBackStack(null);
     transaction.commit();
   }
