@@ -143,8 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/addImageLinearLayout"
-                        android:layoutDirection="rtl"
-                        android:numColumns="3">
+                        android:layoutDirection="rtl">
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/addImagebtn"
