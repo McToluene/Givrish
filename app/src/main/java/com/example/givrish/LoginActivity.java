@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
   private TextInputEditText password;
   private  MaterialButton loginBtn;
   private ProgressBar progressBar;
+  public static  boolean monitoringUserLoginFlag = false;
 
 //  @Override
 ////  protected void onStart() {
@@ -85,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
+          monitoringUserLoginFlag = true;
           UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),number);
           UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
 
@@ -92,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         else if(response.body().getResponseCode().equals("0")){
             Toast.makeText(LoginActivity.this,response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
+            monitoringUserLoginFlag = false;
         }
       }
 

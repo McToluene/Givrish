@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -48,6 +49,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
   private TextView resendCode;
   private String realUserNumber;
+  boolean monitoringUserVerificationFlag = false;
 
   @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +90,9 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String code = edtPhoneCode.getText().toString().trim();
-                if (code.isEmpty() || code.length() < 6) {
-                    edtPhoneCode.setError("Enter code...");
+                if (code.isEmpty() || code.length() != 6) {
+//                    edtPhoneCode.setError("Enter valid code");
+                    Snackbar.make(view,"Enter valid code",Snackbar.LENGTH_LONG).show();
                     edtPhoneCode.requestFocus();
                     return;
                 }else{ btnVerify.setEnabled(false);verifyCode(code);}
@@ -121,12 +124,14 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                if(task.isSuccessful()){
+                   monitoringUserVerificationFlag = true;
                    Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
                    intent.putExtra(PhoneVerifyActivity.phoneverifyKey,realUserNumber);
                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                    startActivity(intent);
                }else{
                    progressBar.setVisibility(View.INVISIBLE);
+                   monitoringUserVerificationFlag = false;
                    Toast.makeText(PhoneVerifyActivity.this,getString(R.string.code_error),Toast.LENGTH_LONG).show();
                }
 

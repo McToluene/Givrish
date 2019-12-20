@@ -23,6 +23,7 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
   private ApiEndpointInterface apiService;
+  boolean monitoringUserSignupFlag = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +67,15 @@ public class SignUpActivity extends AppCompatActivity {
     call.enqueue(new Callback<AuthResponseDto>() {
       @Override
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
-        if (response.body().getResponseCode().equals("1"))
-          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_fullname),name);
-          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),phone);
-          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
+        if (response.body().getResponseCode().equals("1")) {
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_fullname), name);
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_number_Keystore), phone);
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_password_Keystore), pass);
+          monitoringUserSignupFlag = true;
           startActivity(new Intent(SignUpActivity.this, Dashboard.class));
+        }else{monitoringUserSignupFlag = false;}
       }
+
 
       @Override
       public void onFailure(Call<AuthResponseDto> call, Throwable t) {

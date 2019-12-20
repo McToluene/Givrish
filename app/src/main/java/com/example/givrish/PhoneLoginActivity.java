@@ -44,50 +44,6 @@ public class PhoneLoginActivity extends AppCompatActivity {
   private String registeringUserToFirebase;
    ProgressDialog progressDialog;
 
-
-//
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-//
-//            Intent intent = new Intent(this,LoginActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//        }
-//    }
-
-
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-    if(retreiveUserLoginDetails() == true){
-            startActivity(new Intent(PhoneLoginActivity.this, Dashboard.class)); }
-    else if(retreiveUserRegistrationDetails() == true && retreiveUserLoginDetails() != true){
-      startActivity(new Intent(PhoneLoginActivity.this, LoginActivity.class)); }
-    else if(FirebaseAuth.getInstance().getCurrentUser() != null && retreiveUserRegistrationDetails() != true && retreiveUserLoginDetails() != true){
-      startActivity(new Intent(PhoneLoginActivity.this, SignUpActivity.class)); }
-  }
-
-
-  private boolean retreiveUserRegistrationDetails(){
-    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_fullname));
-    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
-    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
-    return true;
-  }
-
-
-
-  private boolean retreiveUserLoginDetails(){
-    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
-    UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
-    return true;
-  }
-
-
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -107,24 +63,17 @@ public class PhoneLoginActivity extends AppCompatActivity {
         registeredUser = 0 + cpp.getFullNumber().substring(3);
 
         if(cpp.isValidFullNumber() != true){
-            Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();
-            edtPhoneNumberLogin.requestFocus();
-            return; }
+            Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();edtPhoneNumberLogin.requestFocus();return; }
         else if (!isConnectionActive()) {
-          Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show();
-        }
-        else {
-            progressDialogMethod();
+          Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show(); } else { progressDialogMethod();
           new Thread(new Runnable() {
             @Override
             public void run() {
               try{
                 onCheckHandler(view,registeredUser);
               }catch (Exception e){e.printStackTrace();}
-
             }
           }).start();
-//          onCheckHandler(view, registeredUser);
         }
       }
     });

@@ -89,7 +89,7 @@ public class CategoryFragment extends Fragment {
                              Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
                 if(response.body().getResponseCode().equals("1")){
                     items = new ArrayList<>(response.body().getData());
-                    itemCategoryAdapter = new ItemCategoryAdapter(items);
+                    itemCategoryAdapter = new ItemCategoryAdapter(items,getContext());
                     recyclerView.setAdapter(itemCategoryAdapter);
                 }else
              Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
