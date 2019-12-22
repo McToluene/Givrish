@@ -13,6 +13,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        if(SignUpActivity.monitoringUserSignupFlag == true && PhoneLoginActivity.monitoringUserLVFlag == true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){
+
+
+        }else if(SignUpActivity.monitoringUserSignupFlag != true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){ }
+
 
          if(retreiveUserRegistrationDetails() == true && retreiveUserLoginDetails() != true){
             startActivity(new Intent(MainActivity.this, LoginActivity.class)); }
@@ -23,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         findViewById(R.id.btn_signUp).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

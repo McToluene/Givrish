@@ -19,52 +19,66 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.givrish.ItemSubCategoryData;
 import com.example.givrish.R;
 import com.example.givrish.database.CategoryCallbackEvent;
 import com.example.givrish.models.ItemCategoryAdapter;
 import com.example.givrish.models.ItemCategoryData;
 import com.example.givrish.models.ItemCategoryModel;
 import com.example.givrish.models.ItemCategoryResponse;
-import com.example.givrish.models.ItemSubCategoryModel;
+import com.example.givrish.models.ItemSubCategoryAdapter;
+import com.example.givrish.models.ItemSubCategoryResponse;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.CategoryViewModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryFragment extends Fragment implements CategoryCallbackEvent {
+public class CategoryFragment extends Fragment {
 
     private Toolbar toolbar;
     private CategoryViewModel mViewModel;
     private RecyclerView recyclerView;
     private ItemCategoryAdapter itemCategoryAdapter;
     public static final String api_key = "test";
+    Executor executor = Executors.newSingleThreadExecutor();
+    CategoryCallbackEvent mEvent = (CategoryCallbackEvent) getActivity();
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar = getActivity().findViewById(R.id.cate_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
-        toolbar.setNavigationIcon(R.drawable.ic_back_icon);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();;
-            }
-        });
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("Categories");
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+//        toolbar.setNavigationIcon(R.drawable.ic_back_icon);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar.setTitle("Categories");
 
         return inflater.inflate(R.layout.category_fragment, container, false);
     }
@@ -103,9 +117,12 @@ public class CategoryFragment extends Fragment implements CategoryCallbackEvent 
         callItem.enqueue(new Callback<ItemCategoryResponse>() {
             @Override
             public void onResponse(Call<ItemCategoryResponse> call, Response<ItemCategoryResponse> response) {
-
                 if(response.body().getResponseCode().equals("1")){
+                    String getItemCatID ;
+                    Collections.sort((response.body().getData()),ItemCategoryData.itemCategoryDataComparator);
                     mViewModel.insert(new ArrayList<>(response.body().getData()) );
+
+
                 }else
              Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
 
@@ -115,23 +132,8 @@ public class CategoryFragment extends Fragment implements CategoryCallbackEvent 
             public void onFailure(Call<ItemCategoryResponse> call, Throwable t) {
                 Log.d("Error",t.getMessage());
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-
             }
         });
-
     }
 
-    @Override
-    public void BackgroundResult(String id, ItemSubCategoryModel msg) {
-        if(id == "2"){
-//            LoadSubCategories(msg,this);
-        }
-
-
-    }
-
-    @Override
-    public void BackgroundResult(String id, ItemCategoryData msg) {
-
-    }
 }

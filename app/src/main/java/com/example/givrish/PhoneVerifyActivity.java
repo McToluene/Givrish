@@ -49,7 +49,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
   private TextView resendCode;
   private String realUserNumber;
-  boolean monitoringUserVerificationFlag = false;
+ public static boolean monitoringUserVerificationFlag = false;
 
   @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -14,13 +14,6 @@ public class ItemCategoryResponse {
     @SerializedName("data")
     private List<ItemCategoryData> data;
 
-    public List<ItemSubCategoryModel> getSubData() {
-        return subData;
-    }
-
-    @SerializedName("data")
-    private List<ItemSubCategoryModel> subData;
-
     @SerializedName("record_count")
     private String recordCount;
 

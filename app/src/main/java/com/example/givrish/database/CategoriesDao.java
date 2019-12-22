@@ -6,8 +6,9 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.example.givrish.ItemSubCategoryData;
 import com.example.givrish.models.ItemCategoryData;
-import com.example.givrish.models.ItemSubCategoryModel;
+
 
 import java.util.List;
 
@@ -22,12 +23,6 @@ public interface CategoriesDao {
 
   @Query("SELECT COUNT(*) FROM item_category")
   LiveData<Integer> getCount();
-
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertSub(List<ItemSubCategoryModel> itemSubCategoryModels);
-
-
-
+  
 
 }

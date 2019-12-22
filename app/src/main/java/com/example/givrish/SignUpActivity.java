@@ -23,7 +23,7 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
   private ApiEndpointInterface apiService;
-  boolean monitoringUserSignupFlag = false;
+ public static boolean monitoringUserSignupFlag = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

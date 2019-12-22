@@ -37,12 +37,12 @@ public class PhoneLoginActivity extends AppCompatActivity {
   public static final String phoneLoginKey = "com.example.givrish.phoneActivityKey";
   public static final String phoneLoginKeyFirebase = "com.example.givrish.phoneActivityKeyFireBase";
   private ApiEndpointInterface apiService;
-  private String phoneNumber;
-  private FirebaseAuth mAuth;
   CountryCodePicker cpp;
   private String registeredUser;
   private String registeringUserToFirebase;
    ProgressDialog progressDialog;
+   public static boolean monitoringUserLVFlag = false;
+   public static int mLVFlag = 1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +99,12 @@ public class PhoneLoginActivity extends AppCompatActivity {
         if (response.body().getResponseCode().equals("1")) {
           Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
           intent.putExtra(PhoneLoginActivity.phoneLoginKey, registeredUser);
+          monitoringUserLVFlag = true;
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
           startActivity(intent);
         } else if (response.body().getResponseCode().equals("0")) {
           Intent intent = new Intent(getApplicationContext(), PhoneVerifyActivity.class);
+          monitoringUserLVFlag= false;
           intent.putExtra(PhoneLoginActivity.phoneLoginKeyFirebase, registeringUserToFirebase);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
           startActivity(intent);

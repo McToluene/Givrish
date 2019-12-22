@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.givrish.ItemSubCategoryData;
 import com.example.givrish.R;
 import com.example.givrish.database.CategoryCallbackEvent;
 
@@ -20,13 +21,13 @@ import java.util.Random;
 
 public class ItemSubCategoryAdapter extends RecyclerView.Adapter<ItemSubCategoryAdapter.ItemSubCategoryHolder> {
     private Context mContext;
-    private List<ItemSubCategoryModel> itemSubCategoryModels;
+    private List<ItemSubCategoryData> itemSubCategoryData;
     private LayoutInflater inflater;
     private CategoryCallbackEvent mEvent;
 
-    public ItemSubCategoryAdapter(Context mContext, List<ItemSubCategoryModel> itemSubCategoryModels) {
+    public ItemSubCategoryAdapter(Context mContext, List<ItemSubCategoryData> itemSubCategoryData) {
         this.mContext = mContext;
-        this.itemSubCategoryModels = itemSubCategoryModels;
+        this.itemSubCategoryData = itemSubCategoryData;
         inflater = LayoutInflater.from(mContext);
     }
 
@@ -35,18 +36,24 @@ public class ItemSubCategoryAdapter extends RecyclerView.Adapter<ItemSubCategory
         inflater = LayoutInflater.from(mContext);
     }
 
+    public ItemSubCategoryAdapter(List<ItemSubCategoryData> itemSubCategoryDataList, Context context) {
+        this.itemSubCategoryData = itemSubCategoryDataList;
+        this.mContext = context;
+        inflater = LayoutInflater.from(mContext);
+    }
+
 
     @NonNull
     @Override
     public ItemSubCategoryAdapter.ItemSubCategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemSubCategoryview = inflater.inflate(R.layout.item_category,parent,false);
+        View itemSubCategoryview = inflater.inflate(R.layout.item_sub_category,parent,false);
         return new ItemSubCategoryHolder(itemSubCategoryview);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemSubCategoryAdapter.ItemSubCategoryHolder holder, int position) {
-        holder.itemSubCatTitle.setText(itemSubCategoryModels.get(position).getItem_sub_category_name());
-        holder.fSubTitle.setText(itemSubCategoryModels.get(position).getItem_sub_category_name().subSequence(0,1));
+        holder.itemSubCatTitle.setText(itemSubCategoryData.get(position).getItem_sub_category_name());
+        holder.fSubTitle.setText(itemSubCategoryData.get(position).getItem_sub_category_name().subSequence(0,1));
        holder.Position = position;
 
         GradientDrawable drawable = (GradientDrawable) holder.fSubTitle.getBackground();
@@ -56,15 +63,15 @@ public class ItemSubCategoryAdapter extends RecyclerView.Adapter<ItemSubCategory
 
     }
 
-    public void setCategories(List<ItemSubCategoryModel> vSubModel){
-        this.itemSubCategoryModels = vSubModel;
+    public void setCategories(List<ItemSubCategoryData> vSubModel){
+        this.itemSubCategoryData = vSubModel;
         notifyDataSetChanged();
     }
 
 
     @Override
     public int getItemCount() {
-        return itemSubCategoryModels == null ? 0 : itemSubCategoryModels.size();
+        return itemSubCategoryData == null ? 0 : itemSubCategoryData.size();
     }
 
     public class ItemSubCategoryHolder extends RecyclerView.ViewHolder {
@@ -74,8 +81,8 @@ public class ItemSubCategoryAdapter extends RecyclerView.Adapter<ItemSubCategory
 
         public ItemSubCategoryHolder(@NonNull View itemView) {
             super(itemView);
-            fSubTitle = itemView.findViewById(R.id.sub_tv);
-            itemSubCatTitle = itemView.findViewById(R.id.sub_tv_name);
+            fSubTitle = itemView.findViewById(R.id.sub_tvv);
+            itemSubCatTitle = itemView.findViewById(R.id.sub_tv_name_v);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.example.givrish.database.CategoriesRepository;
 import com.example.givrish.models.ItemCategoryData;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CategoryViewModel extends AndroidViewModel {
@@ -21,9 +22,12 @@ public class CategoryViewModel extends AndroidViewModel {
 
     categoriesRepository = new CategoriesRepository(application);
     itemCategories = categoriesRepository.getAll();
+
+
   }
 
   public LiveData<List<ItemCategoryData>> getAllCategories() {return itemCategories;}
   public void insert(List<ItemCategoryData> itemCategoryData) {categoriesRepository.insert(itemCategoryData);}
   public LiveData<Integer> getCount() { return categoriesRepository.getCount();}
+
 }

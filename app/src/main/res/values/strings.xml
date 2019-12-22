@@ -7,13 +7,11 @@
     <string name="name">Full Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="lets_go">Lets go</string>
-    <string name="error_message">Valid number required</string>
     <string name="connection_error">Check internet connection</string>
     <string name="main">Main</string>
     <string name="favorites">Favorites</string>
     <string name="messages">Messages</string>
     <string name="request">Request</string>
-    <string name="search">Search</string>
     <string name="title_empty"></string>
     <string name="hello_blank_fragment">Hey</string>
     <string name="illustrate">illustrate</string>
@@ -22,14 +20,17 @@
     <string name="otp">OTP</string>
     <string name="let_go">Let\'s go</string>
     <string name="image_desc">Product image</string>
-    <string name="search_items">Search for items</string>
-    <string name="otp_mess">Verification code has been sent to you on your mobile </string>
-    <string name="otp_mess_end"> please enter it below.</string>
     <string name="resend_code">Resend code</string>
     <string name="back_button">Back Button</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="add_item_header">Add an item</string>
+    <string name="Item_name">Name of the item</string>
+    <string name="item_description">Describe the item</string>
+    <string name="item_tag">Add tags to your item( e.g sneakers, addidas)</string>
+    <string name="search_gift">Search gift</string>
     <string name="code_error">The sms code has expired. Please resend the verification code to try again.</string>
     <string name="user_phone_number_Keystore">UserPhoneNumber</string>
     <string name="user_phone_password_Keystore">UserPhonePassword</string>
     <string name="user_fullname">UserFullname</string>
+
 </resources>
