@@ -20,7 +20,7 @@ public class CategoryViewModel extends AndroidViewModel {
     super(application);
 
     categoriesRepository = new CategoriesRepository(application);
-    itemCategories = categoriesRepository.getAll();
+    itemCategories = categoriesRepository.getAllCategories();
   }
 
   public LiveData<List<ItemCategoryData>> getAllCategories() {return itemCategories;}

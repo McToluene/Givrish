@@ -15,7 +15,6 @@ public class AuthResponseDto {
     private List<String> data;
 
 
-
     public String getResponseCode() {
         return responseCode;
     }

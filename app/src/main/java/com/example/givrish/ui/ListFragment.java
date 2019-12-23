@@ -31,7 +31,7 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
   private ListViewModel mViewModel;
-  private Toolbar toolbar;
+  private RecyclerView listRecyclerView;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -44,13 +44,19 @@ public class ListFragment extends Fragment {
   }
 
   @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    toolbar = getActivity().findViewById(R.id.toolbar);
-    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-    return inflater.inflate(R.layout.fragment_list_item, container, false);
+    View view = inflater.inflate(R.layout.fragment_list_item, container, false);
+    Toolbar toolbar = view.findViewById(R.id.list_item_toolbar);
+    listRecyclerView = view.findViewById(R.id.listItem);
+
+    if (getActivity() != null) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+    }
+
+    return view;
   }
 
   @Override
@@ -61,7 +67,6 @@ public class ListFragment extends Fragment {
 
     List <ProductModel> productsList = ProductModel.createProduct();
 
-    RecyclerView listRecyclerView = getActivity().findViewById(R.id.listItem);
     listRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
     listRecyclerView.setAdapter( new ListItemAdapter(productsList, getContext()));
 
@@ -72,7 +77,6 @@ public class ListFragment extends Fragment {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.main_toolbar_menu, menu);
   }
-
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -87,11 +91,14 @@ public class ListFragment extends Fragment {
   }
 
   private void loadFragment(Fragment fragment) {
-    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.dashboard_layout, fragment);
-    transaction.addToBackStack(null);
-    transaction.commit();
-  }
+    FragmentTransaction transaction;
+    if(getActivity() != null) {
+      transaction = getActivity().getSupportFragmentManager().beginTransaction();
+      transaction.replace(R.id.dashboard_layout, fragment);
+      transaction.addToBackStack(null);
+      transaction.commit();
+    }
 
+  }
 
 }

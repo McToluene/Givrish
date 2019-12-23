@@ -42,7 +42,7 @@ public class CategoryFragment extends Fragment {
     private CategoryViewModel mViewModel;
     private RecyclerView recyclerView;
     private ItemCategoryAdapter itemCategoryAdapter;
-    public static final String api_key = "test";
+    private static final String api_key = "test";
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
@@ -55,22 +55,23 @@ public class CategoryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        toolbar = getActivity().findViewById(R.id.cate_toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
-//        toolbar.setNavigationIcon(R.drawable.ic_back_icon);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getActivity().onBackPressed();
-//            }
-//        });
-//        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        toolbar.setTitle("Categories");
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.category_fragment, container, false);
+        View view = inflater.inflate(R.layout.category_fragment, container, false);
+        toolbar = view.findViewById(R.id.cate_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        toolbar.setTitle("Categories");
+
+        return view;
     }
 
     @Override
@@ -90,12 +91,15 @@ public class CategoryFragment extends Fragment {
     }
 
     private void initiateView() {
-        recyclerView = getActivity().findViewById(R.id.listItemCategory);
-        recyclerView.setHasFixedSize(true);
+        if (getActivity() != null) {
+            recyclerView = getActivity().findViewById(R.id.listItemCategory);
+            recyclerView.setHasFixedSize(true);
+        }
+
         itemCategoryAdapter = new ItemCategoryAdapter(getContext());
         recyclerView.setAdapter(itemCategoryAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        loadCategoryItems(api_key);
+//        loadCategoryItems(api_key);
     }
 
     private void loadCategoryItems(String api_key) {
@@ -106,19 +110,18 @@ public class CategoryFragment extends Fragment {
         Call<ItemCategoryResponse> callItem = apiService.getCategory(itemString);
         callItem.enqueue(new Callback<ItemCategoryResponse>() {
             @Override
-            public void onResponse(Call<ItemCategoryResponse> call, Response<ItemCategoryResponse> response) {
-
-                if(response.body().getResponseCode().equals("1")){
+            public void onResponse(@NonNull Call<ItemCategoryResponse> call, @NonNull Response<ItemCategoryResponse> response) {
+                if( response.body() != null && response.body().getResponseCode().equals("1")){
                     mViewModel.insert(new ArrayList<>(response.body().getData()) );
-                }else
-             Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
+                } else if (response.body() != null) {
+                    Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
+                }
 
             }
 
             @Override
-            public void onFailure(Call<ItemCategoryResponse> call, Throwable t) {
-                Log.d("Error",t.getMessage());
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<ItemCategoryResponse> call, @NonNull Throwable t) {
+                Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
             }
         });
 
