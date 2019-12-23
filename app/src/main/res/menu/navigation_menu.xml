@@ -15,7 +15,6 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/navigation_empty"
         android:title="@string/title_empty"
         app:showAsAction="ifRoom"/>
 

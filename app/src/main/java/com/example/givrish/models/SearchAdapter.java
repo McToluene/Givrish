@@ -45,8 +45,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     holder.txtList.setText(prodName);
     holder.position = position;
     //image to be shown
-    productModel.setProductImg(prodName);
-    holder.productImgAdp.setImageResource(productModel.getProductImgResourcesId(holder.productImgAdp.getContext()));
+//    productModel.setProductImg(prodName);
+//    holder.productImgAdp.setImageResource(productModel.getProductImgResourcesId(holder.productImgAdp.getContext()));
   }
 
   @Override

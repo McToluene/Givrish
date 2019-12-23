@@ -1,6 +1,5 @@
 package com.example.givrish.models;
 
-import com.example.givrish.ItemSubCategoryData;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

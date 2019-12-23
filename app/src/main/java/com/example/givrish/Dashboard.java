@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,18 +24,26 @@ import com.example.givrish.ui.ProfileFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.example.givrish.ui.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textview.MaterialTextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Dashboard extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+  private static final String LIST_ITEM_FRAGMENT_FLAG = "1";
+  private static final String ADD_ITEM_FRAGMENT_FLAG = "2";
+  private static final String MESSAGE_FRAGMENT_FLAG = "3";
+  private static final String CATEGORIES_FRAGMENT_FLAG= "4";
+  private static final String FAVOURITES_FRAGMENT_FLAG = "5";
+  private static final String REQUESTS_FRAGMENT_FLAG = "6";
 
+
+  private static int FLAG = 0;
   BottomNavigationView bottomNavigationView;
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private MaterialTextView tvSearch;
   private Fragment fragment = new  ListFragment();
-  private Toolbar toolbar;
-  private ConstraintLayout top;
+  private FloatingActionButton fab;
 
 
   @Override
@@ -44,87 +53,110 @@ public class Dashboard extends AppCompatActivity implements BottomNavigationView
 
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
+    fab = findViewById(R.id.fab);
+    fab.setColorFilter(getResources().getColor(R.color.white));
 
 
-    tvSearch = findViewById(R.id.tv_search);
-    toolbar=findViewById(R.id.toolbar);
+//    tvSearch = findViewById(R.id.tv_search);
+//    toolbar=findViewById(R.id.toolbar);
+//    setSupportActionBar(toolbar);
 
     //going to search fragment
-    tvSearch.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            try {
-                fragment = new SearchFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.dashboard_layout, fragment);
-                transaction.addToBackStack("Dashboard");
-                transaction.commit();
-            }catch (Exception e){
-            }
+//    tvSearch.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            try {
+//                fragment = new SearchFragment();
+//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                transaction.add(R.id.dashboard_layout, fragment);
+//                transaction.addToBackStack("Dashboard");
+//                transaction.commit();
+//            }catch (Exception e){
+//            }
+//        }
+//    });
+
+//    CircleImageView profile = findViewById(R.id.circ_profile);
+//    profile.setOnClickListener(new View.OnClickListener() {
+//      @Override
+//      public void onClick(View v) {
+//        fragment = new ProfileFragment();
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        transaction.replace(R.id.dashboard_layout, fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//      }
+//    });
+
+
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (FLAG == 0){
+          loadFragments(addItemFragment, "5");
+          fab.setImageDrawable(getDrawable(R.drawable.ic_add_box_));
+          FLAG = 1;
+        } else if (FLAG == 1) {
+          AddItemFragment itemFragment = (AddItemFragment) getSupportFragmentManager().findFragmentByTag("5");
+          itemFragment.addItem();
         }
-    });
-
-    CircleImageView profile = findViewById(R.id.circ_profile);
-    profile.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        fragment = new ProfileFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.dashboard_layout, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
       }
     });
+    loadFragments(fragment, "1");
+  }
 
-    findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        loadFragments(addItemFragment);
-      }
-    });
-    loadFragments(fragment);
+  private void addItem() {
+    Log.i("HERE", "WE DEY");
   }
 
 
-    @Override
+  @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
     int id = item.getItemId();
     switch (id) {
       case R.id.navigation_home:
         fragment = new ListFragment();
-        loadFragments(fragment);
+        loadFragments(fragment, LIST_ITEM_FRAGMENT_FLAG);
+        fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+        FLAG = 0;
        return true;
 
       case R.id.navigation_favorite:
         fragment = new FavouritesFragment();
-        loadFragments(fragment);
+        loadFragments(fragment, FAVOURITES_FRAGMENT_FLAG);
+        fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+        FLAG = 0;
         return true;
 
       case R.id.navigation_messages:
         fragment = new MessagesFragment();
-        loadFragments(fragment);
+        loadFragments(fragment, MESSAGE_FRAGMENT_FLAG);
+        fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+        FLAG = 0;
         return true;
 
       case R.id.navigation_request:
         fragment = new RequestsFragment();
-        loadFragments(fragment);
+        loadFragments(fragment, REQUESTS_FRAGMENT_FLAG);
+        fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+        FLAG = 0;
         return true;
     }
     return false;
   }
 
-  private void loadFragments(Fragment fragment) {
+  private void loadFragments(Fragment fragment, String tag) {
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.frame_container, fragment);
+    transaction.replace(R.id.frame_container, fragment, tag);
     transaction.addToBackStack(null);
     transaction.commit();
   }
 
-@Override
-protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-	super.onActivityResult(requestCode, resultCode, data);
-	for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-		fragment.onActivityResult(requestCode, resultCode, data);
-	}
-}
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+	  super.onActivityResult(requestCode, resultCode, data);
+	  for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+		  fragment.onActivityResult(requestCode, resultCode, data);
+	  }
+  }
 }

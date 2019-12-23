@@ -9,7 +9,7 @@
         <item name="android:colorBackground">@color/white</item>
     </style>
 
-    <style name="toolbarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="toolbarStyle" parent="Theme.MaterialComponents.Light">
         <item name="android:textColorPrimary">@color/white</item>
     </style>
     
@@ -86,9 +86,10 @@
         <item name="android:layout_marginTop">@dimen/pMt</item>
         <item name="android:layout_marginBottom">@dimen/pMb</item>
     </style>
-    <style name="addItemLayouts" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="addItemLayouts" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+
         <item name="android:padding">8dp</item>
-        <item name="layout_editor_absoluteX">48dp</item>
+
     </style>
 
 </resources>

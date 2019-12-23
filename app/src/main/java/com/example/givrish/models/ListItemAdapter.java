@@ -40,8 +40,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   @Override
   public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
     ProductModel product = productModelList.get(position);
-    holder.title.setText(product.getTitle());
-    holder.location.setText(product.getLocation());
+    holder.title.setText(product.getItem_title());
+//    holder.location.setText(product.get);
     holder.position = position;
   }
 
