@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(SignUpActivity.monitoringUserSignupFlag == true && PhoneLoginActivity.monitoringUserLVFlag == true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){
+        if(SignUpActivity.monitoringUserSignupFlag != false && PhoneLoginActivity.monitoringUserLVFlag == true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){
 
 
         }else if(SignUpActivity.monitoringUserSignupFlag != true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){ }
