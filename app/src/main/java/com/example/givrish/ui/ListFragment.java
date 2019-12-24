@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.givrish.R;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
+import com.example.givrish.models.AllItemsResponseImageData;
 import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ListItemAdapter;
 import com.example.givrish.models.ProductModel;
@@ -57,7 +58,6 @@ public class ListFragment extends Fragment {
   private Fragment fragment;
   private ApiEndpointInterface apiService;
   private ProgressBar loading;
-  private List<AllItemsResponseData> itemSModel;
   private ListItemAdapter listItemAdapter;
 
   public static ListFragment newInstance() {
@@ -102,10 +102,8 @@ public class ListFragment extends Fragment {
       @Override
       public void onResponse(@NonNull Call<AllItemsResponse> call,@NonNull Response<AllItemsResponse> response) {
         if (response.body() != null && response.body().getResponseCode().equals("1")) {
-          Log.i("MESSAGE", response.toString() );
           listItemAdapter.setAllItemsResponseData(response.body().getData());
-          itemSModel = response.body().getData();
-          Log.i("INNER COUNT", String.valueOf(itemSModel.size()));
+          listItemAdapter.setImagesData(response.body().getAllItemsResponseImageData());
           loading.setVisibility(View.INVISIBLE);
           listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
           listRecyclerView.setAdapter(listItemAdapter);
@@ -114,7 +112,7 @@ public class ListFragment extends Fragment {
 
       @Override
       public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
-        Toast.makeText(getContext(), "Please Check your message", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Please check your network", Toast.LENGTH_LONG).show();
       }
     });
   }
