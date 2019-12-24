@@ -5,8 +5,13 @@
 
 
     <item
+        android:id="@+id/search_menu"
+        android:icon="@drawable/ic_search_icon"
+        android:title="@string/categories"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_hamburger"
-        android:title="Categories"
+        android:title="@string/categories"
         android:icon="@drawable/ic_menu_icon"
         app:showAsAction="always"/>
 
