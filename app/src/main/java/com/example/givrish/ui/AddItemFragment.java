@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -95,7 +96,7 @@ public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 			 
 				options = Options.init()
 									  .setRequestCode(100)
-									  .setCount(3)
+									  .setCount(7)
 									  .setFrontfacing(false)
 									  .setImageQuality(ImageQuality.REGULAR)
 									  .setPreSelectedUrls(returnValue)

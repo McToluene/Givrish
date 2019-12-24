@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.example.givrish.models.AuthResponseDto;
 import com.example.givrish.models.UserRegisterModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
+import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -50,11 +52,25 @@ public class PhoneVerifyActivity extends AppCompatActivity {
   private TextView resendCode;
   private String realUserNumber;
  public static boolean monitoringUserVerificationFlag = false;
+ private ProfileViewModel profileViewModel;
 
-  @Override
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        profileViewModel.saveOriginalState(outState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(getViewModelStore(),ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+        profileViewModel = viewModelProvider.get(ProfileViewModel.class);
+        //Todo RestorenInstance state
+        if(savedInstanceState != null){
+            profileViewModel.RestoreOriginalState(savedInstanceState);
+        }
 
         mAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
@@ -62,6 +78,8 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         edtPhoneCode = findViewById(R.id.edt_phoneCode);
         TextView otpMessage = findViewById(R.id.tv_otpMessage);
         resendCode = findViewById(R.id.tv_resend_code);
+
+
 
 
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKeyFirebase);
@@ -95,7 +113,9 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                     Snackbar.make(view,"Enter valid code",Snackbar.LENGTH_LONG).show();
                     edtPhoneCode.requestFocus();
                     return;
-                }else{ btnVerify.setEnabled(false);verifyCode(code);}
+                }else{ profileViewModel.originalKey = code;
+                        profileViewModel.originalPhoneNumber = realUserNumberR;
+                    btnVerify.setEnabled(false);verifyCode(code);}
             }
         });
     }
