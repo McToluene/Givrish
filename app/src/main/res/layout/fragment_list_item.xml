@@ -7,6 +7,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/items_loading"
+        style="@android:style/Widget.Material.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:indeterminate="true"
+        android:indeterminateTint="#00E41F1F"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/list_item_appBar" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/list_item_appBar"
         android:layout_width="match_parent"
@@ -73,7 +86,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/list_item_appBar"
         tools:context=".ui.ListFragment"
-        tools:listitem="@layout/item_card" />
+        tools:listitem="@layout/item_card" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

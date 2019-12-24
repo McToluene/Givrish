@@ -11,14 +11,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.FileUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,7 +29,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -43,7 +40,7 @@ import com.example.givrish.models.ItemModel;
 import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.R;
 import com.example.givrish.models.ItemCategoryData;
-import com.example.givrish.models.ItemCategoryModel;
+import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.models.ItemColor;
 import com.example.givrish.models.ItemSubCategoryResponse;
@@ -229,7 +226,7 @@ public class AddItemFragment extends Fragment {
   }
 
   private void apiSubCategory(final String apiKey) {
-    ItemCategoryModel itemCategoryModel = new ItemCategoryModel(apiKey);
+    ApiKey itemCategoryModel = new ApiKey(apiKey);
     String itemString = gson.toJson(itemCategoryModel);
     Call<ItemSubCategoryResponse> call = apiService.getSubCategory(itemString);
     call.enqueue(new Callback<ItemSubCategoryResponse>() {
@@ -266,9 +263,9 @@ public class AddItemFragment extends Fragment {
 
 
   private void apiCategoryList(String key) {
-    ItemCategoryModel itemCategoryModel = new ItemCategoryModel(key);
+    ApiKey apiKey = new ApiKey(key);
     gson = new Gson();
-    String itemString = gson.toJson(itemCategoryModel);
+    String itemString = gson.toJson(apiKey);
     Call<ItemCategoryResponse> callItem = apiService.getCategory(itemString);
     callItem.enqueue(new Callback<ItemCategoryResponse>() {
       @Override

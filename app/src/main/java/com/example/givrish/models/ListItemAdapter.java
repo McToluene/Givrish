@@ -19,12 +19,11 @@ import com.example.givrish.ui.ItemDetailsFragment;
 import java.util.List;
 
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
-  private List<ProductModel> productModelList;
+  private List<AllItemsResponseData> allItemsResponseData;
   private  LayoutInflater inflater;
   private Context context;
 
-  public ListItemAdapter(List<ProductModel> productModelList, Context context) {
-    this.productModelList = productModelList;
+  public ListItemAdapter(Context context) {
     inflater = LayoutInflater.from(context);
     this.context = context;
   }
@@ -33,30 +32,36 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   @Override
   public ListItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     View view =   inflater.inflate(R.layout.item_card, parent, false);
-    ListItemHolder itemHolder = new ListItemHolder(view);
-    return itemHolder;
+    return new ListItemHolder(view);
   }
 
   @Override
   public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
-    ProductModel product = productModelList.get(position);
-    holder.title.setText(product.getItem_title());
+    AllItemsResponseData item = allItemsResponseData.get(position);
+    holder.title.setText(item.getItem_title());
 //    holder.location.setText(product.get);
     holder.position = position;
   }
 
   @Override
   public int getItemCount() {
-    return productModelList.size();
+    if (allItemsResponseData != null)
+      return allItemsResponseData.size();
+    else
+      return 0;
   }
 
-  public class ListItemHolder extends RecyclerView.ViewHolder {
+  public void setAllItemsResponseData(List<AllItemsResponseData> responseDataList) {
+    allItemsResponseData = responseDataList;
+  }
+
+  class ListItemHolder extends RecyclerView.ViewHolder {
 
     private final TextView title;
     private final TextView location;
     private int position;
 
-    public ListItemHolder(@NonNull View itemView) {
+    ListItemHolder(@NonNull View itemView) {
       super(itemView);
 
       title = itemView.findViewById(R.id.tv_title);
