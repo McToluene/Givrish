@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,11 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.givrish.Dashboard;
 import com.example.givrish.R;
+import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.ItemCategoryAdapter;
 import com.example.givrish.models.ItemCategoryData;
 import com.example.givrish.models.ItemCategoryModel;
@@ -43,9 +47,16 @@ public class CategoryFragment extends Fragment {
     private RecyclerView recyclerView;
     private ItemCategoryAdapter itemCategoryAdapter;
     private static final String api_key = "test";
+    private CallBackListener callBackListener;
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        callBackListener = (CallBackListener) context;
     }
 
     @Override
@@ -63,14 +74,9 @@ public class CategoryFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+
 
         toolbar.setTitle("Categories");
-
         return view;
     }
 
@@ -89,6 +95,7 @@ public class CategoryFragment extends Fragment {
         initiateView();
 
     }
+
 
     private void initiateView() {
         if (getActivity() != null) {
@@ -116,7 +123,6 @@ public class CategoryFragment extends Fragment {
                 } else if (response.body() != null) {
                     Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
@@ -127,4 +133,12 @@ public class CategoryFragment extends Fragment {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            callBackListener.onBackClick(Dashboard.CATEGORIES_FRAGMENT_FLAG);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

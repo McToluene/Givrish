@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -34,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.givrish.Dashboard;
+import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.ItemModel;
@@ -88,9 +91,18 @@ public class AddItemFragment extends Fragment {
   private TextInputEditText itemDesc;
   private Gson gson;
   private List<String> imagePaths = new ArrayList<>();
+  private FloatingActionButton addButton;
+  private CallBackListener listener;
 
   public static AddItemFragment newInstance() {
     return new AddItemFragment();
+  }
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+    if (context instanceof CallBackListener)
+      listener = (CallBackListener) context;
   }
 
   @Override
@@ -108,6 +120,7 @@ public class AddItemFragment extends Fragment {
     mainCategory = view.findViewById(R.id.mainCategory);
     subCategory = view.findViewById(R.id.subCategory);
     colorSpinner =  view.findViewById(R.id.ItemColor);
+    addButton = view.findViewById(R.id.addImagebtn);
 
     toolbar.setTitle("Add Item");
 
@@ -148,7 +161,6 @@ public class AddItemFragment extends Fragment {
       }
     });
 
-    FloatingActionButton addButton =  getActivity().findViewById(R.id.addImagebtn);
 
     ArrayAdapter<ItemColor> colorArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, populateColor());
     colorArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -193,6 +205,8 @@ public class AddItemFragment extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    if (item.getItemId() == android.R.id.home)
+      listener.onBackClick(Dashboard.ADD_ITEM_FRAGMENT_FLAG);
     return super.onOptionsItemSelected(item);
 
   }
@@ -330,10 +344,10 @@ public class AddItemFragment extends Fragment {
   }
 
   public void addItem() {
-    String name = "ghsdasdADukjqwqwwswweweadswAeerwrwdw ssasd s  wdw fsdf asdasf chasdasd sda";
-    String desc = "newaersdasADSjhjkwewedeqwqwwwerwrwwwdsqa ASasaA  asdqwqwv sf  asdas afas sdasda";
+    String name = "ghsdasdADukjqwqsdsswwswweweadswsdsdAeerwrwdssdw ssasd s  wdewwew fsdf asdasf chasdasd sda";
+    String desc = "newaersdasADSjhjkwewedeqwqsdsdsdsdssdsdwwwerwrwsfsdfwwdsqa ASasaA  asdqwqwv sf  asdas afas sdasda";
     String color = "1";
-    String userId = "1";
+    String userId = "5";
     String categoryId = "5";
     String subId = "16";
     String country = "USA";
@@ -357,9 +371,7 @@ public class AddItemFragment extends Fragment {
           for (int i = 0; i < imagePaths.size(); i++){
             Log.i("USER", id);
             uploadImage(imagePaths.get(i), id);
-
           }
-
         }
       }
 
