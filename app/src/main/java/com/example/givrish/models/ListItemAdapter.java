@@ -53,10 +53,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   @Override
   public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
     item = allItemsResponseData.get(position);
-    String itemName = getImageName();
-    if(!itemName.equals("")) {
-      Log.i("ITEM", itemName);
-      getImage(itemName, holder);
+    String imageName = getImageName();
+    if(!imageName.isEmpty()) {
+      Log.i("ITEM", imageName);
+      getImage(imageName, holder);
     }
     holder.title.setText(item.getItem_title());
     holder.position = position;
@@ -80,6 +80,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
       @Override
       public void onResponse(@NonNull Call<ResponseBody> call,@NonNull Response<ResponseBody> response) {
+        Log.i("HEYYYYYYY", response.toString());
         if (response.isSuccessful()){
           if (response.body() != null) {
             Log.i("IMAGE", "WE DEY");
@@ -107,11 +108,11 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   }
 
   private String getImageName() {
-    String itemName = item.getItem_id();
+    String itemId = item.getItem_id();
     String name ="";
-    for (int i = 0; i < imageData.size(); i++) {
-      if (imageData.get(i).getItemId().equals(itemName))
-        name = imageData.get(i).getItemSmallImageName();
+    for (AllItemsResponseImageData image : imageData) {
+      if (image.getItemId().equals(itemId))
+        name = image.getItemSmallImageName();
     }
     return name;
   }

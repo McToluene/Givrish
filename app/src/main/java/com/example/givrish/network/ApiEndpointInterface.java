@@ -42,7 +42,7 @@ public interface ApiEndpointInterface {
   @POST("/itemscontroller/load_item_details")
   Call<List<AddItemResponse>> addItem(@Query("jsonString") String jsonString);
 
-  @GET("{imageName}")
+  @GET("uploadzuqwhdassigc6762373yughsbcjshd/{imageName}")
   Call<ResponseBody> getImage(@Path("imageName") String image);
 
   @Multipart
