@@ -26,7 +26,8 @@
     <string name="Item_name">Name of the item</string>
     <string name="item_description">Describe the item</string>
   <string name="clear">Clear</string>
-  <string name="categories">Categories</string>
   <string name="subcategory">Subcategory</string>
     <string name="color">Color</string>
+  <string name="search_item">Search for gifts</string>
+  <string name="categories">Categories</string>
 </resources>

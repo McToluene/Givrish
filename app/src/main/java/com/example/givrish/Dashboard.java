@@ -28,7 +28,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String LIST_ITEM_FRAGMENT_FLAG = "1";
   public static final String ADD_ITEM_FRAGMENT_FLAG = "2";
   public static final String MESSAGE_FRAGMENT_FLAG = "3";
-  public static final String CATEGORIES_FRAGMENT_FLAG= "4";
   public static final String FAVOURITES_FRAGMENT_FLAG = "5";
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
 
@@ -56,32 +55,9 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 //    toolbar=findViewById(R.id.toolbar);
 //    setSupportActionBar(toolbar);
 
-    //going to search fragment
-//    tvSearch.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            try {
-//                fragment = new SearchFragment();
-//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                transaction.add(R.id.dashboard_layout, fragment);
-//                transaction.addToBackStack("Dashboard");
-//                transaction.commit();
-//            }catch (Exception e){
-//            }
-//        }
-//    });
 
-//    CircleImageView profile = findViewById(R.id.circ_profile);
-//    profile.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        fragment = new ProfileFragment();
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.dashboard_layout, fragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//      }
-//    });
+
+
 
 
     fab.setOnClickListener(new View.OnClickListener() {
@@ -99,11 +75,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     });
     loadFragments(fragment, "1");
   }
-
-  private void addItem() {
-    Log.i("HERE", "WE DEY");
-  }
-
 
   @Override
   public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -142,7 +113,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 
   private void loadFragments(Fragment fragment, String tag) {
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.add(R.id.frame_container, fragment, tag);
+    transaction.replace(R.id.frame_container, fragment, tag);
     transaction.addToBackStack(tag);
     transaction.commit();
   }

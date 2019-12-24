@@ -136,7 +136,7 @@ public class CategoryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home){
-            callBackListener.onBackClick(Dashboard.CATEGORIES_FRAGMENT_FLAG);
+            callBackListener.onBackClick(ListFragment.CATEGORIES_FRAGMENT_FLAG);
         }
 
         return super.onOptionsItemSelected(item);
