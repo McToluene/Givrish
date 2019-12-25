@@ -12,9 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.givrish.ItemSubCategoryData;
 import com.example.givrish.R;
-import com.example.givrish.database.CategoryCallbackEvent;
 
 import java.util.List;
 import java.util.Random;
@@ -23,22 +21,10 @@ public class ItemSubCategoryAdapter extends RecyclerView.Adapter<ItemSubCategory
     private Context mContext;
     private List<ItemSubCategoryData> itemSubCategoryData;
     private LayoutInflater inflater;
-    private CategoryCallbackEvent mEvent;
 
-    public ItemSubCategoryAdapter(Context mContext, List<ItemSubCategoryData> itemSubCategoryData) {
+    public ItemSubCategoryAdapter(List<ItemSubCategoryData> itemSubCategoryData, Context mContext) {
         this.mContext = mContext;
         this.itemSubCategoryData = itemSubCategoryData;
-        inflater = LayoutInflater.from(mContext);
-    }
-
-    public ItemSubCategoryAdapter(Context mContext) {
-        this.mContext = mContext;
-        inflater = LayoutInflater.from(mContext);
-    }
-
-    public ItemSubCategoryAdapter(List<ItemSubCategoryData> itemSubCategoryDataList, Context context) {
-        this.itemSubCategoryData = itemSubCategoryDataList;
-        this.mContext = context;
         inflater = LayoutInflater.from(mContext);
     }
 

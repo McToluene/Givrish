@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detailConstraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/download"
@@ -24,7 +23,6 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button2"
                 style="@style/buttonCustom.detail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -38,7 +36,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/txtProductNameDetail" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txtProductLocationDetail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

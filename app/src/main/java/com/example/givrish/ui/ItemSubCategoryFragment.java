@@ -17,9 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.givrish.ItemSubCategoryData;
 import com.example.givrish.models.ItemCategoryModel;
 import com.example.givrish.models.ItemSubCategoryAdapter;
+import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.models.ItemSubCategoryResponse;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
@@ -97,7 +97,7 @@ public class ItemSubCategoryFragment extends Fragment {
                         if (i == itemSubCategoryDataList.size()) { break;
                         }else if (morning.equals(selectedCategory)) {
                           subCategoryData.add(itemSubCategoryDataList.get(i));
-                          Collections.sort(subCategoryData,ItemSubCategoryData.SubCategoryComparator);
+                          Collections.sort(subCategoryData, ItemSubCategoryData.itemSubCategoryDataComparator);
                             itemSubCategoryAdapter = new ItemSubCategoryAdapter(subCategoryData,getContext());
                           recyclerView.setAdapter(itemSubCategoryAdapter);
                         }

@@ -1,7 +1,7 @@
 package com.example.givrish.database;
 
-import com.example.givrish.ItemSubCategoryData;
 import com.example.givrish.models.ItemCategoryData;
+import com.example.givrish.models.ItemSubCategoryData;
 
 import java.util.List;
 

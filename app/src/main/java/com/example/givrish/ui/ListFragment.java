@@ -28,10 +28,19 @@ import com.example.givrish.viewmodel.ListViewModel;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ListFragment extends Fragment {
 
+  public static final String CATEGORIES_FRAGMENT_FLAG= "4";
+  public static final String PROFILE_FRAGMENT_FLAG = "5";
+  public static final String SEARCH_FRAGMENT_FLAG = "6";
+
+
   private ListViewModel mViewModel;
-  private Toolbar toolbar;
+  private RecyclerView listRecyclerView;
+  private CircleImageView profile;
+  private Fragment fragment;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -44,13 +53,19 @@ public class ListFragment extends Fragment {
   }
 
   @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    toolbar = getActivity().findViewById(R.id.toolbar);
-    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-    return inflater.inflate(R.layout.fragment_list_item, container, false);
+    View view = inflater.inflate(R.layout.fragment_list_item, container, false);
+    Toolbar toolbar = view.findViewById(R.id.list_item_toolbar);
+    profile = view.findViewById(R.id.circleImageView_profile);
+    listRecyclerView = view.findViewById(R.id.listItem);
+
+
+    if (getActivity() != null) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
+    toolbar.setTitle("Givrish");
+    return view;
   }
 
   @Override
@@ -61,9 +76,17 @@ public class ListFragment extends Fragment {
 
     List <ProductModel> productsList = ProductModel.createProduct();
 
-    RecyclerView listRecyclerView = getActivity().findViewById(R.id.listItem);
     listRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
     listRecyclerView.setAdapter( new ListItemAdapter(productsList, getContext()));
+
+
+    profile.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        fragment = new ProfileFragment();
+        loadFragment(fragment, PROFILE_FRAGMENT_FLAG);
+      }
+    });
 
   }
 
@@ -73,25 +96,27 @@ public class ListFragment extends Fragment {
     inflater.inflate(R.menu.main_toolbar_menu, menu);
   }
 
-
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    Fragment fragment;
-    switch (item.getItemId()) {
-      case R.id.menu_hamburger:
-        fragment = new CategoryFragment();
-        loadFragment(fragment);
-        break;
+    if (item.getItemId() == R.id.menu_hamburger){
+      fragment = new CategoryFragment();
+      loadFragment(fragment, CATEGORIES_FRAGMENT_FLAG);
+    } else if (item.getItemId() == R.id.search_menu) {
+      fragment = new SearchFragment();
+      loadFragment(fragment, SEARCH_FRAGMENT_FLAG);
     }
     return super.onOptionsItemSelected(item);
   }
 
-  private void loadFragment(Fragment fragment) {
-    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.dashboard_layout, fragment);
-    transaction.addToBackStack(null);
-    transaction.commit();
-  }
+  private void loadFragment(Fragment fragment, String tag) {
+    FragmentTransaction transaction;
+    if(getActivity() != null) {
+      transaction = getActivity().getSupportFragmentManager().beginTransaction();
+      transaction.replace(R.id.dashboard_layout, fragment, tag);
+      transaction.addToBackStack(tag);
+      transaction.commit();
+    }
 
+  }
 
 }

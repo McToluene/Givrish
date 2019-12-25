@@ -6,7 +6,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitClientInstance {
   private static Retrofit retrofit;
-//  private static  final  String BASE_URL = "http://10.10.10.3:8080/givrish_api/";
+//  private static  final  String BASE_URL = "http://192.168.10.22";
   private static final String BASE_URL = "http://givrishapi.divinepagetech.com/";
 
   public static Retrofit getRetrofitInstance () {

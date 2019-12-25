@@ -34,6 +34,11 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
         inflater = LayoutInflater.from(context);
     }
 
+    public ItemCategoryAdapter(List<ItemCategoryData> itemCategoryData, Context context) {
+        this.itemCategoryData = itemCategoryData;
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public ItemCategoryAdapter.ItemCategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -81,7 +86,6 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("ITEM_POSITION",Position);
-                    bundle.putString("ITEM",itemCategoryData.get(Position).getItem_category_id());
                     ItemSubCategoryFragment itemSub = new ItemSubCategoryFragment();
                     itemSub.setArguments(bundle);
                     loadSub(itemSub);
