@@ -64,6 +64,7 @@ public class ItemSubCategoryFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this).get(ItemSubCategoryViewModel.class);
         // TODO: Use the ViewModel
         try {
+            //Todo...
             abc = getArguments().getString("ITEMM");
         }catch (Exception e){ e.printStackTrace();Toast.makeText(getContext(),"Request failed",Toast.LENGTH_LONG).show(); }
                 intiateView();
