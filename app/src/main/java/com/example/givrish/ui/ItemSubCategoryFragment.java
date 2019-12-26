@@ -2,6 +2,7 @@ package com.example.givrish.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -17,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.givrish.models.ItemCategoryModel;
+import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ItemSubCategoryAdapter;
 import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.models.ItemSubCategoryResponse;
@@ -43,6 +44,8 @@ public class ItemSubCategoryFragment extends Fragment {
     private RecyclerView recyclerView;
     private ItemSubCategoryAdapter itemSubCategoryAdapter;
     private  static final String apiKeySub= "com.example.givrish.ui.APIKEYY";
+    private ItemSubCategoryData items;
+    private String abc;
 
     public static ItemSubCategoryFragment newInstance() {
         return new ItemSubCategoryFragment();
@@ -61,14 +64,22 @@ public class ItemSubCategoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(ItemSubCategoryViewModel.class);
         // TODO: Use the ViewModel
+        mViewModel.getAllSub().observe(this, new Observer<List<ItemSubCategoryData>>() {
+            @Override
+            public void onChanged(List<ItemSubCategoryData> itemSubCategoryData) {
+                itemSubCategoryAdapter.setCategories(itemSubCategoryData);
+            }
+        });
+
 
         try {
         itemcatPositionId = getArguments().getInt("ITEM_POSITION");
-    }catch (Exception e){
-            e.printStackTrace();
-            Toast.makeText(getContext(),"Request failed",Toast.LENGTH_LONG).show();
-        }
-        intiateView();
+            abc = getArguments().getString("ITEMM");
+//           items = itemSubCategoryDataList.get(itemcatPositionId);
+//            getSub(items);
+        }catch (Exception e){ e.printStackTrace();Toast.makeText(getContext(),"Request failed",Toast.LENGTH_LONG).show(); }
+                intiateView();
+
     }
 
 
@@ -76,11 +87,13 @@ public class ItemSubCategoryFragment extends Fragment {
         recyclerView = getActivity().findViewById(R.id.listItemSubCategory);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-       apiSubCategoryList(String.valueOf(itemcatPositionId));
+//       apiSubCategoryList(String.valueOf(itemcatPositionId));
+        subCatApiList((abc));
     }
 
-    private void apiSubCategoryList(final String selectedCategory) {
-        ItemCategoryModel itemCategoryModel = new ItemCategoryModel(apiKeySub);
+
+    private void apiSubCategoryList(final String selected) {
+       ApiKey itemCategoryModel = new ApiKey(apiKeySub);
         final List<ItemSubCategoryData> subCategoryData = new ArrayList<>();
         ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         Gson gson = new Gson();
@@ -95,11 +108,12 @@ public class ItemSubCategoryFragment extends Fragment {
                     for (int i = 0; i < itemSubCategoryDataList.size(); i++) {
                         morning = itemSubCategoryDataList.get(i).getItem_category_id();
                         if (i == itemSubCategoryDataList.size()) { break;
-                        }else if (morning.equals(selectedCategory)) {
+                        }else if (morning.equals(selected)) {
                           subCategoryData.add(itemSubCategoryDataList.get(i));
                           Collections.sort(subCategoryData, ItemSubCategoryData.itemSubCategoryDataComparator);
                             itemSubCategoryAdapter = new ItemSubCategoryAdapter(subCategoryData,getContext());
                           recyclerView.setAdapter(itemSubCategoryAdapter);
+//                          mViewModel.insertAllSub(response.body().getData());
                         }
                     }
                 }
@@ -110,6 +124,50 @@ public class ItemSubCategoryFragment extends Fragment {
                   Toast.makeText(getContext(),t.getMessage(),Toast.LENGTH_LONG).show();
             }
         });
+
+    }
+    private void subCatApiList(final String abc){
+        ApiKey itemCategoryModel = new ApiKey("api");
+        final List<ItemSubCategoryData>  subCategoryDataList = new ArrayList<>();
+        ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+        Gson gson = new Gson();
+        String itemString = gson.toJson(itemCategoryModel);
+        Call<ItemSubCategoryResponse> callSub = apiService.getSubCategory(itemString);
+        callSub.enqueue(new Callback<ItemSubCategoryResponse>() {
+            @Override
+            public void onResponse(Call<ItemSubCategoryResponse> call, Response<ItemSubCategoryResponse> response) {
+                if(response.body() != null && response.body().getResponseCode().equals("1")){
+                    for(int i=0; i<itemSubCategoryDataList.size(); i++){
+                      if(itemSubCategoryDataList.get(i).getItem_category_id().equals(abc));
+                        subCategoryDataList.add(itemSubCategoryDataList.get(i));
+                        itemSubCategoryAdapter = new ItemSubCategoryAdapter(subCategoryDataList,getContext());
+                        recyclerView.setAdapter(itemSubCategoryAdapter);
+                    }
+//                    mViewModel.insertAllSub(response.body().getData());
+//                    itemSubCategoryDataList = mViewModel.getAllSub().getValue();
+                }
+            }
+            @Override
+            public void onFailure(Call<ItemSubCategoryResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+    }
+    private void getSub(ItemSubCategoryData selected){
+        List<ItemSubCategoryData>  subCategoryDataList = new ArrayList<>();
+        for(int i = 0; i< itemSubCategoryDataList.size(); i++){
+            if(itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())){
+                subCategoryDataList.add(itemSubCategoryDataList.get(i));
+            }
+        }
+        Collections.sort(subCategoryDataList, ItemSubCategoryData.itemSubCategoryDataComparator);
+        itemSubCategoryAdapter = new ItemSubCategoryAdapter(subCategoryDataList,getContext());
+        recyclerView = getActivity().findViewById(R.id.listItemSubCategory);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(itemSubCategoryAdapter);
 
     }
 }

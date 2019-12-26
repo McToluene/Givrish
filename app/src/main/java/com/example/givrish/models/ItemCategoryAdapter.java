@@ -86,10 +86,10 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("ITEM_POSITION",Position);
+                    bundle.putString("ITEMM",itemCategoryData.get(Position).getItem_category_id());
                     ItemSubCategoryFragment itemSub = new ItemSubCategoryFragment();
                     itemSub.setArguments(bundle);
                     loadSub(itemSub);
-//                    mEvent.BackgroundResult("3",itemCategoryData.get(Position));
                 }
 
                 private void loadSub(Fragment itemSub) {

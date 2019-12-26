@@ -5,6 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,22 +15,34 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
 import com.example.givrish.R;
+import com.example.givrish.models.AllItemsResponse;
+import com.example.givrish.models.AllItemsResponseData;
+import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ListItemAdapter;
 import com.example.givrish.models.ProductModel;
+import com.example.givrish.network.ApiEndpointInterface;
+import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.ListViewModel;
+import com.google.gson.Gson;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListFragment extends Fragment {
 
@@ -41,6 +55,10 @@ public class ListFragment extends Fragment {
   private RecyclerView listRecyclerView;
   private CircleImageView profile;
   private Fragment fragment;
+  private ApiEndpointInterface apiService;
+  private ProgressBar loading;
+  private List<AllItemsResponseData> itemSModel;
+  private ListItemAdapter listItemAdapter;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -50,6 +68,8 @@ public class ListFragment extends Fragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+    getAllItems();
   }
 
   @Override
@@ -59,13 +79,44 @@ public class ListFragment extends Fragment {
     Toolbar toolbar = view.findViewById(R.id.list_item_toolbar);
     profile = view.findViewById(R.id.circleImageView_profile);
     listRecyclerView = view.findViewById(R.id.listItem);
-
+    loading = view.findViewById(R.id.items_loading);
+    loading.setVisibility(View.VISIBLE);
 
     if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
+    
     toolbar.setTitle("Givrish");
+
     return view;
+  }
+
+  private void getAllItems() {
+    ApiKey apiKey = new ApiKey("test");
+    Gson gson = new Gson();
+
+    String stringApiKey = gson.toJson(apiKey);
+
+    Call<AllItemsResponse> call = apiService.getAllItems(stringApiKey);
+    call.enqueue(new Callback<AllItemsResponse>() {
+      @Override
+      public void onResponse(@NonNull Call<AllItemsResponse> call,@NonNull Response<AllItemsResponse> response) {
+        if (response.body() != null && response.body().getResponseCode().equals("1")) {
+          Log.i("MESSAGE", response.toString() );
+          listItemAdapter.setAllItemsResponseData(response.body().getData());
+          itemSModel = response.body().getData();
+          Log.i("INNER COUNT", String.valueOf(itemSModel.size()));
+          loading.setVisibility(View.INVISIBLE);
+          listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+          listRecyclerView.setAdapter(listItemAdapter);
+        }
+      }
+
+      @Override
+      public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
+        Toast.makeText(getContext(), "Please Check your message", Toast.LENGTH_LONG).show();
+      }
+    });
   }
 
   @Override
@@ -74,11 +125,10 @@ public class ListFragment extends Fragment {
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     // TODO: Use the ViewModel
 
-    List <ProductModel> productsList = ProductModel.createProduct();
+    listItemAdapter = new ListItemAdapter(getContext());
 
-    listRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-    listRecyclerView.setAdapter( new ListItemAdapter(productsList, getContext()));
-
+    Log.i("COUNT", String.valueOf( listItemAdapter.getItemCount()) );
+//    listItemAdapter.getItemCount();
 
     profile.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -116,7 +166,5 @@ public class ListFragment extends Fragment {
       transaction.addToBackStack(tag);
       transaction.commit();
     }
-
   }
-
 }

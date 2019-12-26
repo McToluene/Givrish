@@ -1,6 +1,7 @@
 package com.example.givrish.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -36,12 +37,12 @@ import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.ItemModel;
+import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.R;
 import com.example.givrish.models.ItemCategoryData;
-import com.example.givrish.models.ItemCategoryModel;
+import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.models.ItemColor;
-import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.models.ItemSubCategoryResponse;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
@@ -111,16 +112,16 @@ public class AddItemFragment extends Fragment {
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
     View view = inflater.inflate(R.layout.add_item_fragment, container, false);
-//    Toolbar toolbar = view.findViewById(R.id.add_toolbar);
+    Toolbar toolbar = view.findViewById(R.id.add_toolbar);
     mainCategory = view.findViewById(R.id.mainCategory);
     subCategory = view.findViewById(R.id.subCategory);
     colorSpinner =  view.findViewById(R.id.ItemColor);
     addButton = view.findViewById(R.id.addImagebtn);
 
-//    toolbar.setTitle("Add Item");
+    toolbar.setTitle("Add Item");
 
     if(getActivity() != null) {
-//      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
@@ -225,15 +226,14 @@ public class AddItemFragment extends Fragment {
   }
 
   private void apiSubCategory(final String apiKey) {
-    ItemCategoryModel itemCategoryModel = new ItemCategoryModel(apiKey);
+    ApiKey itemCategoryModel = new ApiKey(apiKey);
     String itemString = gson.toJson(itemCategoryModel);
     Call<ItemSubCategoryResponse> call = apiService.getSubCategory(itemString);
     call.enqueue(new Callback<ItemSubCategoryResponse>() {
       @Override
       public void onResponse(@NonNull Call<ItemSubCategoryResponse> call,@NonNull Response<ItemSubCategoryResponse> response) {
         if (response.body() != null && response.body().getResponseCode().equals("1")){
-          mViewModel.insertAllSub(response.body().getData());
-        }
+          mViewModel.insertAllSub(response.body().getData()); }
       }
 
       @Override
@@ -262,9 +262,9 @@ public class AddItemFragment extends Fragment {
 
 
   private void apiCategoryList(String key) {
-    ItemCategoryModel itemCategoryModel = new ItemCategoryModel(key);
+    ApiKey apiKey = new ApiKey(key);
     gson = new Gson();
-    String itemString = gson.toJson(itemCategoryModel);
+    String itemString = gson.toJson(apiKey);
     Call<ItemCategoryResponse> callItem = apiService.getCategory(itemString);
     callItem.enqueue(new Callback<ItemCategoryResponse>() {
       @Override

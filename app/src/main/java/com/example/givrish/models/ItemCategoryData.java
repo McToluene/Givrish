@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
 
 @Entity(tableName = "item_category")
@@ -17,7 +19,7 @@ public class ItemCategoryData {
     private String ref_code;
     private String item_category_date;
 
-    public ItemCategoryData(String item_category_id, String item_category_name, String item_category_descp, String item_category_status, String ref_code, String item_category_date) {
+    public ItemCategoryData(@NonNull String item_category_id, String item_category_name, String item_category_descp, String item_category_status, String ref_code, String item_category_date) {
         this.item_category_id = item_category_id;
         this.item_category_name = item_category_name;
         this.item_category_descp = item_category_descp;
@@ -26,6 +28,7 @@ public class ItemCategoryData {
         this.item_category_date = item_category_date;
     }
 
+    @NotNull
     public String getItem_category_id() {
         return item_category_id;
     }
@@ -54,13 +57,13 @@ public class ItemCategoryData {
     public String toString() {
         return item_category_name;
     }
-public static Comparator<ItemCategoryData> itemCategoryDataComparator = new Comparator<ItemCategoryData>() {
-    @Override
-    public int compare(ItemCategoryData itemCategoryData, ItemCategoryData t1) {
-        String catOne = itemCategoryData.getItem_category_name().toUpperCase();
-        String catTwo = t1.getItem_category_name().toUpperCase();
-        return catOne.compareTo(catTwo) ;
-    }
-};
 
+    public static Comparator<ItemCategoryData> itemCategoryDataComparator = new Comparator<ItemCategoryData>() {
+        @Override
+        public int compare(ItemCategoryData itemCategoryData, ItemCategoryData t1) {
+            String c = itemCategoryData.getItem_category_name().toUpperCase();
+            String d = t1.getItem_category_name().toUpperCase();
+            return c.compareTo(d);
+        }
+    };
 }

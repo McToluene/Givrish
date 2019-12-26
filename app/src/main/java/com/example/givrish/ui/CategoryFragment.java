@@ -14,19 +14,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.givrish.Dashboard;
 import com.example.givrish.R;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.ItemCategoryAdapter;
 import com.example.givrish.models.ItemCategoryData;
-import com.example.givrish.models.ItemCategoryModel;
+import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
@@ -107,14 +105,14 @@ public class CategoryFragment extends Fragment {
         itemCategoryAdapter = new ItemCategoryAdapter(getContext());
         recyclerView.setAdapter(itemCategoryAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        loadCategoryItems(api_key);
+        loadCategoryItems(api_key);
     }
 
     private void loadCategoryItems(String api_key) {
-        final ItemCategoryModel itemCategoryModel = new ItemCategoryModel(api_key);
+        final ApiKey apiKey = new ApiKey(api_key);
         ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         Gson gson = new Gson();
-        String itemString = gson.toJson(itemCategoryModel);
+        String itemString = gson.toJson(apiKey);
         Call<ItemCategoryResponse> callItem = apiService.getCategory(itemString);
         callItem.enqueue(new Callback<ItemCategoryResponse>() {
             @Override

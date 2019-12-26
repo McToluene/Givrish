@@ -1,6 +1,7 @@
 package com.example.givrish.network;
 
 import com.example.givrish.models.AddItemResponse;
+import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AuthResponseDto;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.models.ItemSubCategoryResponse;
@@ -26,6 +27,9 @@ public interface ApiEndpointInterface {
 
   @POST("userlogin/login_user")
   Call<LoginResponse> login(@Query("jsonString") String jsonString);
+
+  @POST("itemscontroller/get_all_item")
+  Call<AllItemsResponse> getAllItems(@Query("jsonString") String jsonString);
 
   @GET("itemcategory/get_category")
   Call<ItemCategoryResponse> getCategory(@Query("jsonString") String jsonString);

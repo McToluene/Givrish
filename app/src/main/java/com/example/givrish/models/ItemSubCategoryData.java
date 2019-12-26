@@ -60,10 +60,10 @@ public class ItemSubCategoryData {
 public String toString() {
 	return item_sub_category_name;
 }
-public static Comparator<ItemSubCategoryData> itemSubCategoryDataComparator =  new Comparator<ItemSubCategoryData>() {
+public static Comparator<ItemSubCategoryData> itemSubCategoryDataComparator = new Comparator<ItemSubCategoryData>() {
 	@Override
 	public int compare(ItemSubCategoryData itemSubCategoryData, ItemSubCategoryData t1) {
-		String a  = itemSubCategoryData.getItem_sub_category_name().toUpperCase();
+		String a = itemSubCategoryData.getItem_sub_category_name().toUpperCase();
 		String b = t1.getItem_sub_category_name().toUpperCase();
 		return a.compareTo(b);
 	}

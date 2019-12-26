@@ -87,7 +87,7 @@
         <item name="android:layout_marginBottom">@dimen/pMb</item>
     </style>
     <style name="addItemLayouts" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="layout_editor_absoluteX">48dp</item>
+
         <item name="android:padding">8dp</item>
 
     </style>
