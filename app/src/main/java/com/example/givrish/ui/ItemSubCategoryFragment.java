@@ -68,13 +68,6 @@ public class ItemSubCategoryFragment extends Fragment {
         }catch (Exception e){ e.printStackTrace();Toast.makeText(getContext(),"Request failed",Toast.LENGTH_LONG).show(); }
                 intiateView();
 
-        itemSubCategoryDataList =mViewModel.getLiveSubCategories().getValue();
-        mViewModel.getLiveSubCategories().observe(this, new Observer<List<ItemSubCategoryData>>() {
-            @Override
-            public void onChanged(List<ItemSubCategoryData> itemSubCategoryData) {
-                itemSubCategoryDataList = itemSubCategoryData;
-            }
-        });
     }
 
     private void intiateView() {
@@ -133,8 +126,6 @@ public class ItemSubCategoryFragment extends Fragment {
                             subCategoryDataList.add(itemSubCategoryDataList.get(i));
                             itemSubCategoryAdapter = new ItemSubCategoryAdapter(subCategoryDataList, getContext());
                             recyclerView.setAdapter(itemSubCategoryAdapter);
-                            mViewModel.insertAllSub(response.body().getData());
-                            itemSubCategoryDataList = mViewModel.getLiveSubCategories().getValue();
                         }
                     }
                 }
