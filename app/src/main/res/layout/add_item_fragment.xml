@@ -140,7 +140,6 @@
             app:layout_constraintTop_toBottomOf="@id/subCategory_layout">
 
           <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/item_name"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/Item_name"
@@ -158,7 +157,6 @@
             app:layout_constraintTop_toBottomOf="@id/ItemNameLayout">
 
           <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/item_desc"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/item_description"
