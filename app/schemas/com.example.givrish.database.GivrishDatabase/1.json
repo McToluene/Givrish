@@ -1,0 +1,120 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "0765d8fe23891e678a3297df2dc1c547",
+    "entities": [
+      {
+        "tableName": "item_category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`item_category_id` TEXT NOT NULL, `item_category_name` TEXT, `item_category_descp` TEXT, `item_category_status` TEXT, `ref_code` TEXT, `item_category_date` TEXT, PRIMARY KEY(`item_category_id`))",
+        "fields": [
+          {
+            "fieldPath": "item_category_id",
+            "columnName": "item_category_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "item_category_name",
+            "columnName": "item_category_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_descp",
+            "columnName": "item_category_descp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_status",
+            "columnName": "item_category_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_code",
+            "columnName": "ref_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_date",
+            "columnName": "item_category_date",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "item_category_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "item_sub_category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`item_sub_category_id` TEXT NOT NULL, `item_category_id` TEXT, `item_sub_category_name` TEXT, `item_sub_category_descp` TEXT, `item_sub_category_status` TEXT, `ref_code` TEXT, `item_sub_category_date` TEXT, PRIMARY KEY(`item_sub_category_id`))",
+        "fields": [
+          {
+            "fieldPath": "item_sub_category_id",
+            "columnName": "item_sub_category_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "item_category_id",
+            "columnName": "item_category_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_name",
+            "columnName": "item_sub_category_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_descp",
+            "columnName": "item_sub_category_descp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_status",
+            "columnName": "item_sub_category_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_code",
+            "columnName": "ref_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_date",
+            "columnName": "item_sub_category_date",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "item_sub_category_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0765d8fe23891e678a3297df2dc1c547')"
+    ]
+  }
+}
