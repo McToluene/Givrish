@@ -80,10 +80,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
       @Override
       public void onResponse(@NonNull Call<ResponseBody> call,@NonNull Response<ResponseBody> response) {
-        Log.i("HEYYYYYYY", response.toString());
         if (response.isSuccessful()){
           if (response.body() != null) {
-            Log.i("IMAGE", "WE DEY");
             try {
               byte[] imageBytes = response.body().bytes();
               Bitmap image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
@@ -91,7 +89,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
             }catch (IOException ex) {
               Log.i("ERROR", ex.toString());
             }
-
           }
         }
       }

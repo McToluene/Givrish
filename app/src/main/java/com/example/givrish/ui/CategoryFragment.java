@@ -104,7 +104,7 @@ public class CategoryFragment extends Fragment {
         itemCategoryAdapter = new ItemCategoryAdapter(getContext());
         recyclerView.setAdapter(itemCategoryAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        loadCategoryItems(api_key);
+        loadCategoryItems(api_key);
     }
 
     private void loadCategoryItems(String api_key) {
