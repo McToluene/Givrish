@@ -190,7 +190,6 @@ private String[] locationData;
     colorArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
     colorSpinner.setAdapter(colorArrayAdapter);
 
-
     addButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -405,7 +404,7 @@ private String[] locationData;
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
     String userId = "5";
-
+    String imgCount = String.valueOf(layout.getChildCount());
 
     if (!name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
