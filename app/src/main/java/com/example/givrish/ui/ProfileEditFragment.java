@@ -1,4 +1,4 @@
-package com.example.givrish;
+package com.example.givrish.ui;
 
 
 import android.app.Activity;
@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.givrish.R;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
