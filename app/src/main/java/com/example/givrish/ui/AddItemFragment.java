@@ -420,7 +420,7 @@ private String[] locationData;
         public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
           Log.i("RES", response.body().get(0).getResponseCode());
           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-            Toast.makeText(getContext(), response.body().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
             AddItemResponseData data = response.body().get(0).getData();
             String id = data.getRecord();
             Log.i("ID", id);
@@ -428,6 +428,12 @@ private String[] locationData;
               Log.i("USER", id);
               uploadImage(imagePaths.get(i), id);
             }
+            itemName.setText(null);
+            itemDesc.setText(null);
+            mainCategory.setText(null);
+            subCategory.setText(null);
+            colorSpinner.setText(null);
+
           }
         }
 

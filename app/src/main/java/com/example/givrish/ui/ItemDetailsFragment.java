@@ -49,8 +49,8 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     mViewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
     // TODO: Use the ViewModel
 
-      img1=getActivity().findViewById(R.id.imgDetail1);
-      img1.setOnClickListener(this);
+//      img1=getActivity().findViewById(R.id.imgDetail1);
+//      img1.setOnClickListener(this);
 
   }
 
