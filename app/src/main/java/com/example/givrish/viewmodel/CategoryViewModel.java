@@ -18,7 +18,6 @@ public class CategoryViewModel extends AndroidViewModel {
 
   public CategoryViewModel(Application application) {
     super(application);
-
     categoriesRepository = new CategoriesRepository(application);
     itemCategories = categoriesRepository.getAllCategories();
   }
