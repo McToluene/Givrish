@@ -11,13 +11,11 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiEndpointInterface {
@@ -41,9 +39,6 @@ public interface ApiEndpointInterface {
 
   @POST("/itemscontroller/load_item_details")
   Call<List<AddItemResponse>> addItem(@Query("jsonString") String jsonString);
-
-  @GET("uploadzuqwhdassigc6762373yughsbcjshd/{imageName}")
-  Call<ResponseBody> getImage(@Path("imageName") String image);
 
   @Multipart
   @POST("itemscontroller/load_item_images")

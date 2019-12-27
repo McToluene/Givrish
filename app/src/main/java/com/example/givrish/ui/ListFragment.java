@@ -27,9 +27,9 @@ import android.widget.Toast;
 
 
 import com.example.givrish.R;
+import com.example.givrish.interfaces.ListCallBackEvent;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
-import com.example.givrish.models.AllItemsResponseImageData;
 import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ListItemAdapter;
 import com.example.givrish.models.ProductModel;
@@ -45,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements ListCallBackEvent {
 
   public static final String CATEGORIES_FRAGMENT_FLAG= "4";
   public static final String PROFILE_FRAGMENT_FLAG = "5";
@@ -58,7 +58,9 @@ public class ListFragment extends Fragment {
   private Fragment fragment;
   private ApiEndpointInterface apiService;
   private ProgressBar loading;
+  private List<AllItemsResponseData> itemSModel;
   private ListItemAdapter listItemAdapter;
+  private ListCallBackEvent listCallBackEvent;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -68,6 +70,8 @@ public class ListFragment extends Fragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    listCallBackEvent = this;
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
     getAllItems();
   }
@@ -81,13 +85,24 @@ public class ListFragment extends Fragment {
     listRecyclerView = view.findViewById(R.id.listItem);
     loading = view.findViewById(R.id.items_loading);
     loading.setVisibility(View.VISIBLE);
+    listItemAdapter = new ListItemAdapter(getContext());
 
     if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
+
+    mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
+      @Override
+      public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+        listCallBackEvent.itemsLoaded(allItemsResponseData);
+      }
+    });
+    if (getActivity() != null) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
+
     
     toolbar.setTitle("Givrish");
-
     return view;
   }
 
@@ -101,18 +116,19 @@ public class ListFragment extends Fragment {
     call.enqueue(new Callback<AllItemsResponse>() {
       @Override
       public void onResponse(@NonNull Call<AllItemsResponse> call,@NonNull Response<AllItemsResponse> response) {
-        if (response.body() != null && response.body().getResponseCode().equals("1")) {
-          listItemAdapter.setAllItemsResponseData(response.body().getData());
-          listItemAdapter.setImagesData(response.body().getAllItemsResponseImageData());
-          loading.setVisibility(View.INVISIBLE);
-          listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-          listRecyclerView.setAdapter(listItemAdapter);
+        if (response.isSuccessful()) {
+          if (response.body() != null && response.body().getResponseCode().equals("1")) {
+            listCallBackEvent.itemsLoaded(response.body().getData());
+//            itemsLoaded(response.body().getData());
+          }
+
         }
+
       }
 
       @Override
       public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
-        Toast.makeText(getContext(), "Please check your network", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Please Check your message", Toast.LENGTH_LONG).show();
       }
     });
   }
@@ -123,6 +139,7 @@ public class ListFragment extends Fragment {
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     // TODO: Use the ViewModel
 
+
     listItemAdapter = new ListItemAdapter(getContext());
 
     Log.i("COUNT", String.valueOf( listItemAdapter.getItemCount()) );
@@ -131,7 +148,7 @@ public class ListFragment extends Fragment {
     profile.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        fragment = new ProfileFragment();
+//        fragment = new ProfileFragment();
         loadFragment(fragment, PROFILE_FRAGMENT_FLAG);
       }
     });
@@ -164,5 +181,24 @@ public class ListFragment extends Fragment {
       transaction.addToBackStack(tag);
       transaction.commit();
     }
+  }
+
+  @Override
+  public void itemsLoaded(List<AllItemsResponseData> items) {
+    mViewModel.insertAllItems(getNewItems(items));
+    listItemAdapter.setAllItemsResponseData(items);
+    listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) );
+    listRecyclerView.setAdapter(listItemAdapter);
+  }
+
+
+  // This get new items into database by selecting last 20;
+  private List<AllItemsResponseData> getNewItems(List<AllItemsResponseData> items) {
+    if (items.size() > 20){
+      int lastIndex = items.size();
+      int fromIndex = lastIndex - 20;
+      return items.subList(fromIndex, lastIndex);
+    }
+    return items;
   }
 }
