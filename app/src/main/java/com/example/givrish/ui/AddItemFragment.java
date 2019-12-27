@@ -121,6 +121,7 @@ private String[] locationData;
       listener = (CallBackListener) context;
   }
 
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

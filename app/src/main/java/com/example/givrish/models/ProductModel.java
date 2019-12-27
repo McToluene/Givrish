@@ -23,8 +23,10 @@ public class ProductModel {
   public ProductModel() {
   }
 
+  private String location;
   public ProductModel(String item_title, String location) {
     this.item_title = item_title;
+    this.location=location;
   }
 
   public ProductModel(String user_id, String item_title, String item_color, String item_country, String item_address, String item_longitude, String item_latitude, String item_description, String item_category_id, String item_sub_category_id) {
@@ -44,6 +46,10 @@ public class ProductModel {
     return item_title;
   }
 
+
+  public String getItem_Location(){
+    return location;
+  }
 
 
   public static ArrayList<ProductModel> createProduct() {
