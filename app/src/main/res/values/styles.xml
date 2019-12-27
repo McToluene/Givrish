@@ -37,7 +37,7 @@
         <item name="android:background">@drawable/top_corner_radius</item>
     </style>
 
-    <style name="progressDailogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="progressDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
@@ -81,7 +81,6 @@
     <style name="progressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
         <item name="android:colorAccent">@color/colorPrimary</item>
         <item name="android:layout_marginTop">@dimen/pMt</item>
         <item name="android:layout_marginBottom">@dimen/pMb</item>
