@@ -17,15 +17,12 @@ public class AllItemsResponse {
   @SerializedName("data")
   private List<AllItemsResponseData> data;
 
-  @SerializedName("image_data")
-  private List<AllItemsResponseImageData> allItemsResponseImageData;
 
   public AllItemsResponse(String responseCode, String responseStatus, String recordCount, List<AllItemsResponseData> data, List<AllItemsResponseImageData> allItemsResponseImageData) {
     this.responseCode = responseCode;
     this.responseStatus = responseStatus;
     this.recordCount = recordCount;
     this.data = data;
-    this.allItemsResponseImageData = allItemsResponseImageData;
   }
 
   public String getResponseCode() {
@@ -44,7 +41,4 @@ public class AllItemsResponse {
     return data;
   }
 
-  public List<AllItemsResponseImageData> getAllItemsResponseImageData() {
-    return allItemsResponseImageData;
-  }
 }

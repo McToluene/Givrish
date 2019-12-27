@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 
 import com.example.givrish.R;
+import com.example.givrish.interfaces.ListCallBackEvent;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
 import com.example.givrish.models.AllItemsResponseImageData;
@@ -47,7 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements ListCallBackEvent {
 
   public static final String CATEGORIES_FRAGMENT_FLAG= "4";
   public static final String PROFILE_FRAGMENT_FLAG = "5";
@@ -62,6 +63,7 @@ public class ListFragment extends Fragment {
   private ProgressBar loading;
   private ListItemAdapter listItemAdapter;
   private List<AllItemsResponseData> itemsList;
+  private ListCallBackEvent listCallBackEvent;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -71,8 +73,9 @@ public class ListFragment extends Fragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-    getAllItems();
+    listCallBackEvent = this;
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+    getAllItems();
 
   }
 
@@ -84,14 +87,8 @@ public class ListFragment extends Fragment {
     listRecyclerView = view.findViewById(R.id.listItem);
     loading = view.findViewById(R.id.items_loading);
     loading.setVisibility(View.VISIBLE);
+    listItemAdapter = new ListItemAdapter(getContext());
 
-    itemsList = mViewModel.getItems().getValue();
-    mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
-      @Override
-      public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
-        listItemAdapter.setAllItemsResponseData(allItemsResponseData);
-      }
-    });
 
     if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -112,24 +109,12 @@ public class ListFragment extends Fragment {
     call.enqueue(new Callback<AllItemsResponse>() {
       @Override
       public void onResponse(@NonNull Call<AllItemsResponse> call,@NonNull Response<AllItemsResponse> response) {
-        if (response.body() != null && response.body().getResponseCode().equals("1")) {
-
-          mViewModel.insertAllItems(response.body().getData());
-
-          listItemAdapter.setAllItemsResponseData(mViewModel.getItems().getValue());
-          mViewModel.getItems().observe(getActivity(), new Observer<List<AllItemsResponseData>>() {
-            @Override
-            public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
-              listItemAdapter.setAllItemsResponseData(allItemsResponseData);
-            }
-          });
-
-          listItemAdapter.setImagesData(response.body().getAllItemsResponseImageData());
-
-          loading.setVisibility(View.INVISIBLE);
-          listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-          listRecyclerView.setAdapter(listItemAdapter);
+        if (response.isSuccessful()) {
+          if (response.body() != null && response.body().getResponseCode().equals("1")) {
+            itemsLoaded(response.body().getData());
+          }
         }
+
       }
 
       @Override
@@ -146,8 +131,6 @@ public class ListFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     // TODO: Use the ViewModel
-
-    listItemAdapter = new ListItemAdapter(getContext());
 
     profile.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -184,5 +167,12 @@ public class ListFragment extends Fragment {
       transaction.addToBackStack(tag);
       transaction.commit();
     }
+  }
+
+  @Override
+  public void itemsLoaded(List<AllItemsResponseData> items) {
+    listItemAdapter.setAllItemsResponseData(items);
+    listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) );
+    listRecyclerView.setAdapter(listItemAdapter);
   }
 }

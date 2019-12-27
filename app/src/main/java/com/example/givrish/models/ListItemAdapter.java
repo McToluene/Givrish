@@ -21,6 +21,7 @@ import com.example.givrish.R;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.ItemDetailsFragment;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,11 +33,8 @@ import retrofit2.Response;
 
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
   private List<AllItemsResponseData> allItemsResponseData;
-  private List<AllItemsResponseImageData> imageData;
   private  LayoutInflater inflater;
   private Context context;
-  private ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-  private AllItemsResponseData item;
 
   public ListItemAdapter(Context context) {
     inflater = LayoutInflater.from(context);
@@ -52,12 +50,18 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
   @Override
   public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
-    item = allItemsResponseData.get(position);
-    String imageName = getImageName();
-    if(!imageName.isEmpty()) {
-      Log.i("ITEM", imageName);
-      getImage(imageName, holder);
+    AllItemsResponseData item = allItemsResponseData.get(position);
+
+    String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
+
+    if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemSmallImageName() != null) {
+      String uri =  url + item.getItem_images().get(0).getItemSmallImageName();
+      Picasso.get().load(uri).into( holder.itemImage);
+
+    } else {
+      holder.itemImage.setImageResource(R.drawable.download);
     }
+
     holder.title.setText(item.getItem_title());
     holder.position = position;
   }
@@ -74,46 +78,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     allItemsResponseData = responseDataList;
   }
 
-  private void getImage(String image, final ListItemHolder holder) {
-    Call<ResponseBody> call = apiService.getImage(image);
-    call.enqueue(new Callback<ResponseBody>() {
-
-      @Override
-      public void onResponse(@NonNull Call<ResponseBody> call,@NonNull Response<ResponseBody> response) {
-        if (response.isSuccessful()){
-          if (response.body() != null) {
-            try {
-              byte[] imageBytes = response.body().bytes();
-              Bitmap image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-              holder.itemImage.setImageBitmap(image);
-            }catch (IOException ex) {
-              Log.i("ERROR", ex.toString());
-            }
-          }
-        }
-      }
-
-      @Override
-      public void onFailure(@NonNull Call<ResponseBody> call,@NonNull Throwable t) {
-        Log.i("Not", t.toString());
-      }
-    });
-  }
-
-  public void setImagesData(List<AllItemsResponseImageData> imagesData) {
-    this.imageData = imagesData;
-  }
-
-  private String getImageName() {
-    String itemId = item.getItem_id();
-    String name ="";
-    for (AllItemsResponseImageData image : imageData) {
-      if (image.getItemId().equals(itemId))
-        name = image.getItemSmallImageName();
-    }
-    return name;
-  }
-
   class ListItemHolder extends RecyclerView.ViewHolder {
 
     private final TextView title;
@@ -127,6 +91,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
       title = itemView.findViewById(R.id.tv_title);
       itemImage = itemView.findViewById(R.id.item_image);
       location = itemView.findViewById(R.id.tv_location);
+
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {

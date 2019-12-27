@@ -2,8 +2,11 @@ package com.example.givrish.models;
 
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.util.List;
 
 @Entity(tableName = "item")
 public class AllItemsResponseData {
@@ -27,7 +30,10 @@ public class AllItemsResponseData {
     private String item_category_id;
     private String item_sub_category_id;
 
-    public AllItemsResponseData(String item_id, String user_id, String user_ip, String user_browser, String item_joined, String item_active_status, String item_status, String item_ref_code, String item_title, String item_color, String item_country, String item_address, String item_longitude, String item_latitude, String item_description, String item_category_id, String item_sub_category_id) {
+    @ColumnInfo(name = "item_images")
+    private List<AllItemsResponseImageData> item_images;
+
+    public AllItemsResponseData(@NonNull String item_id, String user_id, String user_ip, String user_browser, String item_joined, String item_active_status, String item_status, String item_ref_code, String item_title, String item_color, String item_country, String item_address, String item_longitude, String item_latitude, String item_description, String item_category_id, String item_sub_category_id, List<AllItemsResponseImageData> item_images) {
       this.item_id = item_id;
       this.user_id = user_id;
       this.user_ip = user_ip;
@@ -45,6 +51,7 @@ public class AllItemsResponseData {
       this.item_description = item_description;
       this.item_category_id = item_category_id;
       this.item_sub_category_id = item_sub_category_id;
+      this.item_images = item_images;
     }
 
     public String getItem_id() {
@@ -113,6 +120,10 @@ public class AllItemsResponseData {
 
     public String getItem_sub_category_id() {
       return item_sub_category_id;
+    }
+
+    public List<AllItemsResponseImageData> getItem_images() {
+      return item_images;
     }
   }
 

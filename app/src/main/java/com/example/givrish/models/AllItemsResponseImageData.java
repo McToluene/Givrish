@@ -1,8 +1,15 @@
 package com.example.givrish.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "images")
 public class AllItemsResponseImageData {
+  @PrimaryKey
+  @NonNull
   @SerializedName("item_image_id")
   private String itemImageId;
 
