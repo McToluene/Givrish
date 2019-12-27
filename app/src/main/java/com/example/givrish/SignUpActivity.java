@@ -23,6 +23,7 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
   private ApiEndpointInterface apiService;
+ public static boolean monitoringUserSignupFlag = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
     });
   }
 
-  private void onSubmitHandler( final View v, String name, String phone, String pass) {
+  private void onSubmitHandler(final View v, final String name, final String phone, final String pass) {
     UserRegisterModel userRegisterModel = new UserRegisterModel(name, phone, pass);
     Gson gson = new Gson();
     String userString = gson.toJson(userRegisterModel);
@@ -66,9 +67,15 @@ public class SignUpActivity extends AppCompatActivity {
     call.enqueue(new Callback<AuthResponseDto>() {
       @Override
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
-        if (response.body().getResponseCode().equals("1")) startActivity(new Intent(SignUpActivity.this, Dashboard.class));
-
+        if (response.body().getResponseCode().equals("1")) {
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_fullname), name);
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_number_Keystore), phone);
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_password_Keystore), pass);
+          monitoringUserSignupFlag = true;
+          startActivity(new Intent(SignUpActivity.this, Dashboard.class));
+        }else{monitoringUserSignupFlag = false;}
       }
+
 
       @Override
       public void onFailure(Call<AuthResponseDto> call, Throwable t) {

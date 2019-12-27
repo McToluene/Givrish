@@ -3,11 +3,76 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#ffffff"
     android:layout_height="match_parent"
-    android:background="@drawable/download"
     tools:context=".ui.ItemDetailsFragment">
 
+
+<!--    <HorizontalScrollView-->
+<!--        android:layout_width="497dp"-->
+<!--        android:layout_height="300dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/frameLayout"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/ImgDetailLinear"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="horizontal">-->
+
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgDetail1"-->
+<!--                android:layout_width="250dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:contentDescription="@string/picture"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:src="@drawable/hpfolio9470m" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgDetail2"-->
+<!--                android:layout_width="250dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:layout_weight="1"-->
+<!--                android:contentDescription="@string/picture"-->
+<!--                android:src="@drawable/hpfolio9470m" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgDetail3"-->
+<!--                android:layout_width="250dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:contentDescription="@string/picture"-->
+<!--                android:src="@drawable/hpfolio9470m" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgDetail4"-->
+<!--                android:layout_width="250dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:contentDescription="@string/picture"-->
+<!--                android:src="@drawable/hpfolio9470m" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgDetail5"-->
+<!--                android:layout_width="250dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:contentDescription="@string/picture"-->
+<!--                android:src="@drawable/hpfolio9470m" />-->
+<!--        </LinearLayout>-->
+<!--    </HorizontalScrollView>-->
+
     <FrameLayout
+        android:id="@+id/frameLayout"
         style="@style/topCorner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

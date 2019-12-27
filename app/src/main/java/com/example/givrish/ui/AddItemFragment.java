@@ -121,6 +121,7 @@ private String[] locationData;
       listener = (CallBackListener) context;
   }
 
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -188,7 +189,6 @@ private String[] locationData;
     ArrayAdapter<ItemColor> colorArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, populateColor());
     colorArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
     colorSpinner.setAdapter(colorArrayAdapter);
-
 
     addButton.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -404,7 +404,7 @@ private String[] locationData;
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
     String userId = "5";
-
+    String imgCount = String.valueOf(layout.getChildCount());
 
     if (!name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
@@ -419,7 +419,7 @@ private String[] locationData;
         public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
           Log.i("RES", response.body().get(0).getResponseCode());
           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-            Toast.makeText(getContext(), response.body().toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
             AddItemResponseData data = response.body().get(0).getData();
             String id = data.getRecord();
             Log.i("ID", id);
@@ -427,6 +427,12 @@ private String[] locationData;
               Log.i("USER", id);
               uploadImage(imagePaths.get(i), id);
             }
+            itemName.setText(null);
+            itemDesc.setText(null);
+            mainCategory.setText(null);
+            subCategory.setText(null);
+            colorSpinner.setText(null);
+
           }
         }
 

@@ -12,17 +12,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.givrish.R;
 import com.example.givrish.viewmodel.ItemDetailsViewModel;
 
 
-public class ItemDetailsFragment extends Fragment {
+public class ItemDetailsFragment extends Fragment implements View.OnClickListener{
 
   private ItemDetailsViewModel mViewModel;
   private TextView prodNameTextView;
   private TextView prodLocationTextView;
+  private ImageView img1,img2,img3,img4,img5;
 
 
 
@@ -47,9 +49,13 @@ public class ItemDetailsFragment extends Fragment {
     mViewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
     // TODO: Use the ViewModel
 
-
-
+//      img1=getActivity().findViewById(R.id.imgDetail1);
+//      img1.setOnClickListener(this);
 
   }
 
+  @Override
+  public void onClick(View v) {
+
+  }
 }
