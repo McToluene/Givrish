@@ -9,7 +9,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -100,7 +99,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
     });
   }
     private void progressDialogMethod() {
-        progressDialog = new ProgressDialog(PhoneLoginActivity.this,R.style.progressDailogStyle);
+        progressDialog = new ProgressDialog(PhoneLoginActivity.this,R.style.progressDialogStyle);
         progressDialog.setMessage("Please wait..");
         progressDialog.setTitle("Welcome");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

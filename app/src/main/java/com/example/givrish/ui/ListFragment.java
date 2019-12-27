@@ -62,7 +62,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ApiEndpointInterface apiService;
   private ProgressBar loading;
   private ListItemAdapter listItemAdapter;
-  private List<AllItemsResponseData> itemsList;
   private ListCallBackEvent listCallBackEvent;
 
   public static ListFragment newInstance() {
@@ -89,13 +88,18 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     loading.setVisibility(View.VISIBLE);
     listItemAdapter = new ListItemAdapter(getContext());
 
-
     if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
+
+    mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
+      @Override
+      public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+        listCallBackEvent.itemsLoaded(allItemsResponseData);
+      }
+    });
     
     toolbar.setTitle("Givrish");
-
     return view;
   }
 
@@ -111,7 +115,8 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       public void onResponse(@NonNull Call<AllItemsResponse> call,@NonNull Response<AllItemsResponse> response) {
         if (response.isSuccessful()) {
           if (response.body() != null && response.body().getResponseCode().equals("1")) {
-            itemsLoaded(response.body().getData());
+            listCallBackEvent.itemsLoaded(response.body().getData());
+//            itemsLoaded(response.body().getData());
           }
         }
 
@@ -171,8 +176,20 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
   @Override
   public void itemsLoaded(List<AllItemsResponseData> items) {
+    mViewModel.insertAllItems(getNewItems(items));
     listItemAdapter.setAllItemsResponseData(items);
     listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) );
     listRecyclerView.setAdapter(listItemAdapter);
+  }
+
+
+  // This get new items into database by selecting last 20;
+  private List<AllItemsResponseData> getNewItems(List<AllItemsResponseData> items) {
+    if (items.size() > 20){
+      int lastIndex = items.size();
+      int fromIndex = lastIndex - 20;
+      return items.subList(fromIndex, lastIndex);
+    }
+    return items;
   }
 }

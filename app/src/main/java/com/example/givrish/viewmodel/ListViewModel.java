@@ -22,7 +22,6 @@ public class ListViewModel extends AndroidViewModel {
   }
 
   // TODO: Implement the ViewModel
-
   public void insertAllItems(List<AllItemsResponseData> items) {itemRepository.setItems(items);}
 
   public LiveData<List<AllItemsResponseData>> getItems() {return items;}
