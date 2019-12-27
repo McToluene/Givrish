@@ -1,6 +1,14 @@
 package com.example.givrish.models;
 
+
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "item")
 public class AllItemsResponseData {
+    @PrimaryKey
+    @NonNull
     private String item_id;
     private String user_id;
     private String user_ip;

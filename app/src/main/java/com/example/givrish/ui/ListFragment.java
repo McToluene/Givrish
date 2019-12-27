@@ -133,7 +133,7 @@ public class ListFragment extends Fragment {
     profile.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        fragment = new ProfileFragment();
+//        fragment = new ProfileFragment();
         loadFragment(fragment, PROFILE_FRAGMENT_FLAG);
       }
     });

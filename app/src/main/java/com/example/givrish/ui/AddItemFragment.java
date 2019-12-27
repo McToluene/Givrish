@@ -2,21 +2,28 @@ package com.example.givrish.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +51,7 @@ import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.models.ItemColor;
 import com.example.givrish.models.ItemSubCategoryResponse;
+import com.example.givrish.models.LocationClass;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.fxn.pix.Options;
@@ -55,8 +63,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -89,6 +99,15 @@ public class AddItemFragment extends Fragment {
   private List<String> imagePaths = new ArrayList<>();
   private FloatingActionButton addButton;
   private CallBackListener listener;
+//  private Context Thecontext;
+  LocationClass locationClass;
+  LocationClass.LocationResult locationResult;
+  boolean check=false;
+//  String addr;
+private String[] locationData;
+  private String categoryId;
+  private String subId;
+
 
   public static AddItemFragment newInstance() {
     return new AddItemFragment();
@@ -97,9 +116,11 @@ public class AddItemFragment extends Fragment {
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
+//    Thecontext = context;
     if (context instanceof CallBackListener)
       listener = (CallBackListener) context;
   }
+
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,6 +137,9 @@ public class AddItemFragment extends Fragment {
     mainCategory = view.findViewById(R.id.mainCategory);
     subCategory = view.findViewById(R.id.subCategory);
     colorSpinner =  view.findViewById(R.id.ItemColor);
+    itemName = view.findViewById(R.id.item_name);
+    itemDesc = view.findViewById(R.id.item_desc);
+
     addButton = view.findViewById(R.id.addImagebtn);
 
     toolbar.setTitle("Add Item");
@@ -134,7 +158,11 @@ public class AddItemFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(AddItemViewModel.class);
 
+
     // TODO: Use the ViewModel
+    locationClass=new LocationClass();
+    displayLocation();
+
     itemCategoryDataList = mViewModel.getLiveItemCategories().getValue();
     mViewModel.getLiveItemCategories().observe(this, new Observer<List<ItemCategoryData>>() {
       @Override
@@ -182,6 +210,7 @@ public class AddItemFragment extends Fragment {
     mainCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        categoryId = itemCategoryDataList.get(position).getItem_category_id();
         try {
           ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
           getSub(selectedItem);
@@ -189,6 +218,12 @@ public class AddItemFragment extends Fragment {
         } catch (Exception e) {
           e.printStackTrace();
         }
+      }
+    });
+    subCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        subId = itemSubCategoryDataList.get(position).getItem_category_id();
       }
     });
   }
@@ -233,7 +268,8 @@ public class AddItemFragment extends Fragment {
       @Override
       public void onResponse(@NonNull Call<ItemSubCategoryResponse> call,@NonNull Response<ItemSubCategoryResponse> response) {
         if (response.body() != null && response.body().getResponseCode().equals("1")){
-          mViewModel.insertAllSub(response.body().getData()); }
+          mViewModel.insertAllSub(response.body().getData());
+        }
       }
 
       @Override
@@ -297,7 +333,12 @@ public class AddItemFragment extends Fragment {
 
       }
 
-    }else{ }
+    }else{
+      if(requestCode==123)
+        Toast.makeText(getContext(), "phone permission granted", Toast.LENGTH_SHORT).show();
+      displayLocation();
+
+    }
   }
 
   private void loadImage(ArrayList<String> returnValue) {
@@ -334,49 +375,79 @@ public class AddItemFragment extends Fragment {
           Toast.makeText(getContext(), "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
         }
         break;
+      }case 1: {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                  == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission
+                  (getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(getContext(), "app location permission granted", Toast.LENGTH_SHORT).show();
+            //if permission is granted
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivityForResult(intent, 123);
+          }
+        } else {
+          //app location not granted, it should ask for it again
+          check = locationClass.getLocation(getContext(), locationResult);
+
+          if (!check)
+            //Ask for permission
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
       }
     }
   }
 
   public void addItem() {
-    String name = "ghsdasdADukjqwqsdsswwswweweadswsdsdAeerwrwdssdw ssasd s  wdewwew fsdf asdasf chasdasd sda";
-    String desc = "newaersdasADSjhjkwewedeqwqsdsdsdsdssdsdwwwerwrwsfsdfwwdsqa ASasaA  asdqwqwv sf  asdas afas sdasda";
-    String color = "1";
+
+    String name = itemName.getText().toString();
+    String desc = itemDesc.getText().toString();
+    String color = colorSpinner.getText().toString();
     String userId = "5";
-    String categoryId = "5";
-    String subId = "16";
-    String country = "USA";
-    String address = "heaven lane nigeria";
-    String latitude = "40s";
-    String longitude = "22w";
 
-    ItemModel itemModel = new ItemModel(userId, name, color, country, address, longitude, latitude, desc, categoryId, subId);
-    String itemString = gson.toJson(itemModel);
 
-    Log.i("Item", itemString);
-    Call<List<AddItemResponse>> call = apiService.addItem(itemString);
-    call.enqueue(new Callback<List<AddItemResponse>>() {
-      @Override
-      public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
-        Log.i("RES", response.body().get(0).getResponseCode());
-        if (response.body() != null && response.body().get(0).getResponseCode().equals("1")){
-          AddItemResponseData data = response.body().get(0).getData();
-          String id = data.getRecord();
-          Log.i("ID", id);
-          for (int i = 0; i < imagePaths.size(); i++){
-            Log.i("USER", id);
-            uploadImage(imagePaths.get(i), id);
+    if (!name.isEmpty() || !desc.isEmpty()) {
+      //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
+      ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
+
+      String itemString = gson.toJson(itemModel);
+
+      Log.i("Item", itemString);
+      Call<List<AddItemResponse>> call = apiService.addItem(itemString);
+      call.enqueue(new Callback<List<AddItemResponse>>() {
+        @Override
+        public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
+          Log.i("RES", response.body().get(0).getResponseCode());
+          if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
+            Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
+            AddItemResponseData data = response.body().get(0).getData();
+            String id = data.getRecord();
+            Log.i("ID", id);
+            for (int i = 0; i < imagePaths.size(); i++) {
+              Log.i("USER", id);
+              uploadImage(imagePaths.get(i), id);
+            }
+            itemName.setText(null);
+            itemDesc.setText(null);
+            mainCategory.setText(null);
+            subCategory.setText(null);
+            colorSpinner.setText(null);
+
           }
         }
-      }
 
-      @Override
-      public void onFailure(@NonNull Call<List<AddItemResponse>> call, @NonNull Throwable t) {
-        Toast.makeText(getContext(), "Check your network", Toast.LENGTH_LONG).show();
-      }
-    });
+        @Override
+        public void onFailure(@NonNull Call<List<AddItemResponse>> call, @NonNull Throwable t) {
+          Toast.makeText(getContext(), "Check your network", Toast.LENGTH_LONG).show();
+        }
+      });
 
+    } else {
+    Toast.makeText(getContext(), "pls fill out all fields correctly", Toast.LENGTH_LONG).show();
   }
+
+}
 
   private void uploadImage(String path, String id) {
     File file = new File(path);
@@ -407,4 +478,47 @@ public class AddItemFragment extends Fragment {
     });
     Log.i("WE", "HERE");
   }
+
+  private void displayLocation() {
+
+    locationResult = new LocationClass.LocationResult(){
+
+      @Override
+      public void gotLocation(Location location) {
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+        try {
+          List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),
+                  location.getLongitude(), 1);
+
+          String country = addressList.get(0).getCountryName();
+          String state = addressList.get(0).getAdminArea();
+          String addressLine = addressList.get(0).getAddressLine(0);
+
+          DecimalFormat df = new DecimalFormat("#.###");
+
+          String lng = df.format(addressList.get(0).getLongitude());
+          String lat = df.format(addressList.get(0).getLatitude());
+
+
+          //try to use if statement for checking empty string
+          String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
+          locationData = addr.split("\\\\");
+//          Toast.makeText(getContext(), "i got the location"+ country + " " + state + " " + addressLine + " " + lng + " " + lat, Toast.LENGTH_LONG).show();
+
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+
+      }
+    };
+
+    check = locationClass.getLocation(getContext(), locationResult);
+
+    if(!check)
+      //Ask for permission
+      ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
+  }
+
 }
