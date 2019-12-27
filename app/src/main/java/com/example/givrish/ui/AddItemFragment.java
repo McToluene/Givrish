@@ -121,6 +121,7 @@ private String[] locationData;
       listener = (CallBackListener) context;
   }
 
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -294,7 +295,6 @@ private String[] locationData;
     }
 
   }
-
 
   private void apiCategoryList(String key) {
     ApiKey apiKey = new ApiKey(key);

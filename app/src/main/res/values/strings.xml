@@ -21,13 +21,20 @@
     <string name="let_go">Let\'s go</string>
     <string name="image_desc">Product image</string>
     <string name="resend_code">Resend code</string>
-  <string name="confirm_password">Confirm Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="add_item_header">Add an item</string>
     <string name="Item_name">Name of the item</string>
     <string name="item_description">Describe the item</string>
-  <string name="clear">Clear</string>
-  <string name="subcategory">Subcategory</string>
+    <string name="clear">Clear</string>
+    <string name="subcategory">Subcategory</string>
     <string name="color">Color</string>
-  <string name="search_item">Search for gifts</string>
-  <string name="categories">Categories</string>
+    <string name="search_item">Search for gifts</string>
+    <string name="categories">Categories</string>
+    <string name="txtEditProfile">Edit Profile</string>
+    <string name="txtNameEditProfile">Name</string>
+    <string name="txtEmailEditProfile">Email</string>
+    <string name="txtChangeProfilePicture">Change Profile Picture</string>
+    <string name="txtPhoneNoEditProfile">Phone Number</string>
+    <string name="picture" />
+    <string name="btnSave">SAVE</string>
 </resources>
