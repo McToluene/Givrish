@@ -3,6 +3,7 @@ package com.example.givrish.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.graphics.Color;
@@ -36,6 +37,7 @@ import com.example.givrish.models.ProductModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.ListViewModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -59,6 +61,7 @@ public class ListFragment extends Fragment {
   private ApiEndpointInterface apiService;
   private ProgressBar loading;
   private ListItemAdapter listItemAdapter;
+  private List<AllItemsResponseData> itemsList;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -68,19 +71,27 @@ public class ListFragment extends Fragment {
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
-    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
     getAllItems();
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+
   }
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
     View view = inflater.inflate(R.layout.fragment_list_item, container, false);
     Toolbar toolbar = view.findViewById(R.id.list_item_toolbar);
     profile = view.findViewById(R.id.circleImageView_profile);
     listRecyclerView = view.findViewById(R.id.listItem);
     loading = view.findViewById(R.id.items_loading);
     loading.setVisibility(View.VISIBLE);
+
+    itemsList = mViewModel.getItems().getValue();
+    mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
+      @Override
+      public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+        listItemAdapter.setAllItemsResponseData(allItemsResponseData);
+      }
+    });
 
     if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -102,8 +113,19 @@ public class ListFragment extends Fragment {
       @Override
       public void onResponse(@NonNull Call<AllItemsResponse> call,@NonNull Response<AllItemsResponse> response) {
         if (response.body() != null && response.body().getResponseCode().equals("1")) {
-          listItemAdapter.setAllItemsResponseData(response.body().getData());
+
+          mViewModel.insertAllItems(response.body().getData());
+
+          listItemAdapter.setAllItemsResponseData(mViewModel.getItems().getValue());
+          mViewModel.getItems().observe(getActivity(), new Observer<List<AllItemsResponseData>>() {
+            @Override
+            public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+              listItemAdapter.setAllItemsResponseData(allItemsResponseData);
+            }
+          });
+
           listItemAdapter.setImagesData(response.body().getAllItemsResponseImageData());
+
           loading.setVisibility(View.INVISIBLE);
           listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
           listRecyclerView.setAdapter(listItemAdapter);
@@ -112,7 +134,9 @@ public class ListFragment extends Fragment {
 
       @Override
       public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
-        Toast.makeText(getContext(), "Please check your network", Toast.LENGTH_LONG).show();
+        if (getView() != null)
+        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT)
+                .show();
       }
     });
   }
@@ -125,9 +149,6 @@ public class ListFragment extends Fragment {
 
     listItemAdapter = new ListItemAdapter(getContext());
 
-    Log.i("COUNT", String.valueOf( listItemAdapter.getItemCount()) );
-//    listItemAdapter.getItemCount();
-
     profile.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -135,7 +156,6 @@ public class ListFragment extends Fragment {
         loadFragment(fragment, PROFILE_FRAGMENT_FLAG);
       }
     });
-
   }
 
   @Override
