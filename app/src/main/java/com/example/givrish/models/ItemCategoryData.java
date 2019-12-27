@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
+
 @Entity(tableName = "item_category")
 public class ItemCategoryData {
     @PrimaryKey
@@ -55,4 +57,13 @@ public class ItemCategoryData {
     public String toString() {
         return item_category_name;
     }
+
+    public static Comparator<ItemCategoryData> itemCategoryDataComparator = new Comparator<ItemCategoryData>() {
+        @Override
+        public int compare(ItemCategoryData itemCategoryData, ItemCategoryData t1) {
+            String c = itemCategoryData.getItem_category_name().toUpperCase();
+            String d = t1.getItem_category_name().toUpperCase();
+            return c.compareTo(d);
+        }
+    };
 }

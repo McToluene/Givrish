@@ -47,7 +47,54 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    return inflater.inflate(R.layout.search_fragment, container, false);
+    View view=inflater.inflate(R.layout.search_fragment, container, false);
+
+    recyclerView = view.findViewById(R.id.recyclerSearchList);
+    recyclerView.setHasFixedSize(true);
+
+    layoutManager = new LinearLayoutManager(this.getContext());
+    recyclerView.setLayoutManager(layoutManager);
+
+    myAdapter = new SearchAdapter(listString, getContext());
+    recyclerView.setAdapter(myAdapter);
+
+
+    // on searching typing:
+    edtSearch = view.findViewById(R.id.searchView);
+
+    edtSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        return false;
+      }
+
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+
+        if(newText.isEmpty()){
+          myAdapter.filterChanges(listString);
+        }else {
+          //new array list that will hold the filtered data
+          ArrayList<String> searchList = new ArrayList<>();
+
+          //for in looping through existing elements
+          for (String str : listString) {
+            //if the existing elements contains the search input
+            if (str.toLowerCase().contains(newText.toLowerCase())) {
+              //adding the element to filtered list accumulator
+              searchList.add(str);
+            }
+          }
+
+          //calling a method of the adapter class and passing the filtered list
+          myAdapter.filterChanges(searchList);
+        }
+        return true;
+      }
+    });
+
+    return view;
   }
 
 
@@ -62,51 +109,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener{
 //
 //    ImageButton backButton = getActivity().findViewById(R.id.back_button);
 //    backButton.setOnClickListener(this);
-
-    recyclerView = getActivity().findViewById(R.id.recyclerSearchList);
-    recyclerView.setHasFixedSize(true);
-
-    layoutManager = new LinearLayoutManager(this.getContext());
-    recyclerView.setLayoutManager(layoutManager);
-
-    myAdapter = new SearchAdapter(listString, getContext());
-    recyclerView.setAdapter(myAdapter);
-
-
-    // on searching typing:
-    edtSearch = getActivity().findViewById(R.id.searchView);
-
-    edtSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-      @Override
-      public boolean onQueryTextSubmit(String query) {
-        return false;
-      }
-
-
-      @Override
-      public boolean onQueryTextChange(String newText) {
-
-          if(newText.isEmpty()){
-            myAdapter.filterChanges(listString);
-          }else {
-            //new array list that will hold the filtered data
-            ArrayList<String> searchList = new ArrayList<>();
-
-            //for in looping through existing elements
-            for (String str : listString) {
-              //if the existing elements contains the search input
-              if (str.toLowerCase().contains(newText.toLowerCase())) {
-                //adding the element to filtered list accumulator
-                searchList.add(str);
-              }
-            }
-
-            //calling a method of the adapter class and passing the filtered list
-            myAdapter.filterChanges(searchList);
-          }
-        return true;
-      }
-    });
   }
 
   @Override

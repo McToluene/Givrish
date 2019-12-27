@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "407332541666-e4ungkpoq8uqptdivo7rh7r896qlaul1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.givrish",
+            "certificate_hash": "8525295fe8511576d81cfa171f8d583c2976289f"
+          }
+        },
+        {
           "client_id": "407332541666-lr9h6b3i4ou2lhkkdmnd77830s2c0khp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,14 +1,10 @@
 package com.example.givrish.models;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,18 +14,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
-import com.example.givrish.network.ApiEndpointInterface;
-import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.ItemDetailsFragment;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
   private List<AllItemsResponseData> allItemsResponseData;
@@ -63,6 +51,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     }
 
     holder.title.setText(item.getItem_title());
+//    holder.location.setText(product.get);
     holder.position = position;
   }
 
@@ -81,7 +70,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   class ListItemHolder extends RecyclerView.ViewHolder {
 
     private final TextView title;
-    private final ImageView itemImage;
     private final TextView location;
     private int position;
 
@@ -89,7 +77,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
       super(itemView);
 
       title = itemView.findViewById(R.id.tv_title);
-      itemImage = itemView.findViewById(R.id.item_image);
       location = itemView.findViewById(R.id.tv_location);
 
       itemView.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +97,5 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
         }
       });
     }
-
   }
 }

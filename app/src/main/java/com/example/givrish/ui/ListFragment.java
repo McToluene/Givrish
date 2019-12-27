@@ -3,7 +3,6 @@ package com.example.givrish.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.graphics.Color;
@@ -31,14 +30,12 @@ import com.example.givrish.R;
 import com.example.givrish.interfaces.ListCallBackEvent;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
-import com.example.givrish.models.AllItemsResponseImageData;
 import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ListItemAdapter;
 import com.example.givrish.models.ProductModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.ListViewModel;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -61,6 +58,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private Fragment fragment;
   private ApiEndpointInterface apiService;
   private ProgressBar loading;
+  private List<AllItemsResponseData> itemSModel;
   private ListItemAdapter listItemAdapter;
   private ListCallBackEvent listCallBackEvent;
 
@@ -74,12 +72,13 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     setHasOptionsMenu(true);
     listCallBackEvent = this;
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
     getAllItems();
-
   }
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
     View view = inflater.inflate(R.layout.fragment_list_item, container, false);
     Toolbar toolbar = view.findViewById(R.id.list_item_toolbar);
     profile = view.findViewById(R.id.circleImageView_profile);
@@ -98,6 +97,10 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
         listCallBackEvent.itemsLoaded(allItemsResponseData);
       }
     });
+    if (getActivity() != null) {
+      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    }
+
     
     toolbar.setTitle("Givrish");
     return view;
@@ -118,15 +121,14 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
             listCallBackEvent.itemsLoaded(response.body().getData());
 //            itemsLoaded(response.body().getData());
           }
+
         }
 
       }
 
       @Override
       public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
-        if (getView() != null)
-        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT)
-                .show();
+        Toast.makeText(getContext(), "Please Check your message", Toast.LENGTH_LONG).show();
       }
     });
   }
@@ -137,13 +139,20 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     // TODO: Use the ViewModel
 
+
+    listItemAdapter = new ListItemAdapter(getContext());
+
+    Log.i("COUNT", String.valueOf( listItemAdapter.getItemCount()) );
+//    listItemAdapter.getItemCount();
+
     profile.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        fragment = new ProfileFragment();
+//        fragment = new ProfileFragment();
         loadFragment(fragment, PROFILE_FRAGMENT_FLAG);
       }
     });
+
   }
 
   @Override

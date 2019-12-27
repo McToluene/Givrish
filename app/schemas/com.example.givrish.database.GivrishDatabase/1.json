@@ -1,0 +1,236 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "ab11f5260f00bc371c82fadf23aed31b",
+    "entities": [
+      {
+        "tableName": "item_category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`item_category_id` TEXT NOT NULL, `item_category_name` TEXT, `item_category_descp` TEXT, `item_category_status` TEXT, `ref_code` TEXT, `item_category_date` TEXT, PRIMARY KEY(`item_category_id`))",
+        "fields": [
+          {
+            "fieldPath": "item_category_id",
+            "columnName": "item_category_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "item_category_name",
+            "columnName": "item_category_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_descp",
+            "columnName": "item_category_descp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_status",
+            "columnName": "item_category_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_code",
+            "columnName": "ref_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_date",
+            "columnName": "item_category_date",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "item_category_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "item_sub_category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`item_sub_category_id` TEXT NOT NULL, `item_category_id` TEXT, `item_sub_category_name` TEXT, `item_sub_category_descp` TEXT, `item_sub_category_status` TEXT, `ref_code` TEXT, `item_sub_category_date` TEXT, PRIMARY KEY(`item_sub_category_id`))",
+        "fields": [
+          {
+            "fieldPath": "item_sub_category_id",
+            "columnName": "item_sub_category_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "item_category_id",
+            "columnName": "item_category_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_name",
+            "columnName": "item_sub_category_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_descp",
+            "columnName": "item_sub_category_descp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_status",
+            "columnName": "item_sub_category_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ref_code",
+            "columnName": "ref_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_date",
+            "columnName": "item_sub_category_date",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "item_sub_category_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "item",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`item_id` TEXT NOT NULL, `user_id` TEXT, `user_ip` TEXT, `user_browser` TEXT, `item_joined` TEXT, `item_active_status` TEXT, `item_status` TEXT, `item_ref_code` TEXT, `item_title` TEXT, `item_color` TEXT, `item_country` TEXT, `item_address` TEXT, `item_longitude` TEXT, `item_latitude` TEXT, `item_description` TEXT, `item_category_id` TEXT, `item_sub_category_id` TEXT, PRIMARY KEY(`item_id`))",
+        "fields": [
+          {
+            "fieldPath": "item_id",
+            "columnName": "item_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_id",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "user_ip",
+            "columnName": "user_ip",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "user_browser",
+            "columnName": "user_browser",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_joined",
+            "columnName": "item_joined",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_active_status",
+            "columnName": "item_active_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_status",
+            "columnName": "item_status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_ref_code",
+            "columnName": "item_ref_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_title",
+            "columnName": "item_title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_color",
+            "columnName": "item_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_country",
+            "columnName": "item_country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_address",
+            "columnName": "item_address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_longitude",
+            "columnName": "item_longitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_latitude",
+            "columnName": "item_latitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_description",
+            "columnName": "item_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_id",
+            "columnName": "item_category_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_id",
+            "columnName": "item_sub_category_id",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "item_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab11f5260f00bc371c82fadf23aed31b')"
+    ]
+  }
+}

@@ -11,7 +11,7 @@
         tools:context=".PhoneVerifyActivity">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imgDetail5"
             android:layout_width="0dp"
             android:layout_height="261dp"
             android:layout_marginStart="24dp"
@@ -89,9 +89,9 @@
             android:layout_marginTop="32dp"
             android:gravity="center"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintEnd_toEndOf="@+id/imgDetail5"
+            app:layout_constraintStart_toStartOf="@+id/imgDetail5"
+            app:layout_constraintTop_toBottomOf="@+id/imgDetail5" />
 
         <TextView
             android:id="@+id/tv_resend_code"
