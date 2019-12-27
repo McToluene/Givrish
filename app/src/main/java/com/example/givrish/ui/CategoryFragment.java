@@ -32,6 +32,7 @@ import com.example.givrish.viewmodel.CategoryViewModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -104,7 +105,7 @@ public class CategoryFragment extends Fragment {
         itemCategoryAdapter = new ItemCategoryAdapter(getContext());
         recyclerView.setAdapter(itemCategoryAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        loadCategoryItems(api_key);
+        loadCategoryItems(api_key);
     }
 
     private void loadCategoryItems(String api_key) {
@@ -117,6 +118,7 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<ItemCategoryResponse> call, @NonNull Response<ItemCategoryResponse> response) {
                 if( response.body() != null && response.body().getResponseCode().equals("1")){
+                    Collections.sort(response.body().getData(),ItemCategoryData.itemCategoryDataComparator);
                     mViewModel.insert(new ArrayList<>(response.body().getData()) );
                 } else if (response.body() != null) {
                     Toast.makeText(getActivity(),response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
