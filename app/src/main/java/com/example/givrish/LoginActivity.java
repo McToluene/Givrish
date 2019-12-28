@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("ERROR", t.toString());
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
+        monitoringUserLoginFlag = false;
       }
     });
   }

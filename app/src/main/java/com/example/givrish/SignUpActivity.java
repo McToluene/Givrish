@@ -35,6 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
     final TextInputEditText fullName = findViewById(R.id.ed_fullName);
     final TextInputEditText number = findViewById(R.id.edt_phoneNumber);
     final TextInputEditText password = findViewById(R.id.ed_password);
+    final TextInputEditText comPassword = findViewById(R.id.ed_compassword);
     MaterialButton signUp = findViewById(R.id.btn_signUp);
 
     String phone = getIntent().getStringExtra(PhoneVerifyActivity.phoneverifyKey);
@@ -46,12 +47,14 @@ public class SignUpActivity extends AppCompatActivity {
         String name = fullName.getText().toString();
         String phone = number.getText().toString();
         String pass = password.getText().toString();
-        if (name.isEmpty()){
-          fullName.setError("Name cannot be empty!");
-        } else if (pass.isEmpty()){
-          password.setError("Password cannot be empty!");
+        String comPass = comPassword.getText().toString();
+        if (name.isEmpty() || pass.isEmpty() || comPass.isEmpty() || phone.isEmpty()){
+          Snackbar.make(v,"All fields are required", Snackbar.LENGTH_LONG).show();
+        } else if (!pass.equals(comPass)){
+          Snackbar.make(v,"Password mismatch", Snackbar.LENGTH_LONG).show();
+
         }else {
-          onSubmitHandler(v, name, phone, pass);
+//          onSubmitHandler(v, name, phone, pass);
         }
 
       }
@@ -73,12 +76,12 @@ public class SignUpActivity extends AppCompatActivity {
           UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_password_Keystore), pass);
           monitoringUserSignupFlag = true;
           startActivity(new Intent(SignUpActivity.this, Dashboard.class));
-        }else{monitoringUserSignupFlag = false;}
+        }
       }
-
 
       @Override
       public void onFailure(Call<AuthResponseDto> call, Throwable t) {
+        monitoringUserSignupFlag = false;
         Snackbar snackBar = Snackbar .make(v, "Please try again", Snackbar.LENGTH_LONG);
         snackBar.show();
       }

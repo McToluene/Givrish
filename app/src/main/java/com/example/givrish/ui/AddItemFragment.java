@@ -51,6 +51,7 @@ import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
 import com.fxn.utility.PermUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
@@ -366,6 +367,8 @@ public class AddItemFragment extends Fragment {
           for (int i = 0; i < imagePaths.size(); i++){
             Log.i("USER", id);
             uploadImage(imagePaths.get(i), id);
+            Toast.makeText(getContext(), "Items successfully added", Toast.LENGTH_SHORT).show();
+
           }
         }
       }

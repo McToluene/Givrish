@@ -21,12 +21,12 @@ public class ItemSubCategoryViewModel extends AndroidViewModel {
         categoriesRepository = new CategoriesRepository(applicationn);
         itemSubCategories = categoriesRepository.getAllSub();
     }
-    public void insertAllSub (List<ItemSubCategoryData> itemSubCategoryData) {
-        categoriesRepository.insertSub(itemSubCategoryData);
-    }
 
 
     public LiveData<List<ItemSubCategoryData>> getLiveSubCategories() {return itemSubCategories;}
 
+    public void insertAllSub (List<ItemSubCategoryData> itemSubCategoryData) {
+        categoriesRepository.insertSub(itemSubCategoryData);
+    }
 
 }

@@ -62,6 +62,8 @@ public class PhoneLoginActivity extends AppCompatActivity {
         registeringUserToFirebase = cpp.getFullNumber();
         registeredUser = 0 + cpp.getFullNumber().substring(3);
 
+
+
         if(cpp.isValidFullNumber() != true){
             Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();edtPhoneNumberLogin.requestFocus();return; }
         else if (!isConnectionActive()) {
@@ -113,6 +115,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 
       @Override
       public void onFailure(Call<AuthResponseDto> call, Throwable t) {
+        monitoringUserLVFlag= false;
         Log.i("Error", t.getMessage());
         Toast.makeText(PhoneLoginActivity.this, t.getMessage(), Toast.LENGTH_LONG);
       }

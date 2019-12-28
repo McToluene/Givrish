@@ -45,6 +45,8 @@ public class ItemSubCategoryFragment extends Fragment {
     private ItemSubCategoryAdapter itemSubCategoryAdapter;
     private  static final String apiKeySub= "com.example.givrish.ui.APIKEYY";
     private String abc;
+    private ApiEndpointInterface apiService;
+    private ItemSubCategoryData selectedItem;
 
     public static ItemSubCategoryFragment newInstance() {
         return new ItemSubCategoryFragment();
@@ -53,6 +55,7 @@ public class ItemSubCategoryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         toolbar = getActivity().findViewById(R.id.cate_toolbarr);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         return inflater.inflate(R.layout.item_sub_category_fragment, container, false);
@@ -62,50 +65,46 @@ public class ItemSubCategoryFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(ItemSubCategoryViewModel.class);
+        itemSubCategoryDataList = mViewModel.getLiveSubCategories().getValue();
+
         // TODO: Use the ViewModel
         try {
             //Todo...
             abc = getArguments().getString("ITEMM");
         }catch (Exception e){ e.printStackTrace();Toast.makeText(getContext(),"Request failed",Toast.LENGTH_LONG).show(); }
-                intiateView();
 
+        //Todo B4 Update
+       intiateView();
     }
 
     private void intiateView() {
         recyclerView = getActivity().findViewById(R.id.listItemSubCategory);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        subCatApiList(abc);
+        //Todo B4 Update...
+       subCatApiList(abc);
     }
 
 
-    private void apiSubCategoryList(final String selected) {
+
+
+    private void apiSubCategoryList(final String apiKeySub) {
        ApiKey itemCategoryModel = new ApiKey(apiKeySub);
-        final List<ItemSubCategoryData> subCategoryData = new ArrayList<>();
-        ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         Gson gson = new Gson();
         String itemsubString = gson.toJson(itemCategoryModel);
         Call<ItemSubCategoryResponse> callSubItem = apiService.getSubCategory(itemsubString);
         callSubItem.enqueue(new Callback<ItemSubCategoryResponse>() {
             @Override
             public void onResponse(Call<ItemSubCategoryResponse> call, Response<ItemSubCategoryResponse> response) {
-                if (response.body().getResponseCode().equals("1")) {
-                    itemSubCategoryDataList = response.body().getData();
-                    for (int i = 0; i < itemSubCategoryDataList.size(); i++) {
-                        if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected)) {
-                          subCategoryData.add(itemSubCategoryDataList.get(i));
-                          Collections.sort(subCategoryData, ItemSubCategoryData.itemSubCategoryDataComparator);
-                            itemSubCategoryAdapter = new ItemSubCategoryAdapter(subCategoryData,getContext());
-                          recyclerView.setAdapter(itemSubCategoryAdapter);
-//
-                        }
-                    }
+                if (response.body() != null && response.body().getResponseCode().equals("1")) {
+                    mViewModel.insertAllSub(response.body().getData());
+
                 }
             }
 
             @Override
             public void onFailure(Call<ItemSubCategoryResponse> call, Throwable t) {
-                  Toast.makeText(getContext(),t.getMessage(),Toast.LENGTH_LONG).show();
+                  Toast.makeText(getContext(), "Please check your internet connection",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -127,6 +126,7 @@ public class ItemSubCategoryFragment extends Fragment {
                             subCategoryDataList.add(itemSubCategoryDataList.get(i));
                             itemSubCategoryAdapter = new ItemSubCategoryAdapter(subCategoryDataList, getContext());
                             recyclerView.setAdapter(itemSubCategoryAdapter);
+
                         }
                     }
                 }
@@ -137,6 +137,7 @@ public class ItemSubCategoryFragment extends Fragment {
             }
         });
     }
+
     private void getSub(ItemSubCategoryData selected){
         List<ItemSubCategoryData>  subCategoryDataList = new ArrayList<>();
         for(int i = 0; i< itemSubCategoryDataList.size(); i++){

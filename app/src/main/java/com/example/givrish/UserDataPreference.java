@@ -34,6 +34,7 @@ public class UserDataPreference {
     }
 
   public void clearPreference(String key){
+        editor.remove(key);
         editor.clear();
         editor.commit();
   }
