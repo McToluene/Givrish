@@ -36,4 +36,9 @@
     <string name="user_phone_number_Keystore">UserPhoneNumber</string>
     <string name="user_phone_password_Keystore">UserPhonePassword</string>
     <string name="user_fullname">UserFullname</string>
+    <string name="txtNameEditProfile">Edit Profile</string>
+    <string name="txtEmailEditProfile">Edit Email</string>
+    <string name="txtPhoneNoEditProfile">Edit Phone number</string>
+    <string name="txtChangeProfilePicture">Edit Profile Pics</string>
+    <string name="btnSave">Save</string>
 </resources>

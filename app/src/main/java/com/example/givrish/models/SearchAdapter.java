@@ -38,7 +38,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     return vh;
   }
 
-  ProductModel productModel=new ProductModel();
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
       String prodName=listString.get(position);

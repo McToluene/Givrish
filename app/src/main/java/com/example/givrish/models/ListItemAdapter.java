@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
 import com.example.givrish.ui.ItemDetailsFragment;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -38,6 +39,18 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   @Override
   public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
     AllItemsResponseData item = allItemsResponseData.get(position);
+
+    String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
+
+    if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
+      String uri =  url + item.getItem_images().get(0).getItemSmallImageName();
+      Picasso.get().load(uri).resize(100, 100).centerCrop().placeholder(R.drawable.download).into( holder.itemImage);
+
+    } else {
+      holder.itemImage.setImageResource(R.drawable.download);
+
+    }
+
     holder.title.setText(item.getItem_title());
 //    holder.location.setText(product.get);
     holder.position = position;

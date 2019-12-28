@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-
+            android:id="@+id/profile_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimaryDark"
@@ -62,7 +62,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="8dp"
-                android:text="User Name"
+                android:text="Givrish Username"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,6 +70,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
             <Button
+                android:id="@+id/btnEditProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -116,96 +117,11 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView_profileActions"
             app:layout_constraintVertical_bias="0.012">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerMyGiftOut"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp">
-
-                <TextView
-                    android:id="@+id/txtv_giftHistory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:paddingTop="4dp"
-                    android:text="Gift History"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.121"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/txtv_gifted"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="Gifted"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="@+id/txtv_giftHistory"
-                    app:layout_constraintTop_toBottomOf="@+id/txtv_giftHistory" />
-
-                <TextView
-                    android:id="@+id/txtv_received"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:text="Received"
-                    app:layout_constraintStart_toEndOf="@+id/txtv_gifted"
-                    app:layout_constraintTop_toTopOf="@+id/txtv_gifted" />
-
-                <TextView
-                    android:id="@+id/txtv_giftedCounter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="35dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="24dp"
-                    android:text="TextView"
-                    android:textSize="30sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtv_gifted"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:text="1" />
-
-                <ImageView
-                    android:id="@+id/imgv_streak1"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="12dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/txtv_giftedCounter"
-                    app:layout_constraintStart_toEndOf="@+id/txtv_giftedCounter"
-                    app:layout_constraintTop_toTopOf="@+id/txtv_giftedCounter"
-                    tools:src="@tools:sample/avatars[0]" />
-
-                <TextView
-                    android:id="@+id/textView11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="24dp"
-                    android:text="TextView"
-                    android:textSize="30sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.115"
-                    app:layout_constraintStart_toEndOf="@+id/imgv_streak1"
-                    app:layout_constraintTop_toBottomOf="@+id/txtv_received"
-                    app:layout_constraintVertical_bias="1.0"
-                    tools:text="1" />
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="12dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/textView11"
-                    app:layout_constraintStart_toEndOf="@+id/textView11"
-                    app:layout_constraintTop_toTopOf="@+id/textView11"
-                    tools:src="@tools:sample/avatars[0]" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:paddingBottom="15dp"/>
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
