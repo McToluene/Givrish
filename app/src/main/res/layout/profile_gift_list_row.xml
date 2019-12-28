@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_margin="@dimen/cardview_compat_inset_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgProdProfileEdit"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/flag_nigeria"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="2dp"
+            app:srcCompat="@drawable/flag_nigeria" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@android:drawable/ic_menu_edit"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="55dp"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="55dp"/>
+
+        <TextView
+            android:id="@+id/txtProdNameMyProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="55dp"
+            android:textStyle="bold"
+            android:padding="15dp"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="55dp"
+            android:id="@+id/txtProdLocMyProfile"
+            android:textSize="18sp"/>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
