@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,7 +139,9 @@ public class ItemSubCategoryFragment extends Fragment {
         });
     }
 
+
     private void getSub(ItemSubCategoryData selected){
+        Log.i("TAG", selected.getItem_category_id());
         List<ItemSubCategoryData>  subCategoryDataList = new ArrayList<>();
         for(int i = 0; i< itemSubCategoryDataList.size(); i++){
             if(itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())){
