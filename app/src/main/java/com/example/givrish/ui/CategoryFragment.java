@@ -69,6 +69,7 @@ public class CategoryFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.category_fragment, container, false);
         toolbar = view.findViewById(R.id.cate_toolbar);
+
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
