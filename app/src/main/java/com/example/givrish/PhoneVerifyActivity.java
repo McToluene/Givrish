@@ -148,7 +148,10 @@ public class PhoneVerifyActivity extends AppCompatActivity {
                    Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
                    intent.putExtra(PhoneVerifyActivity.phoneverifyKey,realUserNumber);
                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                   UserDataPreference.getInstance(PhoneVerifyActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),realUserNumber);
                    startActivity(intent);
+
+
                }else{
                    progressBar.setVisibility(View.INVISIBLE);
                    monitoringUserVerificationFlag = false;

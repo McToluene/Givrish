@@ -23,12 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+
         </activity>
         <activity android:name=".PhoneVerifyActivity"/>
         <activity android:name=".PhoneLoginActivity" />
         <activity android:name=".Dashboard"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:windowSoftInputMode="adjustPan|stateHidden">
+
 
         </activity>
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,20 +14,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        if(SignUpActivity.monitoringUserSignupFlag != false && PhoneLoginActivity.monitoringUserLVFlag == true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){
-//
-//
-//        }else if(SignUpActivity.monitoringUserSignupFlag != true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){ }
-//
 
-        if(PhoneLoginActivity.monitoringUserLVFlag == true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){
+        if (PhoneLoginActivity.monitoringUserLVFlag == true && PhoneVerifyActivity.monitoringUserVerificationFlag == true) {
             //Todo goto Dashboard Activity
-            startActivity(new Intent(MainActivity.this, Dashboard.class));
-            if(PhoneLoginActivity.monitoringUserLVFlag == false && PhoneVerifyActivity.monitoringUserVerificationFlag == false){
+           // startActivity(new Intent(MainActivity.this, Dashboard.class));
+            if (PhoneLoginActivity.monitoringUserLVFlag == false && PhoneVerifyActivity.monitoringUserVerificationFlag == false) {
                 //Todo goto signUp Activity
-                startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+                //startActivity(new Intent(MainActivity.this, SignUpActivity.class));
 
-                if(FirebaseAuth.getInstance().getCurrentUser() != null && SignUpActivity.monitoringUserSignupFlag == false){
+                if (FirebaseAuth.getInstance().getCurrentUser() != null && SignUpActivity.monitoringUserSignupFlag == false) {
                     // Todo goto SignUp page
                 }
 
@@ -36,35 +32,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        if (FirebaseAuth.getInstance().getCurrentUser() != null && retreiveUserRegistrationDetails()) {
+            startActivity(new Intent(MainActivity.this, Dashboard.class));
+        } else if (FirebaseAuth.getInstance().getCurrentUser() != null && !retreiveUserRegistrationDetails() ) {
+            startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+        }
 
 
-//
+//        else if (retreiveUserLoginDetails() == true) {
+//            startActivity(new Intent(MainActivity.this, Dashboard.class));
+//        }
 
-//        if(FirebaseAuth.getInstance().getCurrentUser() != null && !retreiveUserRegistrationDetails()){
-//                       startActivity(new Intent(MainActivity.this, SignUpActivity.class)); }
-    }
-
-
-
-
-
-
-//         if(retreiveUserRegistrationDetails() == true){
-//            startActivity(new Intent(MainActivity.this, Dashboard.class)); }
-//        else if(FirebaseAuth.getInstance().getCurrentUser() != null && retreiveUserRegistrationDetails() != true){
-//            startActivity(new Intent(MainActivity.this, SignUpActivity.class)); }
-
-//        else if(retreiveUserLoginDetails() == true){
-//            startActivity(new Intent(MainActivity.this, Dashboard.class)); }
-//        UserDataPreference.getInstance(MainActivity.this).clearPreference(getString(R.string.user_fullname));
+//        UserDataPreference.getInstance(MainActivity.this).clearPreference(getString(R.string.user_fullname_Keystore));
 //        UserDataPreference.getInstance(MainActivity.this).clearPreference(getString(R.string.user_phone_number_Keystore));
 //        UserDataPreference.getInstance(MainActivity.this).clearPreference(getString(R.string.user_phone_password_Keystore));
 
-
-
-
-
-
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,24 +62,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean retreiveUserRegistrationDetails(){
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_fullname));
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
-
-        return true;
+        String fullname = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_fullname_Keystore));
+        String phoneNumber = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
+        String password = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
+        return !TextUtils.isEmpty(fullname) && !TextUtils.isEmpty(phoneNumber) && !TextUtils.isEmpty(password);
     }
-
-
 
     private boolean retreiveUserLoginDetails(){
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
-        return true;
+        String loginPhoneNumber = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
+        String loginPhonePassword = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
+        return !TextUtils.isEmpty(loginPhoneNumber) && !TextUtils.isEmpty(loginPhonePassword);
     }
-
-
-
-
 }
 
 

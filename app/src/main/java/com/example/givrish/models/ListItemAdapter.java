@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,9 +45,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
     if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
       String uri =  url + item.getItem_images().get(0).getItemSmallImageName();
-      Picasso.get().load(uri).resize(100, 100).centerCrop().placeholder(R.drawable.download).into( holder.itemImage);
+   Picasso.get().load(uri).resize(100, 100).centerCrop().placeholder(R.drawable.download).into( holder.itemImage);
 
-    } else {
+   }
+    else {
       holder.itemImage.setImageResource(R.drawable.download);
 
     }
@@ -73,12 +75,15 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     private final TextView title;
     private final TextView location;
     private int position;
+    private final ImageView itemImage;
 
     ListItemHolder(@NonNull View itemView) {
       super(itemView);
 
       title = itemView.findViewById(R.id.tv_title);
       location = itemView.findViewById(R.id.tv_location);
+      itemImage = itemView.findViewById(R.id.item_image);
+
 
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override

@@ -71,7 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
       @Override
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
         if (response.body().getResponseCode().equals("1")) {
-          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_fullname), name);
+          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_fullname_Keystore), name);
           UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_number_Keystore), phone);
           UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_password_Keystore), pass);
           monitoringUserSignupFlag = true;

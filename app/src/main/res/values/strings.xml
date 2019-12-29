@@ -35,7 +35,7 @@
     <string name="code_error">The sms code has expired. Please resend the verification code to try again.</string>
     <string name="user_phone_number_Keystore">UserPhoneNumber</string>
     <string name="user_phone_password_Keystore">UserPhonePassword</string>
-    <string name="user_fullname">UserFullname</string>
+    <string name="user_fullname_Keystore">UserFullname</string>
     <string name="txtNameEditProfile">Edit Profile</string>
     <string name="txtEmailEditProfile">Edit Email</string>
     <string name="txtPhoneNoEditProfile">Edit Phone number</string>

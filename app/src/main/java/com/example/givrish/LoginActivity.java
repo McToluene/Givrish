@@ -30,22 +30,6 @@ public class LoginActivity extends AppCompatActivity {
   private ProgressBar progressBar;
   public static  boolean monitoringUserLoginFlag = false;
 
-//  @Override
-////  protected void onStart() {
-////    super.onStart();
-////    if(UserDataPreference.getInstance(this).isLoggedIn()){
-////      startActivity(new Intent(LoginActivity.this, Dashboard.class));
-////
-////    }
-////  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-
-
-  }
-
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -89,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
           monitoringUserLoginFlag = true;
           UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),number);
           UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
-
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
         else if(response.body().getResponseCode().equals("0")){
