@@ -21,8 +21,8 @@ import java.util.concurrent.Executors;
 public abstract class GivrishDatabase extends RoomDatabase {
   public abstract CategoriesDao categoriesDao();
   public abstract ItemsDao itemsDao();
-  private static final String DB_NAME = "Givrish";
 
+  private static final String DB_NAME = "Givrish";
   private static volatile GivrishDatabase INSTANCE;
   private static  final int NUMBER_OF_THREADS = 4;
 
