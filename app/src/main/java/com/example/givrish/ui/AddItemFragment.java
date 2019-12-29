@@ -295,7 +295,6 @@ private String[] locationData;
 
   }
 
-
   private void apiCategoryList(String key) {
     ApiKey apiKey = new ApiKey(key);
     gson = new Gson();
