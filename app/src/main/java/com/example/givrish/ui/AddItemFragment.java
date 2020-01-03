@@ -102,16 +102,15 @@ public class AddItemFragment extends Fragment {
   private List<String> imagePaths = new ArrayList<>();
   private FloatingActionButton addButton;
   private CallBackListener listener;
-  //  private Context Thecontext;
-  LocationClass locationClass;
-  LocationClass.LocationResult locationResult;
+  private LocationClass locationClass;
+  private LocationClass.LocationResult locationResult;
   boolean check = false;
-  //  String addr;
   private String[] locationData;
   private String categoryId;
   private String subId;
   private int imageCount = 3;
   private TextView clearImageSelection;
+  private MenuItem clearAllselection;
 
 
   public static AddItemFragment newInstance() {
@@ -144,6 +143,7 @@ public class AddItemFragment extends Fragment {
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
     clearImageSelection = view.findViewById(R.id.clear_image_selection);
+    clearAllselection = view.findViewById(R.id.menu_hamburger);
 
     addButton = view.findViewById(R.id.addImagebtn);
 
@@ -200,10 +200,7 @@ public class AddItemFragment extends Fragment {
     clearImageSelection.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        layout.removeViews(1, layout.getChildCount() - 1);
-        imageCount = 3;
-        addButton.setEnabled(true);
-        imagePaths.clear();
+          clearImageFunction();
       }
     });
     addButton.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +243,22 @@ public class AddItemFragment extends Fragment {
     });
   }
 
-  @Override
+    private void clearFieldsFunction() {
+        itemName.setText(null);
+        itemDesc.setText(null);
+        mainCategory.setText(null);
+        subCategory.setText(null);
+        colorSpinner.setText(null);
+        clearImageFunction();
+    }
+    private void clearImageFunction() {
+        layout.removeViews(1, layout.getChildCount() - 1);
+        imageCount = 3;
+        addButton.setEnabled(true);
+        imagePaths.clear();
+    }
+
+    @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.add_menu, menu);
@@ -254,8 +266,11 @@ public class AddItemFragment extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (item.getItemId() == android.R.id.home)
-      listener.onBackClick(Dashboard.ADD_ITEM_FRAGMENT_FLAG);
+    if (item.getItemId() == android.R.id.home) {
+        listener.onBackClick(Dashboard.ADD_ITEM_FRAGMENT_FLAG);
+    }else if(item.getItemId() == R.id.menu_hamburger){
+        clearFieldsFunction();
+    }
     return super.onOptionsItemSelected(item);
 
   }
@@ -451,12 +466,7 @@ public class AddItemFragment extends Fragment {
               Log.i("USER", id);
               uploadImage(imagePaths.get(i), id);
             }
-            itemName.setText(null);
-            itemDesc.setText(null);
-            mainCategory.setText(null);
-            subCategory.setText(null);
-            colorSpinner.setText(null);
-
+            clearFieldsFunction();
           }
         }
 
@@ -525,11 +535,11 @@ public class AddItemFragment extends Fragment {
 
 
           //try to use if statement for checking empty string
-          country = country == "" ? null : country;
-          state = state == "" ? null : state;
-          addressLine = addressLine == "" ? null : addressLine;
-          lng = lng == "" ? null : lng;
-          lat = lat == "" ? null : lat;
+          country = country.equals("")  ? null : country;
+          state = state.equals("") ? null : state;
+          addressLine = addressLine .equals("") ? null : addressLine;
+          lng = lng.equals("") ? null : lng;
+          lat = lat.equals("") ? null : lat;
           String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
           locationData = addr.split("\\\\");
 //
