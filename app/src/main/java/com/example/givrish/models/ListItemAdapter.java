@@ -90,14 +90,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
           AllItemsResponseData selectedItem = allItemsResponseData.get(position);
           ItemDetailsFragment itemDetails = ItemDetailsFragment.newInstance(selectedItem);
           listener.loadItem(itemDetails, ItemDetailsFragment.ITEM_DETAILS_TAG);
-//          loadDetail(itemDetails, ItemDetailsFragment.ITEM_DETAILS_TAG);
-        }
-
-        private void loadDetail(Fragment itemDetails, String tag) {
-          FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-          transaction.add(R.id.dashboard_layout, itemDetails, tag);
-          transaction.addToBackStack("");
-          transaction.commit();
         }
       });
     }
