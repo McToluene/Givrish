@@ -36,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -43,6 +44,7 @@ import com.example.givrish.Dashboard;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
+import com.example.givrish.models.DeleteImageClass;
 import com.example.givrish.models.ItemModel;
 import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.R;
@@ -67,6 +69,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -88,7 +91,7 @@ public class AddItemFragment extends Fragment {
   private AutoCompleteTextView mainCategory;
   private AutoCompleteTextView subCategory;
   private AutoCompleteTextView colorSpinner;
-  private  static final String apiKey= "com.example.givrish.ui.APIKEY";
+  private static final String apiKey = "com.example.givrish.ui.APIKEY";
   private List<ItemSubCategoryData> itemSubCategoryDataList;
   private int selectedPosition;
   private ApiEndpointInterface apiService;
@@ -99,14 +102,16 @@ public class AddItemFragment extends Fragment {
   private List<String> imagePaths = new ArrayList<>();
   private FloatingActionButton addButton;
   private CallBackListener listener;
-//  private Context Thecontext;
+  //  private Context Thecontext;
   LocationClass locationClass;
   LocationClass.LocationResult locationResult;
-  boolean check=false;
-//  String addr;
-private String[] locationData;
+  boolean check = false;
+  //  String addr;
+  private String[] locationData;
   private String categoryId;
   private String subId;
+  private int imageCount = 3;
+  private TextView clearImageSelection;
 
 
   public static AddItemFragment newInstance() {
@@ -116,7 +121,6 @@ private String[] locationData;
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
-//    Thecontext = context;
     if (context instanceof CallBackListener)
       listener = (CallBackListener) context;
   }
@@ -136,15 +140,17 @@ private String[] locationData;
     Toolbar toolbar = view.findViewById(R.id.add_toolbar);
     mainCategory = view.findViewById(R.id.mainCategory);
     subCategory = view.findViewById(R.id.subCategory);
-    colorSpinner =  view.findViewById(R.id.ItemColor);
+    colorSpinner = view.findViewById(R.id.ItemColor);
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
+    clearImageSelection = view.findViewById(R.id.clear_image_selection);
 
     addButton = view.findViewById(R.id.addImagebtn);
 
     toolbar.setTitle("Add Item");
 
-    if(getActivity() != null) {
+
+    if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -160,7 +166,7 @@ private String[] locationData;
 
 
     // TODO: Use the ViewModel
-    locationClass=new LocationClass();
+    locationClass = new LocationClass();
     displayLocation();
 
     itemCategoryDataList = mViewModel.getLiveItemCategories().getValue();
@@ -190,12 +196,23 @@ private String[] locationData;
     colorArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
     colorSpinner.setAdapter(colorArrayAdapter);
 
+
+    clearImageSelection.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        layout.removeViews(1, layout.getChildCount() - 1);
+        imageCount = 3;
+        addButton.setEnabled(true);
+        imagePaths.clear();
+      }
+    });
     addButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+
         options = Options.init()
                 .setRequestCode(100)
-                .setCount(3)
+                .setCount(imageCount)
                 .setFrontfacing(false)
                 .setImageQuality(ImageQuality.REGULAR)
                 .setPreSelectedUrls(returnValue)
@@ -203,15 +220,17 @@ private String[] locationData;
                 .setPath("/pix/images");
 
         Pix.start(getActivity(), options);
+
       }
     });
+
 
     mainCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         categoryId = itemCategoryDataList.get(position).getItem_category_id();
         try {
-          ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
+          ItemCategoryData selectedItem = itemCategoryDataList.get(position);
           getSub(selectedItem);
 
         } catch (Exception e) {
@@ -265,8 +284,8 @@ private String[] locationData;
     Call<ItemSubCategoryResponse> call = apiService.getSubCategory(itemString);
     call.enqueue(new Callback<ItemSubCategoryResponse>() {
       @Override
-      public void onResponse(@NonNull Call<ItemSubCategoryResponse> call,@NonNull Response<ItemSubCategoryResponse> response) {
-        if (response.body() != null && response.body().getResponseCode().equals("1")){
+      public void onResponse(@NonNull Call<ItemSubCategoryResponse> call, @NonNull Response<ItemSubCategoryResponse> response) {
+        if (response.body() != null && response.body().getResponseCode().equals("1")) {
           mViewModel.insertAllSub(response.body().getData());
         }
       }
@@ -282,19 +301,18 @@ private String[] locationData;
     Log.i("SELECT", selected.getItem_category_id());
     final List<ItemSubCategoryData> subCategoryOfCategory = new ArrayList<>();
     for (int i = 0; i < itemSubCategoryDataList.size(); i++) {
-      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())){
+      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())) {
         subCategoryOfCategory.add(itemSubCategoryDataList.get(i));
       }
     }
 
     ArrayAdapter<ItemSubCategoryData> arrayAdapter;
-    if (getContext()!= null) {
-     arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, subCategoryOfCategory);
+    if (getContext() != null) {
+      arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, subCategoryOfCategory);
       subCategory.setAdapter(arrayAdapter);
     }
 
   }
-
 
   private void apiCategoryList(String key) {
     ApiKey apiKey = new ApiKey(key);
@@ -307,8 +325,6 @@ private String[] locationData;
         if (response.body() != null && response.body().getResponseCode().equals("1")) {
           mViewModel.insertAll(response.body().getData());
           itemCategoryDataList = mViewModel.getLiveItemCategories().getValue();
-//          ArrayAdapter<ItemCategoryData> arrayAdapter = new ArrayAdapter<>( getContext(), android.R.layout.simple_dropdown_item_1line, itemCategoryDataList);
-//          mainCategory.setAdapter(arrayAdapter);
         }
       }
 
@@ -326,14 +342,20 @@ private String[] locationData;
     if (resultCode == Activity.RESULT_OK && requestCode == RequestCode) {
       if (data != null) {
         ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+        imageCount = imageCount - returnValue.size();
+        if (imageCount == 0) {
+          addButton.setEnabled(false);
+          Toast.makeText(getContext(), "Maximum number of image(s) selected", Toast.LENGTH_LONG).show();
+        }
         if (returnValue != null) {
           loadImage(returnValue);
         }
 
+
       }
 
-    }else{
-      if(requestCode==123)
+    } else {
+      if (requestCode == 123)
         Toast.makeText(getContext(), "phone permission granted", Toast.LENGTH_SHORT).show();
       displayLocation();
 
@@ -341,20 +363,21 @@ private String[] locationData;
   }
 
   private void loadImage(ArrayList<String> returnValue) {
+
     layout = getActivity().findViewById(R.id.addImageLinearLayout);
-    for(int i=0;i<returnValue.size();i++)
-    {
+    for (int i = 0; i < returnValue.size(); i++) {
       ImageView image = new ImageView(getActivity());
-      image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150,150));
-      image.setPaddingRelative(4,4,4,4);
+      image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150, 150));
+      image.setPaddingRelative(4, 4, 4, 4);
       image.setMaxHeight(100);
       image.setMaxWidth(100);
       image.setMinimumHeight(100);
       image.setMaxHeight(100);
       image.setScaleType(ImageView.ScaleType.FIT_XY);
+      image.setElevation(4);
+      image.setId(i);
       Bitmap theImage = BitmapFactory.decodeFile(returnValue.get(i));
       image.setImageBitmap(theImage);
-//      imageArray.add(theImage);
       // Adds the view to the layout
       layout.addView(image);
       imagePaths.add(returnValue.get(i));
@@ -374,7 +397,8 @@ private String[] locationData;
           Toast.makeText(getContext(), "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
         }
         break;
-      }case 1: {
+      }
+      case 1: {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                   == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission
@@ -404,7 +428,7 @@ private String[] locationData;
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
     String userId = "5";
-    String imgCount = String.valueOf(layout.getChildCount());
+
 
     if (!name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
@@ -443,10 +467,10 @@ private String[] locationData;
       });
 
     } else {
-    Toast.makeText(getContext(), "pls fill out all fields correctly", Toast.LENGTH_LONG).show();
-  }
+      Toast.makeText(getContext(), "pls fill out all fields correctly", Toast.LENGTH_LONG).show();
+    }
 
-}
+  }
 
   private void uploadImage(String path, String id) {
     File file = new File(path);
@@ -463,11 +487,11 @@ private String[] locationData;
     Call<List<AddItemResponse>> call = apiService.uploadImage(part, description, id);
     call.enqueue(new Callback<List<AddItemResponse>>() {
       @Override
-      public void onResponse(@NonNull Call<List<AddItemResponse>> call,@NonNull Response<List<AddItemResponse>> response) {
+      public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
         String message = response.body().get(0).getResponseCode();
         Log.i("MESSAGE", response.body().get(0).getResponseCode());
         if (response.body() != null)
-        Log.i("RES", response.body().get(0).getResponseStatus());
+          Log.i("RES", response.body().get(0).getResponseStatus());
       }
 
       @Override
@@ -480,7 +504,7 @@ private String[] locationData;
 
   private void displayLocation() {
 
-    locationResult = new LocationClass.LocationResult(){
+    locationResult = new LocationClass.LocationResult() {
 
       @Override
       public void gotLocation(Location location) {
@@ -501,10 +525,14 @@ private String[] locationData;
 
 
           //try to use if statement for checking empty string
+          country = country == "" ? null : country;
+          state = state == "" ? null : state;
+          addressLine = addressLine == "" ? null : addressLine;
+          lng = lng == "" ? null : lng;
+          lat = lat == "" ? null : lat;
           String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
           locationData = addr.split("\\\\");
-//          Toast.makeText(getContext(), "i got the location"+ country + " " + state + " " + addressLine + " " + lng + " " + lat, Toast.LENGTH_LONG).show();
-
+//
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -514,10 +542,9 @@ private String[] locationData;
 
     check = locationClass.getLocation(getContext(), locationResult);
 
-    if(!check)
+    if (!check)
       //Ask for permission
-      ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+      ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
   }
-
 }

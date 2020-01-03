@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners android:topLeftRadius="70dp" android:topRightRadius="30dp"
+    android:bottomLeftRadius="30dp" android:bottomRightRadius="70dp"
+        android:radius="@dimen/cardview_compat_inset_shadow"/>
+
+    <padding android:left="30dp" android:top="25dp" android:right="30dp" android:bottom="15dp"/>
+
+    <stroke android:color="@color/colorPrimary" android:width="9dp"/>
+</shape>

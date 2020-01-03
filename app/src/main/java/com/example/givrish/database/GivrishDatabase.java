@@ -5,8 +5,10 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.example.givrish.models.AllItemsResponseData;
+import com.example.givrish.models.AllItemsResponseImageData;
 import com.example.givrish.models.ItemCategoryData;
 import com.example.givrish.models.ItemSubCategoryData;
 
@@ -14,12 +16,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {ItemCategoryData.class, ItemSubCategoryData.class, AllItemsResponseData.class}, version = 1)
+@Database(entities = {ItemCategoryData.class, ItemSubCategoryData.class, AllItemsResponseData.class, AllItemsResponseImageData.class}, version = 1)
+@TypeConverters({ClassConverter.class})
 public abstract class GivrishDatabase extends RoomDatabase {
   public abstract CategoriesDao categoriesDao();
   public abstract ItemsDao itemsDao();
-  private static final String DB_NAME = "Givrish";
 
+  private static final String DB_NAME = "Givrish";
   private static volatile GivrishDatabase INSTANCE;
   private static  final int NUMBER_OF_THREADS = 4;
 
