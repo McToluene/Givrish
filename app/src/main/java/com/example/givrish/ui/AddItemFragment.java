@@ -116,7 +116,6 @@ public class AddItemFragment extends Fragment {
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
-//    Thecontext = context;
     if (context instanceof CallBackListener)
       listener = (CallBackListener) context;
   }

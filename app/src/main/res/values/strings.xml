@@ -39,4 +39,8 @@
   <string name="item_image">Item image</string>
   <string name="call_button">Call button</string>
   <string name="message_button">Message button</string>
+  <string name="category">Category</string>
+  <string name="sub_cat">Subcategory</string>
+  <string name="call_giver">Call Giver</string>
+  <string name="i_want">I want it</string>
 </resources>

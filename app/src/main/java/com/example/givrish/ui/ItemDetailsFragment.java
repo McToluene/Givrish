@@ -1,6 +1,5 @@
 package com.example.givrish.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,24 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.example.givrish.Dashboard;
 import com.example.givrish.R;
-import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.models.AllItemsResponseData;
 import com.example.givrish.viewmodel.ItemDetailsViewModel;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.squareup.picasso.Picasso;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ItemDetailsFragment extends Fragment implements View.OnClickListener{
@@ -38,9 +33,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
   private static final String ITEM_KEY = "item";
   public static final String ITEM_DETAILS_TAG = "7";
   private ItemDetailsViewModel mViewModel;
-  private MaterialTextView tvItemName, tvOwnerPhone, tvOwnerName;
-  private ImageView itemImage;
-  private ImageButton message;
+  private MaterialTextView tvDateAdded;
   private ItemSelectedListener listener;
   private ImageView img1,img2,img3,img4,img5;
 
@@ -48,10 +41,11 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     return new ItemDetailsFragment();
   }
 
-  public static ItemDetailsFragment newInstance(AllItemsResponseData item) {
+  public static ItemDetailsFragment newInstance(AllItemsResponseData item, double location) {
 
     Bundle args = new Bundle();
     args.putParcelable(ITEM_KEY, item);
+    args.putDouble("LOCATION", location);
     ItemDetailsFragment fragment = new ItemDetailsFragment();
     fragment.setArguments(args);
     return fragment;
@@ -78,19 +72,26 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
 
 
     String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
-    tvItemName = view.findViewById(R.id.tv_itemName);
-    tvOwnerName = view.findViewById(R.id.tv_ownerName);
-    itemImage = view.findViewById(R.id.items_image);
-    tvOwnerPhone = view.findViewById(R.id.tv_ownerPhone);
-    ImageButton phone = view.findViewById(R.id.callButton);
-    message = view.findViewById(R.id.messageButton);
+    MaterialTextView tvItemName = view.findViewById(R.id.tv_itemName);
+    MaterialTextView tvLocation = view.findViewById(R.id.tv_itemLocation);
+    ImageView itemImage = view.findViewById(R.id.items_image);
+    MaterialTextView tvCate = view.findViewById(R.id.tv_ItemCate);
+    MaterialTextView tvSubCate = view.findViewById(R.id.tv_itemSubCat);
+    tvDateAdded = view.findViewById(R.id.tv_dateAdded);
+
+    MaterialButton phone = view.findViewById(R.id.callButton);
+    MaterialButton message = view.findViewById(R.id.messageButton);
 
     if (getArguments() != null) {
       final AllItemsResponseData item = getArguments().getParcelable(ITEM_KEY);
+      final double location = getArguments().getDouble("LOCATION");
+
+      tvLocation.setText(String.valueOf(location));
+
       if (item != null) {
-        tvOwnerName.setText(item.getFullname());
         tvItemName.setText(item.getItem_title());
-        tvOwnerPhone.setText(item.getPhone_number());
+        tvSubCate.setText(item.getItem_sub_category_id());
+        tvCate.setText(item.getItem_category_id());
         if (item.getItem_images().size() != 0) {
           String uri = url + item.getItem_images().get(0).getItemLargeImageName();
           Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(itemImage);
@@ -121,13 +122,6 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     return view;
   }
 
-//  @Override
-//  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//    if (item.getItemId() == android.R.id.home)
-//      listener.onCloseItem(Dashboard.ADD_ITEM_FRAGMENT_FLAG);
-//    return super.onOptionsItemSelected(item);
-//
-//  }
 
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
