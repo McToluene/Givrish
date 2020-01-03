@@ -108,7 +108,7 @@ public class AddItemFragment extends Fragment {
   private String[] locationData;
   private String categoryId;
   private String subId;
-  private int imageCount = 3;
+  private int imageCount = 5;
   private TextView clearImageSelection;
   private MenuItem clearAllselection;
 
@@ -252,8 +252,8 @@ public class AddItemFragment extends Fragment {
         clearImageFunction();
     }
     private void clearImageFunction() {
-        layout.removeViews(1, layout.getChildCount() - 1);
-        imageCount = 3;
+        layout.removeAllViews();
+        imageCount = 5;
         addButton.setEnabled(true);
         imagePaths.clear();
     }

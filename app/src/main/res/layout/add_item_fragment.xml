@@ -8,224 +8,194 @@
     android:layout_height="match_parent"
     tools:layout_editor_absoluteX="0dp">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      tools:context=".ui.AddItemFragment">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Light"
-        app:elevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:context=".ui.AddItemFragment">
 
-      <androidx.appcompat.widget.Toolbar
-          android:id="@+id/add_toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          android:background="?attr/colorPrimaryDark"
-          android:theme="@style/toolbarStyle"
-          app:layout_scrollFlags="scroll|enterAlways"
-          app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar">
-
-      <androidx.constraintlayout.widget.ConstraintLayout
-          android:id="@+id/constraintLayout"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-
-        <!--        <androidx.cardview.widget.CardView-->
-        <!--            android:id="@+id/headerCardView"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="@id/constraintLayout">-->
-
-        <!--          <androidx.constraintlayout.widget.ConstraintLayout-->
-        <!--              android:layout_width="match_parent"-->
-        <!--              android:layout_height="wrap_content"-->
-        <!--              android:background="@color/colorPrimary"-->
-        <!--              android:padding="12dp">-->
-
-        <!--            <ImageView-->
-        <!--                android:id="@+id/AddheaderImage"-->
-        <!--                android:layout_width="31dp"-->
-        <!--                android:layout_height="32dp"-->
-        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--                app:layout_constraintStart_toStartOf="parent"-->
-        <!--                app:layout_constraintTop_toTopOf="parent"-->
-        <!--                app:srcCompat="@drawable/ic_card_giftcard_black_24dp" />-->
-
-        <!--            <TextView-->
-        <!--                android:layout_width="0dp"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginStart="16dp"-->
-        <!--                android:layout_marginTop="6dp"-->
-        <!--                android:text="@string/add_item_header"-->
-        <!--                android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-        <!--                android:textColor="@color/white"-->
-        <!--                app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                app:layout_constraintStart_toEndOf="@+id/AddheaderImage"-->
-        <!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--          </androidx.constraintlayout.widget.ConstraintLayout>-->
-        <!--        </androidx.cardview.widget.CardView>-->
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/mainCategory_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:hint="@string/categories"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:elevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/constraintLayout">
+            app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/add_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark"
+                android:theme="@style/toolbarStyle"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-          <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-              android:id="@+id/mainCategory"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/subCategory_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/subcategory"
-            app:layout_constraintEnd_toEndOf="@+id/mainCategory_layout"
-            app:layout_constraintStart_toStartOf="@+id/mainCategory_layout"
-            app:layout_constraintTop_toBottomOf="@id/mainCategory_layout">
-
-          <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-              android:id="@+id/subCategory"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ItemNameLayout"
-            style="@style/Input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/subCategory_layout"
-            app:layout_constraintStart_toStartOf="@+id/subCategory_layout"
-            app:layout_constraintTop_toBottomOf="@id/subCategory_layout">
-
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/item_name"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:hint="@string/Item_name"
-              android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ItemDescriptionLayout"
-            style="@style/Input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="@+id/ItemNameLayout"
-            app:layout_constraintStart_toStartOf="@+id/ItemNameLayout"
-            app:layout_constraintTop_toBottomOf="@id/ItemNameLayout">
-
-          <com.google.android.material.textfield.TextInputEditText
-              android:id="@+id/item_desc"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:hint="@string/item_description"
-              android:inputType="textMultiLine" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <LinearLayout
-            android:id="@+id/addImageLinearLayout"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="8dp"
-            android:layoutDirection="rtl"
-            app:layout_constraintEnd_toEndOf="@+id/ItemDescriptionLayout"
-            app:layout_constraintStart_toStartOf="@+id/ItemDescriptionLayout"
-            app:layout_constraintTop_toBottomOf="@id/ItemDescriptionLayout">
-
-          <com.google.android.material.floatingactionbutton.FloatingActionButton
-              android:id="@+id/addImagebtn"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_marginEnd="10dp"
-              android:layout_weight="1"
-              android:padding="5dp"
-              android:src="@android:drawable/ic_input_add"
-              app:backgroundTint="@color/colorPrimary"
-              app:borderWidth="0.1dp"
-              app:fabSize="normal" />
-
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/clear_image_selection"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:text="@string/clear_selection"
-            android:textColor="@color/colorError"
-            app:layout_constraintEnd_toEndOf="@+id/addImageLinearLayout"
-            app:layout_constraintStart_toStartOf="@+id/addImageLinearLayout"
-            app:layout_constraintTop_toBottomOf="@+id/addImageLinearLayout" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/selectColorLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="40dp"
-            android:hint="@string/color"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/clear_image_selection"
-            app:layout_constraintStart_toStartOf="@+id/clear_image_selection"
-            app:layout_constraintTop_toBottomOf="@id/clear_image_selection">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_bar">
 
-          <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-              android:id="@+id/ItemColor"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/mainCategory_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:hint="@string/categories"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/constraintLayout">
 
 
-      </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/mainCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-    </androidx.cardview.widget.CardView>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/subCategory_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/subcategory"
+                    app:layout_constraintEnd_toEndOf="@+id/mainCategory_layout"
+                    app:layout_constraintStart_toStartOf="@+id/mainCategory_layout"
+                    app:layout_constraintTop_toBottomOf="@id/mainCategory_layout">
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/subCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ItemNameLayout"
+                    style="@style/Input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/subCategory_layout"
+                    app:layout_constraintStart_toStartOf="@+id/subCategory_layout"
+                    app:layout_constraintTop_toBottomOf="@id/subCategory_layout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/item_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/Item_name"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ItemDescriptionLayout"
+                    style="@style/Input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="@+id/ItemNameLayout"
+                    app:layout_constraintStart_toStartOf="@+id/ItemNameLayout"
+                    app:layout_constraintTop_toBottomOf="@id/ItemNameLayout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/item_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/item_description"
+                        android:inputType="textMultiLine" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/addImageScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@+id/ItemDescriptionLayout"
+                    app:layout_constraintStart_toStartOf="@+id/ItemDescriptionLayout"
+                    app:layout_constraintTop_toBottomOf="@id/ItemDescriptionLayout">
+
+                    <LinearLayout
+                        android:id="@+id/addImageLinearLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addImagebtn"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:src="@android:drawable/ic_input_add"
+                    app:backgroundTint="@color/colorPrimary"
+                    app:borderWidth="0.1dp"
+                    app:fabSize="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.954"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.783" />
+
+                <TextView
+                    android:id="@+id/clear_image_selection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/clear_selection"
+                    android:textColor="@color/colorError"
+                    app:layout_constraintEnd_toEndOf="@+id/addImageScrollView"
+                    app:layout_constraintStart_toStartOf="@+id/addImageScrollView"
+                    app:layout_constraintTop_toBottomOf="@+id/addImageScrollView" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/selectColorLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="40dp"
+                    android:hint="@string/color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/clear_image_selection"
+                    app:layout_constraintStart_toStartOf="@+id/clear_image_selection"
+                    app:layout_constraintTop_toBottomOf="@id/clear_image_selection">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/ItemColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
       </ScrollView>
