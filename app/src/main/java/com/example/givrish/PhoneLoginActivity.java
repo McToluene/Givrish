@@ -94,7 +94,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
     callUser.enqueue(new Callback<AuthResponseDto>() {
       @Override
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
-        Log.i("SUccess", response.toString());
+        Log.i("Success", response.toString());
         if (response.body().getResponseCode().equals("1")) {
           Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
           intent.putExtra(PhoneLoginActivity.phoneLoginKey, registeredUser);
