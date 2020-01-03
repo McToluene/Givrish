@@ -104,7 +104,7 @@ public class AddItemFragment extends Fragment {
   LocationClass.LocationResult locationResult;
   boolean check=false;
 //  String addr;
-private String[] locationData;
+  private String[] locationData;
   private String categoryId;
   private String subId;
 

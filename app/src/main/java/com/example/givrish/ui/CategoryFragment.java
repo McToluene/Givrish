@@ -59,12 +59,6 @@ public class CategoryFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.category_fragment, container, false);
@@ -95,7 +89,6 @@ public class CategoryFragment extends Fragment {
         initiateView();
 
     }
-
 
     private void initiateView() {
         if (getActivity() != null) {
