@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
+import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.ui.ItemDetailsFragment;
 import com.squareup.picasso.Picasso;
 
@@ -23,12 +24,14 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   private List<AllItemsResponseData> allItemsResponseData;
   private  LayoutInflater inflater;
   private Context context;
+  private ItemSelectedListener listener;
 
-  public ListItemAdapter(Context context, List<AllItemsResponseData> items) {
+  public ListItemAdapter(Context context) {
     inflater = LayoutInflater.from(context);
     this.context = context;
-    allItemsResponseData = items;
+    listener = (ItemSelectedListener) context;
   }
+
 
   @NonNull
   @Override
@@ -86,14 +89,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
         public void onClick(View v) {
           AllItemsResponseData selectedItem = allItemsResponseData.get(position);
           ItemDetailsFragment itemDetails = ItemDetailsFragment.newInstance(selectedItem);
-          loadDetail(itemDetails);
-        }
-
-        private void loadDetail(Fragment itemDetails) {
-          FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-          transaction.replace(R.id.dashboard_layout, itemDetails);
-          transaction.addToBackStack("");
-          transaction.commit();
+          listener.loadItem(itemDetails, ItemDetailsFragment.ITEM_DETAILS_TAG);
         }
       });
     }

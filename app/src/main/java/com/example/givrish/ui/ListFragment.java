@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +28,7 @@ import android.widget.ProgressBar;
 
 
 import com.example.givrish.R;
+import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.interfaces.ListCallBackEvent;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
@@ -50,7 +53,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   public static final String PROFILE_FRAGMENT_FLAG = "5";
   public static final String SEARCH_FRAGMENT_FLAG = "6";
 
-
   private ListViewModel mViewModel;
   private CircleImageView profile;
   private Fragment fragment;
@@ -59,10 +61,16 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ListItemAdapter listItemAdapter;
   private ListCallBackEvent listCallBackEvent;
   private RecyclerView listRecyclerView;
-  private List<AllItemsResponseData> items;
+  private Context context;
 
   public static ListFragment newInstance() {
     return new ListFragment();
+  }
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+    this.context = context;
   }
 
   @Override
@@ -93,9 +101,9 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       @Override
       public void run() {
         getAllItems();
-
       }
     });
+
     swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override
       public void onRefresh() {
@@ -104,18 +112,14 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       }
     });
 
-
     if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
-    LiveData<List<AllItemsResponseData>> itemsList = mViewModel.getItems();
-    items = itemsList.getValue();
     mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
       @Override
       public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
-        items = allItemsResponseData;
-
+        listItemAdapter.setAllItemsResponseData(allItemsResponseData);
       }
     });
 
@@ -126,7 +130,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
   private void inflateRecycler() {
-    listItemAdapter = new ListItemAdapter(getContext(), items);
+    listItemAdapter = new ListItemAdapter(getContext());
     listRecyclerView.setAdapter(listItemAdapter);
     listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) );
   }
@@ -215,4 +219,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     }
     return items;
   }
+
+
 }
