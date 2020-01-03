@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.R;
+import com.example.givrish.database.Constants;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
@@ -31,6 +32,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.givrish.database.Constants.*;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +41,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileEditFragment extends Fragment implements View.OnClickListener{
 
     private EditText edtUsername;
+    private EditText edtEmail;
+    private EditText edtPhoneNo;
+
     private TextView btnChangePix;
     private Button btnSave;
 
@@ -68,7 +74,13 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         }
 
         edtUsername=view.findViewById(R.id.edtProfileNameEditProfile);
-        edtUsername.setText(getArguments().getString("username"));
+        edtUsername.setText(CURRENT_USER_FULLNAME);
+
+        edtPhoneNo=view.findViewById(R.id.edtPhoneNoEditProfile);
+        edtPhoneNo.setText(CURRENT_USER_PHONE_NUMBER);
+
+        edtEmail=view.findViewById(R.id.edtEmailEditProfile);
+        edtEmail.setText(CURRENT_USER_EMAIL);
 
 
         returnValue = new ArrayList<>();

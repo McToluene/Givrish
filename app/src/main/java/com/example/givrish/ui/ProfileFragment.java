@@ -20,11 +20,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.givrish.R;
+import com.example.givrish.database.Constants;
 import com.example.givrish.models.ProductModel;
 import com.example.givrish.models.ProfileAdapter;
 import com.example.givrish.viewmodel.ProfileViewModel;
 
 import java.util.ArrayList;
+
+import static com.example.givrish.database.Constants.*;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
 
@@ -75,6 +78,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     btnEditProf.setOnClickListener(this);
 
     txtUserNameProfile=view.findViewById(R.id.id_username);
+    txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
 
     return view;
   }
@@ -91,10 +95,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     switch (v.getId()){
       case R.id.btnEditProfile:
         ProfileEditFragment editFragment=new ProfileEditFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("username", txtUserNameProfile.getText().toString());
-        editFragment.setArguments(bundle);
-
         loadFragment(editFragment, "1");
         break;
     }
