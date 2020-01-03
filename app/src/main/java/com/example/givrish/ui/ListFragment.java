@@ -177,6 +177,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
         loadFragment(fragment, PROFILE_FRAGMENT_FLAG);
       }
     });
+
   }
 
   @Override

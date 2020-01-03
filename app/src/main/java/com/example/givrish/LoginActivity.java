@@ -81,10 +81,11 @@ public class LoginActivity extends AppCompatActivity {
     ApiEndpointInterface  apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
     Gson gson = new GsonBuilder().create();
-    String login = gson.toJson(userLogin);
+    final String login = gson.toJson(userLogin);
     Log.i("USER", login);
     Call<LoginResponse> call = apiService.login(login);
     call.enqueue(new Callback<LoginResponse>() {
+
       @Override
       public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
         Log.i("RES", response.body().getResponseStatus());
@@ -96,10 +97,11 @@ public class LoginActivity extends AppCompatActivity {
           UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
 
           UserData loginUser = response.body().getData().get(0);
-          CURRENT_USER_ID = Integer.parseInt(loginUser.getUser_id());
+          CURRENT_USER_ID = loginUser.getUser_id();
           CURRENT_USER_FULLNAME = loginUser.getFullname();
           CURRENT_USER_EMAIL = loginUser.getEmail();
           CURRENT_USER_PHONE_NUMBER = loginUser.getPhone_number();
+          CURRENT_USER_PROFILE_PICTURE = loginUser.getProfile_picture();
 
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
