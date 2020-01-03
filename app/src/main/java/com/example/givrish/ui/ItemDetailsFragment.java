@@ -93,7 +93,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
         tvOwnerPhone.setText(item.getPhone_number());
         if (item.getItem_images().size() != 0) {
           String uri = url + item.getItem_images().get(0).getItemLargeImageName();
-          Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(itemImage);
+          Picasso.with(getContext()).load(uri).fit().placeholder(R.drawable.download).into(itemImage);
         }
 
         phone.setOnClickListener(new View.OnClickListener() {

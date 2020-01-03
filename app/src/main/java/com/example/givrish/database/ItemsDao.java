@@ -20,5 +20,4 @@ public interface ItemsDao {
   @Query("SELECT * FROM item")
   LiveData<List<AllItemsResponseData>> getAllItems();
 
-
 }
