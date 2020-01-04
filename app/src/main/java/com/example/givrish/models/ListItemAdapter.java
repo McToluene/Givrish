@@ -49,7 +49,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
     if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
       String uri =  url + item.getItem_images().get(0).getItemSmallImageName();
-      Picasso.with(context).load(uri).resize(100, 100).centerCrop().placeholder(R.drawable.download).into( holder.itemImage);
+      Picasso.get().load(uri).resize(100, 100).centerCrop().placeholder(R.drawable.download).into( holder.itemImage);
 
     } else {
       holder.itemImage.setImageResource(R.drawable.download);
@@ -113,7 +113,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
   public void setLatitude(String lat) {
     this.latitude = Double.parseDouble(lat);
-//    notifyDataSetChanged();
   }
 
   private Double tryParse(String item) {
