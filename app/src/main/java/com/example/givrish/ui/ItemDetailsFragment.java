@@ -1,6 +1,5 @@
 package com.example.givrish.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -13,45 +12,53 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.example.givrish.Dashboard;
 import com.example.givrish.R;
-import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
+import com.example.givrish.interfaces.OnCategoryFetchListener;
 import com.example.givrish.models.AllItemsResponseData;
+import com.example.givrish.models.ItemCategoryData;
+import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.viewmodel.ItemDetailsViewModel;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.squareup.picasso.Picasso;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 
-public class ItemDetailsFragment extends Fragment implements View.OnClickListener{
+public class ItemDetailsFragment extends Fragment implements View.OnClickListener, OnCategoryFetchListener{
 
   private static final String ITEM_KEY = "item";
   public static final String ITEM_DETAILS_TAG = "7";
   private ItemDetailsViewModel mViewModel;
-  private MaterialTextView tvItemName, tvOwnerPhone, tvOwnerName;
-  private ImageView itemImage;
-  private ImageButton message;
   private ItemSelectedListener listener;
+  private OnCategoryFetchListener fetchListener;
+  private Executor executor = Executors.newSingleThreadExecutor();
   private ImageView img1,img2,img3,img4,img5;
+  private MaterialTextView tvCate;
+  private MaterialTextView tvSubCate;
+  private String subCategoryId;
+  private String categoryId;
 
   public static ItemDetailsFragment newInstance() {
     return new ItemDetailsFragment();
   }
 
-  public static ItemDetailsFragment newInstance(AllItemsResponseData item) {
+  public static ItemDetailsFragment newInstance(AllItemsResponseData item, double location) {
 
     Bundle args = new Bundle();
     args.putParcelable(ITEM_KEY, item);
+    args.putDouble("LOCATION", location);
     ItemDetailsFragment fragment = new ItemDetailsFragment();
     fragment.setArguments(args);
     return fragment;
@@ -65,6 +72,9 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    mViewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
+    fetchListener =(OnCategoryFetchListener) this;
+
     View view = inflater.inflate(R.layout.item_details_fragment, container, false);
     Toolbar detailsToolbar = view.findViewById(R.id.details_toolbar);
 
@@ -78,22 +88,33 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
 
 
     String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
-    tvItemName = view.findViewById(R.id.tv_itemName);
-    tvOwnerName = view.findViewById(R.id.tv_ownerName);
-    itemImage = view.findViewById(R.id.items_image);
-    tvOwnerPhone = view.findViewById(R.id.tv_ownerPhone);
-    ImageButton phone = view.findViewById(R.id.callButton);
-    message = view.findViewById(R.id.messageButton);
+    MaterialTextView tvItemName = view.findViewById(R.id.tv_itemName);
+    MaterialTextView tvLocation = view.findViewById(R.id.tv_itemLocation);
+    ImageView itemImage = view.findViewById(R.id.items_image);
+    tvCate = view.findViewById(R.id.tv_ItemCate);
+    tvSubCate = view.findViewById(R.id.tv_itemSubCat);
+    MaterialTextView tvDateAdded = view.findViewById(R.id.tv_dateAdded);
+
+    MaterialButton phone = view.findViewById(R.id.callButton);
+    MaterialButton message = view.findViewById(R.id.messageButton);
 
     if (getArguments() != null) {
       final AllItemsResponseData item = getArguments().getParcelable(ITEM_KEY);
+
+      final double location = getArguments().getDouble("LOCATION");
+      int intLocation = (int) location;
+      String appendLocation = intLocation + "km";
+      tvLocation.setText(appendLocation);
+
       if (item != null) {
-        tvOwnerName.setText(item.getFullname());
         tvItemName.setText(item.getItem_title());
-        tvOwnerPhone.setText(item.getPhone_number());
+        tvDateAdded.setText(extractDate(item.getItem_joined()));
+        getCategory(item.getItem_category_id());
+        getSubCategory(item.getItem_sub_category_id());
+
         if (item.getItem_images().size() != 0) {
           String uri = url + item.getItem_images().get(0).getItemLargeImageName();
-          Picasso.with(getContext()).load(uri).fit().placeholder(R.drawable.download).into(itemImage);
+          Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(itemImage);
         }
 
         phone.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +134,6 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
               if (intent.resolveActivity(getActivity().getPackageManager()) != null)
                 startActivity(intent);
             }
-
           }
         });
       }
@@ -121,24 +141,61 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     return view;
   }
 
-//  @Override
-//  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//    if (item.getItemId() == android.R.id.home)
-//      listener.onCloseItem(Dashboard.ADD_ITEM_FRAGMENT_FLAG);
-//    return super.onOptionsItemSelected(item);
-//
-//  }
-
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
-    // TODO: Use the ViewModel
+    loadSimilarItems();
+  }
 
+  @NotNull
+  private String extractDate(String date) {
+    int index = date.indexOf(" ");
+    return date.substring(0, index);
+  }
+
+  private void getCategory(final String id) {
+    executor.execute(new Runnable() {
+      @Override
+      public void run() {
+        ItemCategoryData itemCategoryData = mViewModel.getCategory(id);
+        fetchListener.onCategoryFetch(itemCategoryData.getItem_category_name());
+      }
+    });
+  }
+
+  private void getSubCategory(final String id) {
+    executor.execute(new Runnable() {
+      @Override
+      public void run() {
+        ItemSubCategoryData itemSubCategoryData = mViewModel.getSubCategory(id);
+        if (itemSubCategoryData != null)
+          fetchListener.onSubCategory(itemSubCategoryData.getItem_sub_category_name());
+      }
+    });
+  }
+
+
+  private void loadSimilarItems() {
+    if ((categoryId != null && !categoryId.isEmpty()) && ((subCategoryId != null) && !subCategoryId.isEmpty())) {
+
+    }
   }
 
   @Override
   public void onClick(View v) {
 
+  }
+
+  @Override
+  public void onCategoryFetch(String name) {
+    categoryId = name;
+    tvCate.setText(name);
+  }
+
+  @Override
+  public void onSubCategory(String name) {
+    subCategoryId = name;
+    tvSubCate.setText(name);
+    getChildFragmentManager().beginTransaction().add(R.id.frame_similar , SimilarFragment.newInstance(categoryId,subCategoryId), "8").commit();
   }
 }

@@ -29,4 +29,10 @@ public interface CategoriesDao {
   @Query("SELECT COUNT(*) FROM item_category")
   LiveData<Integer> getCount();
 
+  @Query("SELECT * FROM item_category WHERE item_category_id = :id")
+  ItemCategoryData getCategory(String id);
+
+  @Query("SELECT * FROM item_sub_category WHERE item_category_id = :id")
+  ItemSubCategoryData getSubCategory(String id);
+
 }

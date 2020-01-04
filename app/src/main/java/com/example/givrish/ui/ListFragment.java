@@ -2,12 +2,17 @@ package com.example.givrish.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.Manifest;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -34,13 +39,16 @@ import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
 import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ListItemAdapter;
+import com.example.givrish.models.LocationClass;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.ListViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -61,16 +69,13 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ListItemAdapter listItemAdapter;
   private ListCallBackEvent listCallBackEvent;
   private RecyclerView listRecyclerView;
-  private Context context;
+  private LocationClass locationClass;
+  private LocationClass.LocationResult locationResult;
+  boolean check = false;
+  private String[] locationData;
 
   public static ListFragment newInstance() {
     return new ListFragment();
-  }
-
-  @Override
-  public void onAttach(@NonNull Context context) {
-    super.onAttach(context);
-    this.context = context;
   }
 
   @Override
@@ -80,7 +85,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     setHasOptionsMenu(true);
     listCallBackEvent = this;
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-
     getAllItems();
 
   }
@@ -124,10 +128,10 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     });
 
     inflateRecycler();
-
     toolbar.setTitle("Givrish");
     return view;
   }
+
 
   private void inflateRecycler() {
     listItemAdapter = new ListItemAdapter(getContext());
@@ -163,6 +167,8 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
+    locationClass=new LocationClass();
+    displayLocation();
 
     profile.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -210,7 +216,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
   }
 
-
   // This get new items into database by selecting last 20;
   private List<AllItemsResponseData> getNewItems(List<AllItemsResponseData> items) {
     if (items.size() > 20){
@@ -219,6 +224,49 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       return items.subList(fromIndex, lastIndex);
     }
     return items;
+  }
+
+  private void displayLocation() {
+
+    locationResult = new LocationClass.LocationResult(){
+
+      @Override
+      public void gotLocation(Location location) {
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+        try {
+          List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+          String country = addressList.get(0).getCountryName();
+          String state = addressList.get(0).getAdminArea();
+          String addressLine = addressList.get(0).getAddressLine(0);
+
+          DecimalFormat df = new DecimalFormat("#.###");
+
+          String lng = df.format(addressList.get(0).getLongitude());
+          String lat = df.format(addressList.get(0).getLatitude());
+
+          listItemAdapter.setLongitude(lng);
+          listItemAdapter.setLatitude(lat);
+
+          //try to use if statement for checking empty string
+          String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
+          locationData = addr.split("\\\\");
+
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+
+      }
+    };
+
+    check = locationClass.getLocation(getContext(), locationResult);
+
+    if(!check)
+      //Ask for permission
+      if (getActivity() != null)
+        ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
   }
 
 
