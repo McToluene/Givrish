@@ -4,6 +4,7 @@ package com.example.givrish.ui;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,7 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
   private String categoryId;
   private String subCategory;
   private Executor executor = Executors.newSingleThreadExecutor();
+  private ContentLoadingProgressBar contentLoadingProgressBar;
 
   public SimilarFragment() {
     // Required empty public constructor
@@ -75,6 +77,8 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
       subCategory = getArguments().getString(SUBCATEGORY_ID_KEY);
     }
 
+    contentLoadingProgressBar = view.findViewById(R.id.similar_loading);
+    contentLoadingProgressBar.show();
 
     RecyclerView similarRecycler = view.findViewById(R.id.similar_recycler);
     adapter = new ListItemAdapter(getContext());
@@ -126,39 +130,34 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
     });
   }
 
+  // Get the top 20 items
   @Override
   public void removeTop(final List<AllItemsResponseData> similarItems) {
-    Log.i("SPLICE", "INSIDE");
     executor.execute(new Runnable() {
       @Override
       public void run() {
         if (similarItems.size() > 10){
           int lastIndex = similarItems.size();
           int fromIndex = lastIndex - 10;
-//          load(similarItems.subList(fromIndex, lastIndex));
           event.loadItems(similarItems.subList(fromIndex, lastIndex));
         }
       }
     });
   }
 
+  //Loading items into the adapter using the main ui thread
   @Override
   public void loadItems(final List<AllItemsResponseData> subList) {
-    getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        int count = subList.size();
-        Log.i("COUNT", String.valueOf(count));
-        adapter.setAllItemsResponseData(subList);
-      }
-    });
-
+    if (getActivity() != null) {
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          adapter.setAllItemsResponseData(subList);
+          contentLoadingProgressBar.hide();
+        }
+      });
+    }
   }
 
-  private void load(List<AllItemsResponseData> subList) {
-    int count = subList.size();
-    Log.i("COUNT", String.valueOf(count));
-    adapter.setAllItemsResponseData(subList);
-  }
 
 }
