@@ -9,10 +9,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.ui.AddItemFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
@@ -21,7 +23,7 @@ import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
 
   public static final String LIST_ITEM_FRAGMENT_FLAG = "1";
   public static final String ADD_ITEM_FRAGMENT_FLAG = "2";
@@ -121,5 +123,19 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     manager.popBackStack();
     fab.setImageDrawable(getDrawable(R.drawable.gift_box));
     FLAG = 0;
+  }
+
+  @Override
+  public void loadItem(Fragment fragment, String tag) {
+    Log.i("Success", "WE DEY");
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    transaction.replace(R.id.dashboard_layout, fragment, tag);
+    transaction.addToBackStack(tag);
+    transaction.commit();
+  }
+
+  @Override
+  public void onCloseItem(String tag) {
+    onBackClick(tag);
   }
 }

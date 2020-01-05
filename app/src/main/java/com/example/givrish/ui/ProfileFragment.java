@@ -76,47 +76,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
   private List<AllItemsResponseData> items;
 
   private CircleImageView imgProfile;
-
-
     private ListCallBackEvent listCallBackEvent;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
-        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-
-        getAllItems();
-    }
-
-    private void getAllItems() {
-
-        ItemModel itemModel=new ItemModel(CURRENT_USER_ID);
-        Gson gson = new Gson();
-        final String id = gson.toJson(itemModel);
-
-        Call<List<GetUserItemResponse>> call = apiService.getUserItem(id);
-        call.enqueue(new Callback<List<GetUserItemResponse>>() {
-            @Override
-            public void onResponse(Call<List<GetUserItemResponse>> call, Response<List<GetUserItemResponse>> response) {
-                Log.i("RES", response.body().get(0).toString());
-                if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-                    ItemModel data = response.body().get(0).getData().get(0);
-                    String dd = data.getItem_address();
-                }
-                else {
-                    Toast.makeText(getContext(), "No Item added ", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<GetUserItemResponse>> call, Throwable t) {
-                t.toString();
-            }
-        });
-
-
-    }
 
     @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -148,37 +108,71 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     btnEditProf=view.findViewById(R.id.btnEditProfile);
     btnEditProf.setOnClickListener(this);
 
+        setHasOptionsMenu(false);
+
     txtUserNameProfile=view.findViewById(R.id.id_username);
     txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
 
-    loadProfilePicture();
     imgProfile=view.findViewById(R.id.profile_image);
+
+
+    loadProfilePicture();
+
     return view;
   }
 
-  Bitmap theImage;
+    private void getAllItems() {
+
+        ItemModel itemModel=new ItemModel(CURRENT_USER_ID);
+        Gson gson = new Gson();
+        final String id = gson.toJson(itemModel);
+
+        Call<List<GetUserItemResponse>> call = apiService.getUserItem(id);
+        call.enqueue(new Callback<List<GetUserItemResponse>>() {
+            @Override
+            public void onResponse(Call<List<GetUserItemResponse>> call, Response<List<GetUserItemResponse>> response) {
+                Log.i("RES", response.body().get(0).toString());
+                if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
+                    ItemModel data = response.body().get(0).getData().get(0);
+                    String dd = data.getItem_address();
+                }
+                else {
+                    Toast.makeText(getContext(), "No Item added ", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GetUserItemResponse>> call, Throwable t) {
+                t.toString();
+            }
+        });
+
+
+    }
+
+    Bitmap theImage;
 
   @Override
   public void onResume() {
     super.onResume();
-    if(ProfileEditFragment.returnValue.isEmpty() || ProfileEditFragment.returnValue.get(0).isEmpty())
+    if(ProfileEditFragment.returnValue.equals(null) || ProfileEditFragment.returnValue.get(0).isEmpty())
     loadProfilePicture();
     else
       theImage = BitmapFactory.decodeFile(ProfileEditFragment.returnValue.get(0));
-     imgProfile.setImageBitmap(theImage);
+    imgProfile.setImageBitmap(theImage);
   }
 
   private void loadProfilePicture() {
-    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
+      apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+      String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
 
-    try {
-      String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
-      Picasso.with(getContext()).load(uri).resize(100, 100).noFade().into(imgProfile);
-    }
-    catch (Exception e){
-      e.printStackTrace();
-    }
+      try {
+          String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
+          Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile);
+      }
+      catch (Exception e){
+          e.printStackTrace();
+      }
   }
 
   @Override
@@ -186,7 +180,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
   }
-
 
   @Override
   public void onClick(View v) {
@@ -199,6 +192,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         break;
     }
   }
+
 //TODO send the string of the picture to the edit fragment
   private void loadFragment(Fragment fragment, String tag) {
     FragmentTransaction transaction;

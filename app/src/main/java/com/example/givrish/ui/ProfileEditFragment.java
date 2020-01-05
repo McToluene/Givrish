@@ -120,7 +120,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
 
         try {
             String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
-            Picasso.with(getContext()).load(uri).resize(100, 100).noFade().into(imgProfile);
+            Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile);
         }
         catch (Exception e){
             e.printStackTrace();

@@ -105,7 +105,7 @@ public class AddItemFragment extends Fragment {
   LocationClass.LocationResult locationResult;
   boolean check=false;
 //  String addr;
-private String[] locationData;
+  private String[] locationData;
   private String categoryId;
   private String subId;
 
@@ -117,7 +117,6 @@ private String[] locationData;
   @Override
   public void onAttach(@NonNull Context context) {
     super.onAttach(context);
-//    Thecontext = context;
     if (context instanceof CallBackListener)
       listener = (CallBackListener) context;
   }

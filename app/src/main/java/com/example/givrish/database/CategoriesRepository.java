@@ -32,6 +32,11 @@ public class CategoriesRepository {
 
   public LiveData<List<ItemSubCategoryData>> getAllSub() {return listLiveDataSub;}
 
+  public ItemCategoryData getCategory(String id) {
+    return categoriesDao.getCategory(id);
+  }
+  public ItemSubCategoryData getSubCategory(String id) {return categoriesDao.getSubCategory(id); }
+
   public void insert(final List<ItemCategoryData> itemCategoryData) {
     GivrishDatabase.databaseWriteExecutor.execute(new Runnable() {
       @Override

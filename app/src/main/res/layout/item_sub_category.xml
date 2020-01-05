@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/itemCategory"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -40,7 +39,6 @@
 
 
     <View
-        android:id="@+id/dividert"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@android:color/white"
