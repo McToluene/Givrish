@@ -40,8 +40,11 @@
 
 
             <FrameLayout
+                android:background="@color/white"
                 android:id="@+id/frameLayout2"
                 android:layout_width="0dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +62,6 @@
                 android:id="@+id/frameLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
@@ -201,6 +203,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/similar_items"
+                        android:textSize="18sp"
+                        android:textStyle="bold|italic"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/divider2"
                         app:layout_constraintStart_toStartOf="@+id/divider2"
@@ -208,16 +212,17 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/frame_similar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/frameLayout"
-                app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+          <FrameLayout
+              android:id="@+id/frame_similar"
+              android:layout_width="200dp"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="4dp"
+              android:layout_marginBottom="2dp"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintHorizontal_bias="0.02"
+              app:layout_constraintStart_toStartOf="@+id/frameLayout"
+              app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

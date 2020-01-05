@@ -141,11 +141,6 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     return view;
   }
 
-  @Override
-  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    loadSimilarItems();
-  }
 
   @NotNull
   private String extractDate(String date) {
@@ -154,31 +149,31 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
   }
 
   private void getCategory(final String id) {
+    categoryId = id;
     executor.execute(new Runnable() {
       @Override
       public void run() {
         ItemCategoryData itemCategoryData = mViewModel.getCategory(id);
-        fetchListener.onCategoryFetch(itemCategoryData.getItem_category_name());
+        if (itemCategoryData != null)
+          fetchListener.onCategoryFetch(itemCategoryData.getItem_category_name());
+        else
+          fetchListener.onCategoryFetch("Others");
       }
     });
   }
 
   private void getSubCategory(final String id) {
+    subCategoryId = id;
     executor.execute(new Runnable() {
       @Override
       public void run() {
         ItemSubCategoryData itemSubCategoryData = mViewModel.getSubCategory(id);
         if (itemSubCategoryData != null)
           fetchListener.onSubCategory(itemSubCategoryData.getItem_sub_category_name());
+        else
+          fetchListener.onSubCategory("Others");
       }
     });
-  }
-
-
-  private void loadSimilarItems() {
-    if ((categoryId != null && !categoryId.isEmpty()) && ((subCategoryId != null) && !subCategoryId.isEmpty())) {
-
-    }
   }
 
   @Override
@@ -188,14 +183,12 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
 
   @Override
   public void onCategoryFetch(String name) {
-    categoryId = name;
     tvCate.setText(name);
   }
 
   @Override
   public void onSubCategory(String name) {
-    subCategoryId = name;
     tvSubCate.setText(name);
-    getChildFragmentManager().beginTransaction().add(R.id.frame_similar , SimilarFragment.newInstance(categoryId,subCategoryId), "8").commit();
+    getChildFragmentManager().beginTransaction().replace(R.id.frame_similar , SimilarFragment.newInstance(categoryId,subCategoryId), "8").commit();
   }
 }

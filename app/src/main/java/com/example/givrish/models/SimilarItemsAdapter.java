@@ -5,46 +5,37 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
-import com.example.givrish.interfaces.ItemSelectedListener;
-import com.example.givrish.ui.ItemDetailsFragment;
+import com.google.android.material.textview.MaterialTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
-  private List<AllItemsResponseData> allItemsResponseData;
-  private  LayoutInflater inflater;
-  private Context context;
-  private ItemSelectedListener listener;
+public class SimilarItemsAdapter extends RecyclerView.Adapter<SimilarItemsAdapter.SimilarItemsViewHolder> {
+  private List< AllItemsResponseData> listItems;
+  private LayoutInflater inflater;
   private double latitude;
   private double longitude;
   private double gottenDistance;
 
-  public ListItemAdapter(Context context) {
+  public SimilarItemsAdapter(Context context) {
     inflater = LayoutInflater.from(context);
-    this.context = context;
-    listener = (ItemSelectedListener) context;
   }
-
 
   @NonNull
   @Override
-  public ListItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    View view =   inflater.inflate(R.layout.item_card, parent, false);
-    return new ListItemHolder(view);
+  public SimilarItemsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    return new SimilarItemsViewHolder(inflater.inflate(R.layout.similar_item_card, parent, false));
   }
 
   @Override
-  public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
-    AllItemsResponseData item = allItemsResponseData.get(position);
-
+  public void onBindViewHolder(@NonNull SimilarItemsViewHolder holder, int position) {
+    AllItemsResponseData item = listItems.get(position);
     String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
 
     if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
@@ -54,25 +45,22 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     } else {
       holder.itemImage.setImageResource(R.drawable.download);
     }
-    holder.title.setText(item.getItem_title());
-    holder.position = position;
 
-    gottenDistance = getDistance(latitude, longitude, spliceLocation(item.getItem_latitude()), spliceLocation(item.getItem_longitude()), "K");
-    int distance = (int) gottenDistance;
-    String appendDistance = distance + " km";
-    holder.location.setText(appendDistance);
+    holder.itemName.setText(item.getItem_title());
+//    gottenDistance = getDistance(latitude, longitude, spliceLocation(item.getItem_latitude()), spliceLocation(item.getItem_longitude()), "K");
+//    int distance = (int) gottenDistance;
+//    String appendDistance = distance + " km";
+//    holder.itemLocation.setText(appendDistance);
+
   }
 
   @Override
   public int getItemCount() {
-    if (allItemsResponseData != null)
-      return allItemsResponseData.size();
-    else
-      return 0;
+    return listItems != null ? listItems.size() : 0;
   }
 
-  public void setAllItemsResponseData(List<AllItemsResponseData> responseDataList) {
-    allItemsResponseData = responseDataList;
+  public void setListItems(List<AllItemsResponseData> listItems) {
+    this.listItems = listItems;
     notifyDataSetChanged();
   }
 
@@ -106,6 +94,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
         Log.i("FAILED CONVERSION", "Conversion not allowed");
     }
 
+//    notifyDataSetChanged();
   }
 
   public void setLatitude(String lat) {
@@ -137,29 +126,16 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     return tryParse(result);
   }
 
-  class ListItemHolder extends RecyclerView.ViewHolder {
+  class SimilarItemsViewHolder extends RecyclerView.ViewHolder {
+    MaterialTextView itemName, itemLocation;
+    AppCompatImageView itemImage;
 
-    private final TextView title;
-    private final ImageView itemImage;
-    private final TextView location;
-    private int position;
-
-    ListItemHolder(@NonNull View itemView) {
+    SimilarItemsViewHolder(@NonNull View itemView) {
       super(itemView);
 
-      title = itemView.findViewById(R.id.tv_title);
-      itemImage = itemView.findViewById(R.id.item_image);
-      location = itemView.findViewById(R.id.tv_location);
-
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          AllItemsResponseData selectedItem = allItemsResponseData.get(position);
-          ItemDetailsFragment itemDetails = ItemDetailsFragment.newInstance(selectedItem, gottenDistance );
-          listener.loadItem(itemDetails, ItemDetailsFragment.ITEM_DETAILS_TAG);
-        }
-      });
+      itemName = itemView.findViewById(R.id.tv_similarItemName);
+      itemLocation = itemName.findViewById(R.id.tv_similarItemLocation);
+      itemImage = itemView.findViewById(R.id.imageView_similarItem);
     }
-
   }
 }
