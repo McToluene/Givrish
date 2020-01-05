@@ -1,20 +1,21 @@
 package com.example.givrish.ui;
 
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.givrish.R;
-import com.example.givrish.interfaces.ListCallBackEvent;
+import com.example.givrish.interfaces.SimilarItemsCallBack;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
 import com.example.givrish.models.ApiKey;
@@ -24,7 +25,10 @@ import com.example.givrish.network.RetrofitClientInstance;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,12 +37,16 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SimilarFragment extends Fragment implements ListCallBackEvent {
+public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
   private static final String CATEGORY_ID_KEY = "com.example.givrish.ui.CATEGORY_KEY";
   private static final String SUBCATEGORY_ID_KEY = "com.example.givrish.ui.SUBCATEGORY_KEY";
-  private ListCallBackEvent listCallBackEvent;
+  private SimilarItemsCallBack event;
   private ApiEndpointInterface apiService;
   private ListItemAdapter adapter;
+  private String categoryId;
+  private String subCategory;
+  private Executor executor = Executors.newSingleThreadExecutor();
+  private ContentLoadingProgressBar contentLoadingProgressBar;
 
   public SimilarFragment() {
     // Required empty public constructor
@@ -58,11 +66,20 @@ public class SimilarFragment extends Fragment implements ListCallBackEvent {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    listCallBackEvent = this;
+    event = this;
     getSimilarItems();
 
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_similar, container, false);
+
+    if (getArguments() != null) {
+      categoryId = getArguments().getString(CATEGORY_ID_KEY);
+      subCategory = getArguments().getString(SUBCATEGORY_ID_KEY);
+    }
+
+    contentLoadingProgressBar = view.findViewById(R.id.similar_loading);
+    contentLoadingProgressBar.show();
+
     RecyclerView similarRecycler = view.findViewById(R.id.similar_recycler);
     adapter = new ListItemAdapter(getContext());
     similarRecycler.setAdapter(adapter);
@@ -82,7 +99,7 @@ public class SimilarFragment extends Fragment implements ListCallBackEvent {
       public void onResponse(@NonNull Call<AllItemsResponse> call, @NonNull Response<AllItemsResponse> response) {
         if (response.isSuccessful()) {
           if (response.body() != null && response.body().getResponseCode().equals("1")) {
-            listCallBackEvent.itemsLoaded(response.body().getData());
+            event.filterItems(response.body().getData());
           }
         }
       }
@@ -96,8 +113,51 @@ public class SimilarFragment extends Fragment implements ListCallBackEvent {
     });
   }
 
+
   @Override
-  public void itemsLoaded(List<AllItemsResponseData> items) {
-    adapter.setAllItemsResponseData(items);
+  public void filterItems(final List<AllItemsResponseData> items) {
+    executor.execute(new Runnable() {
+      @Override
+      public void run() {
+        List <AllItemsResponseData> similarItems = new ArrayList<>();
+        for (AllItemsResponseData item : items) {
+          if ((item.getItem_category_id().equals(categoryId) || item.getItem_sub_category_id().equals(subCategory))) {
+            similarItems.add(item);
+          }
+        }
+        event.removeTop(similarItems);
+      }
+    });
   }
+
+  // Get the top 20 items
+  @Override
+  public void removeTop(final List<AllItemsResponseData> similarItems) {
+    executor.execute(new Runnable() {
+      @Override
+      public void run() {
+        if (similarItems.size() > 10){
+          int lastIndex = similarItems.size();
+          int fromIndex = lastIndex - 10;
+          event.loadItems(similarItems.subList(fromIndex, lastIndex));
+        }
+      }
+    });
+  }
+
+  //Loading items into the adapter using the main ui thread
+  @Override
+  public void loadItems(final List<AllItemsResponseData> subList) {
+    if (getActivity() != null) {
+      getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          adapter.setAllItemsResponseData(subList);
+          contentLoadingProgressBar.hide();
+        }
+      });
+    }
+  }
+
+
 }
