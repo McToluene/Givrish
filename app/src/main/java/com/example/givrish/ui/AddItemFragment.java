@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 
 import com.example.givrish.Dashboard;
+import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
@@ -402,7 +403,7 @@ private String[] locationData;
     String name = itemName.getText().toString();
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
-    String userId = "5";
+    String userId = Constants.CURRENT_USER_ID;
     String imgCount = String.valueOf(layout.getChildCount());
 
     if (!name.isEmpty() || !desc.isEmpty()) {

@@ -26,12 +26,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.R;
+import com.example.givrish.database.Constants;
+import com.example.givrish.interfaces.ListCallBackEvent;
+import com.example.givrish.models.AddItemResponse;
+import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.AllItemsResponseData;
+import com.example.givrish.models.ApiKey;
+import com.example.givrish.models.GetUserItemResponse;
+import com.example.givrish.models.ItemModel;
 import com.example.givrish.models.ProductModel;
 import com.example.givrish.models.ProfileAdapter;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
+import com.example.givrish.viewmodel.ListViewModel;
 import com.example.givrish.viewmodel.ProfileViewModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -43,6 +53,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.givrish.database.Constants.*;
 
@@ -64,7 +77,48 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
   private CircleImageView imgProfile;
 
-  @Override
+
+    private ListCallBackEvent listCallBackEvent;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(false);
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+
+        getAllItems();
+    }
+
+    private void getAllItems() {
+
+        ItemModel itemModel=new ItemModel(CURRENT_USER_ID);
+        Gson gson = new Gson();
+        final String id = gson.toJson(itemModel);
+
+        Call<List<GetUserItemResponse>> call = apiService.getUserItem(id);
+        call.enqueue(new Callback<List<GetUserItemResponse>>() {
+            @Override
+            public void onResponse(Call<List<GetUserItemResponse>> call, Response<List<GetUserItemResponse>> response) {
+                Log.i("RES", response.body().get(0).toString());
+                if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
+                    ItemModel data = response.body().get(0).getData().get(0);
+                    String dd = data.getItem_address();
+                }
+                else {
+                    Toast.makeText(getContext(), "No Item added ", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GetUserItemResponse>> call, Throwable t) {
+                t.toString();
+            }
+        });
+
+
+    }
+
+    @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
     View view=inflater.inflate(R.layout.profile_fragment, container, false);
@@ -139,6 +193,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     switch (v.getId()){
       case R.id.btnEditProfile:
         ProfileEditFragment editFragment=new ProfileEditFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("image", CURRENT_USER_PROFILE_PICTURE);
         loadFragment(editFragment, "1");
         break;
     }

@@ -114,16 +114,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(returnValue.isEmpty() || returnValue.get(0).isEmpty())
-        loadProfilePic();
-        else
-            theImage = BitmapFactory.decodeFile(returnValue.get(0));
-        imgProfile.setImageBitmap(theImage);
-    }
-
     private void loadProfilePic() {
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
@@ -149,7 +139,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         }
     }
 
-        private void uploadImage(String path) {
+    private void uploadImage(String path) {
             File file = new File(path);
             //Request body
             final RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
@@ -193,6 +183,13 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                     imgProfile.setImageBitmap(theImage);
                 }
             }
+        }
+        else {
+            if(ProfileEditFragment.returnValue.isEmpty() || ProfileEditFragment.returnValue.get(0).isEmpty())
+                loadProfilePic();
+            else
+                theImage = BitmapFactory.decodeFile(ProfileEditFragment.returnValue.get(0));
+            imgProfile.setImageBitmap(theImage);
         }
     }
 }

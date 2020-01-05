@@ -7,6 +7,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -36,6 +39,7 @@ import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.ListViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -43,6 +47,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class ListFragment extends Fragment implements ListCallBackEvent {
 
@@ -74,7 +80,29 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
     getAllItems();
+  }
 
+  Bitmap theImage;
+  @Override
+  public void onResume() {
+    super.onResume();
+    if(ProfileEditFragment.returnValue.isEmpty() || ProfileEditFragment.returnValue.get(0).isEmpty())
+      loadProfilePicture();
+    else
+      theImage = BitmapFactory.decodeFile(ProfileEditFragment.returnValue.get(0));
+    profile.setImageBitmap(theImage);
+  }
+
+  private void loadProfilePicture() {
+    String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
+
+    try {
+      String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
+      Picasso.with(getContext()).load(uri).resize(80, 80).noFade().into(profile);
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -103,7 +131,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
         swipeRefreshLayout.setRefreshing(false);
       }
     });
-
 
     if (getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -150,8 +177,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       @Override
       public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
         if (getView() != null)
-        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT)
-                .show();
+        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT).show();
       }
     });
   }
