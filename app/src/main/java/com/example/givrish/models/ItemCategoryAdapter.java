@@ -13,24 +13,32 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
+import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.ui.CategoryFragment;
 import com.example.givrish.ui.ItemSubCategoryFragment;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ItemCategoryHolder> {
+public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ItemCategoryHolder>  implements CallBackListener{
     private List<ItemCategoryData> itemCategoryData;
     private Context context;
     private LayoutInflater inflater;
+    CallBackListener callBackListener;
+
+    public static final String sub_cATEGORIES_fRAGMENT_fLAG= "2001";
 
 
     public ItemCategoryAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+        callBackListener = (CallBackListener) context;
     }
 
     public ItemCategoryAdapter(List<ItemCategoryData> itemCategoryData, Context context) {
@@ -69,12 +77,12 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
         return itemCategoryData == null ? 0 : itemCategoryData.size();
     }
 
+
     public class ItemCategoryHolder extends RecyclerView.ViewHolder {
 
         private TextView fTitle;
         private AppCompatTextView itemCatTitle;
         private int Position;
-
 
         public ItemCategoryHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,20 +93,26 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     bundle.putString("ITEMM",itemCategoryData.get(Position).getItem_category_id());
+                    bundle.putInt("ITEM",Position);
                     ItemSubCategoryFragment itemSub = new ItemSubCategoryFragment();
                     itemSub.setArguments(bundle);
-                    loadSub(itemSub);
+                    loadSub(itemSub,sub_cATEGORIES_fRAGMENT_fLAG);
                 }
 
-                private void loadSub(Fragment itemSub) {
-                    FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.dashboard_layout, itemSub);
-                    transaction.addToBackStack(null);
+                private void loadSub(Fragment itemSub, String tag) {
+                    FragmentTransaction  transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.dashboard_layout,itemSub,tag);
+                    transaction.addToBackStack(tag);
                     transaction.commit();
                 }
             });
 
         }
+
+    }
+
+    @Override
+    public void onBackClick(String tag) {
 
     }
 }

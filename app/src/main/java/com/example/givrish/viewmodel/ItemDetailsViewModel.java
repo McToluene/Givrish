@@ -18,11 +18,11 @@ public class ItemDetailsViewModel extends AndroidViewModel {
     categoriesRepository = new CategoriesRepository(application);
   }
 
-  public ItemCategoryData getCategory(String id) {
-    return categoriesRepository.getCategory(id);
-  }
-
-  public ItemSubCategoryData getSubCategory(String id) {
-    return categoriesRepository.getSubCategory(id);
-  }
+//  public ItemCategoryData getCategory(String id) {
+//    return categoriesRepository.getCategory(id);
+//  }
+//
+//  public ItemSubCategoryData getSubCategory(String id) {
+//    return categoriesRepository.getSubCategory(id);
+//  }
 }

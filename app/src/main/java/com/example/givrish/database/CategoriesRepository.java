@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.givrish.models.ItemCategoryData;
 import com.example.givrish.models.ItemSubCategoryData;
+import com.example.givrish.ui.ItemSubCategoryFragment;
 
 import java.util.List;
 
@@ -14,28 +15,38 @@ public class CategoriesRepository {
   private CategoriesDao categoriesDao;
   private LiveData<List<ItemCategoryData>> listLiveDataCategories;
   private LiveData<List<ItemSubCategoryData>> listLiveDataSub;
+  private LiveData<List<ItemSubCategoryData>> sub;
+
   private LiveData<Integer> count;
+  private LiveData<Integer> subCount;
 
   public CategoriesRepository(Application application) {
     GivrishDatabase db = GivrishDatabase.getDatabase(application);
     categoriesDao = db.categoriesDao();
+
+
     listLiveDataCategories = categoriesDao.getAllCategories();
     listLiveDataSub = categoriesDao.getAllSub();
+
     count = categoriesDao.getCount();
+    subCount = categoriesDao.getSubCount();
+
+     sub = categoriesDao.getSub(ItemSubCategoryFragment.ademi);
+
   }
 
   public LiveData<Integer> getCount() {return count;}
+  public LiveData<Integer> getSubCount(){return subCount;}
+
 
   public LiveData<List<ItemCategoryData>> getAllCategories() {
     return listLiveDataCategories;
   }
-
   public LiveData<List<ItemSubCategoryData>> getAllSub() {return listLiveDataSub;}
 
-  public ItemCategoryData getCategory(String id) {
-    return categoriesDao.getCategory(id);
-  }
-  public ItemSubCategoryData getSubCategory(String id) {return categoriesDao.getSubCategory(id); }
+
+  public LiveData<List<ItemSubCategoryData>> getSub(String ademi){return sub;}
+
 
   public void insert(final List<ItemCategoryData> itemCategoryData) {
     GivrishDatabase.databaseWriteExecutor.execute(new Runnable() {
@@ -46,6 +57,7 @@ public class CategoriesRepository {
     });
   }
 
+
   public void insertSub(final List<ItemSubCategoryData> itemSubCategoryData) {
     GivrishDatabase.databaseWriteExecutor.execute(new Runnable() {
       @Override
@@ -54,4 +66,6 @@ public class CategoriesRepository {
       }
     });
   }
+
+
 }
