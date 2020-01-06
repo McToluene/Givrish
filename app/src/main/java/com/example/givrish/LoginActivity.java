@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.givrish.database.Constants;
 import com.example.givrish.models.LoginResponse;
 import com.example.givrish.models.UserData;
 import com.example.givrish.models.UserLoginModel;
@@ -19,9 +20,13 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.example.givrish.database.Constants.*;
 
 public class LoginActivity extends AppCompatActivity {
   private TextInputEditText phoneNumber;
@@ -76,10 +81,11 @@ public class LoginActivity extends AppCompatActivity {
     ApiEndpointInterface  apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 
     Gson gson = new GsonBuilder().create();
-    String login = gson.toJson(userLogin);
+    final String login = gson.toJson(userLogin);
     Log.i("USER", login);
     Call<LoginResponse> call = apiService.login(login);
     call.enqueue(new Callback<LoginResponse>() {
+
       @Override
       public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
         Log.i("RES", response.body().getResponseStatus());
@@ -89,6 +95,13 @@ public class LoginActivity extends AppCompatActivity {
           monitoringUserLoginFlag = true;
           UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),number);
           UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
+
+          UserData loginUser = response.body().getData().get(0);
+          CURRENT_USER_ID = loginUser.getUser_id();
+          CURRENT_USER_FULLNAME = loginUser.getFullname();
+          CURRENT_USER_EMAIL = loginUser.getEmail();
+          CURRENT_USER_PHONE_NUMBER = loginUser.getPhone_number();
+          CURRENT_USER_PROFILE_PICTURE = loginUser.getProfile_picture();
 
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }

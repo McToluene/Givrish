@@ -147,8 +147,7 @@ public class AddItemFragment extends Fragment {
 
     toolbar.setTitle("Add Item");
 
-
-    if (getActivity() != null) {
+    if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -164,7 +163,7 @@ public class AddItemFragment extends Fragment {
 
 
     // TODO: Use the ViewModel
-    locationClass = new LocationClass();
+    locationClass=new LocationClass();
     displayLocation();
 
     itemCategoryDataList = mViewModel.getLiveItemCategories().getValue();
@@ -204,7 +203,6 @@ public class AddItemFragment extends Fragment {
     addButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-
         options = Options.init()
                 .setRequestCode(100)
                 .setCount(imageCount)
@@ -215,17 +213,15 @@ public class AddItemFragment extends Fragment {
                 .setPath("/pix/images");
 
         Pix.start(getActivity(), options);
-
       }
     });
-
 
     mainCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         categoryId = itemCategoryDataList.get(position).getItem_category_id();
         try {
-          ItemCategoryData selectedItem = itemCategoryDataList.get(position);
+          ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
           getSub(selectedItem);
 
         } catch (Exception e) {
@@ -297,8 +293,8 @@ public class AddItemFragment extends Fragment {
     Call<ItemSubCategoryResponse> call = apiService.getSubCategory(itemString);
     call.enqueue(new Callback<ItemSubCategoryResponse>() {
       @Override
-      public void onResponse(@NonNull Call<ItemSubCategoryResponse> call, @NonNull Response<ItemSubCategoryResponse> response) {
-        if (response.body() != null && response.body().getResponseCode().equals("1")) {
+      public void onResponse(@NonNull Call<ItemSubCategoryResponse> call,@NonNull Response<ItemSubCategoryResponse> response) {
+        if (response.body() != null && response.body().getResponseCode().equals("1")){
           mViewModel.insertAllSub(response.body().getData());
         }
       }
@@ -314,14 +310,14 @@ public class AddItemFragment extends Fragment {
     Log.i("SELECT", selected.getItem_category_id());
     final List<ItemSubCategoryData> subCategoryOfCategory = new ArrayList<>();
     for (int i = 0; i < itemSubCategoryDataList.size(); i++) {
-      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())) {
+      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())){
         subCategoryOfCategory.add(itemSubCategoryDataList.get(i));
       }
     }
 
     ArrayAdapter<ItemSubCategoryData> arrayAdapter;
-    if (getContext() != null) {
-      arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, subCategoryOfCategory);
+    if (getContext()!= null) {
+     arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, subCategoryOfCategory);
       subCategory.setAdapter(arrayAdapter);
     }
 
@@ -338,6 +334,8 @@ public class AddItemFragment extends Fragment {
         if (response.body() != null && response.body().getResponseCode().equals("1")) {
           mViewModel.insertAll(response.body().getData());
           itemCategoryDataList = mViewModel.getLiveItemCategories().getValue();
+//          ArrayAdapter<ItemCategoryData> arrayAdapter = new ArrayAdapter<>( getContext(), android.R.layout.simple_dropdown_item_1line, itemCategoryDataList);
+//          mainCategory.setAdapter(arrayAdapter);
         }
       }
 
@@ -364,11 +362,10 @@ public class AddItemFragment extends Fragment {
           loadImage(returnValue);
         }
 
-
       }
 
-    } else {
-      if (requestCode == 123)
+    }else{
+      if(requestCode==123)
         Toast.makeText(getContext(), "phone permission granted", Toast.LENGTH_SHORT).show();
       displayLocation();
 
@@ -376,19 +373,17 @@ public class AddItemFragment extends Fragment {
   }
 
   private void loadImage(ArrayList<String> returnValue) {
-
     layout = getActivity().findViewById(R.id.addImageLinearLayout);
-    for (int i = 0; i < returnValue.size(); i++) {
+    for(int i=0;i<returnValue.size();i++)
+    {
       ImageView image = new ImageView(getActivity());
-      image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150, 150));
-      image.setPaddingRelative(4, 4, 4, 4);
+      image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150,150));
+      image.setPaddingRelative(4,4,4,4);
       image.setMaxHeight(100);
       image.setMaxWidth(100);
       image.setMinimumHeight(100);
       image.setMaxHeight(100);
       image.setScaleType(ImageView.ScaleType.FIT_XY);
-      image.setElevation(4);
-      image.setId(i);
       Bitmap theImage = BitmapFactory.decodeFile(returnValue.get(i));
       image.setImageBitmap(theImage);
       // Adds the view to the layout
@@ -410,8 +405,7 @@ public class AddItemFragment extends Fragment {
           Toast.makeText(getContext(), "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
         }
         break;
-      }
-      case 1: {
+      }case 1: {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                   == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission
@@ -478,7 +472,7 @@ public class AddItemFragment extends Fragment {
       Toast.makeText(getContext(), "pls fill out all fields correctly", Toast.LENGTH_LONG).show();
     }
 
-  }
+}
 
   private void uploadImage(String path, String id) {
     File file = new File(path);
@@ -495,11 +489,11 @@ public class AddItemFragment extends Fragment {
     Call<List<AddItemResponse>> call = apiService.uploadImage(part, description, id);
     call.enqueue(new Callback<List<AddItemResponse>>() {
       @Override
-      public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
+      public void onResponse(@NonNull Call<List<AddItemResponse>> call,@NonNull Response<List<AddItemResponse>> response) {
         String message = response.body().get(0).getResponseCode();
         Log.i("MESSAGE", response.body().get(0).getResponseCode());
         if (response.body() != null)
-          Log.i("RES", response.body().get(0).getResponseStatus());
+        Log.i("RES", response.body().get(0).getResponseStatus());
       }
 
       @Override
@@ -512,7 +506,7 @@ public class AddItemFragment extends Fragment {
 
   private void displayLocation() {
 
-    locationResult = new LocationClass.LocationResult() {
+    locationResult = new LocationClass.LocationResult(){
 
       @Override
       public void gotLocation(Location location) {
@@ -541,6 +535,7 @@ public class AddItemFragment extends Fragment {
           String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
           locationData = addr.split("\\\\");
 //
+
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -550,9 +545,9 @@ public class AddItemFragment extends Fragment {
 
     check = locationClass.getLocation(getContext(), locationResult);
 
-    if (!check)
+    if(!check)
       //Ask for permission
-      ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+      ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
   }
 }
