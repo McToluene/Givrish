@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    //Todo
 
     private boolean retreiveUserLoginDetails(){
         String loginPhoneNumber = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
