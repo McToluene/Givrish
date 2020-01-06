@@ -43,9 +43,12 @@ public class CategoriesRepository {
     return listLiveDataCategories;
   }
   public LiveData<List<ItemSubCategoryData>> getAllSub() {return listLiveDataSub;}
-
-
   public LiveData<List<ItemSubCategoryData>> getSub(String ademi){return sub;}
+
+  public ItemCategoryData getCategory(String id) {
+    return categoriesDao.getCategory(id);
+  }
+  public ItemSubCategoryData getSubCategory(String id) {return categoriesDao.getSubCategory(id); }
 
 
   public void insert(final List<ItemCategoryData> itemCategoryData) {

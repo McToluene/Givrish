@@ -30,10 +30,13 @@
 
   <ScrollView
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="0dp"
+      android:layout_marginBottom="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/details_appbar">
+      app:layout_constraintTop_toBottomOf="@+id/details_appbar"
+      app:layout_constraintVertical_bias="0.0">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -63,6 +66,8 @@
           android:id="@+id/frameLayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/frameLayout2">
@@ -75,9 +80,7 @@
               android:id="@+id/tv_itemName"
               android:layout_width="0dp"
               android:layout_height="wrap_content"
-              android:layout_marginStart="8dp"
               android:layout_marginTop="8dp"
-              android:layout_marginEnd="8dp"
               android:textSize="24sp"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
@@ -194,36 +197,58 @@
               android:layout_height="1dp"
               android:layout_marginTop="4dp"
               android:background="?android:attr/listDivider"
+              app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="@+id/tv_itemSubCat"
               app:layout_constraintStart_toStartOf="@+id/textView5"
               app:layout_constraintTop_toBottomOf="@+id/tv_itemSubCat" />
 
-          <TextView
-              android:id="@+id/textView"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:text="@string/similar_items"
-              android:textSize="18sp"
-              android:textStyle="bold|italic"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="@+id/divider2"
-              app:layout_constraintStart_toStartOf="@+id/divider2"
-              app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
       </FrameLayout>
 
-      <FrameLayout
-          android:id="@+id/frame_similar"
-          android:layout_width="200dp"
+      <com.google.android.material.card.MaterialCardView
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginBottom="2dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginBottom="8dp"
           app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.02"
+          app:layout_constraintEnd_toEndOf="@+id/frameLayout"
           app:layout_constraintStart_toStartOf="@+id/frameLayout"
-          app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+          app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
+
+          <com.google.android.material.textview.MaterialTextView
+              android:id="@+id/tv_similar_item"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:text="@string/similar_items"
+              android:textColor="@color/black"
+              android:textSize="18sp"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent" />
+
+          <FrameLayout
+              android:id="@+id/frame_similar"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="8dp"
+              android:layout_marginBottom="8dp"
+              app:layout_constraintBottom_toBottomOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/tv_similar_item" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+      </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

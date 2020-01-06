@@ -127,7 +127,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 
   @Override
   public void loadItem(Fragment fragment, String tag) {
-    Log.i("Success", "WE DEY");
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.dashboard_layout, fragment, tag);
     transaction.addToBackStack(tag);

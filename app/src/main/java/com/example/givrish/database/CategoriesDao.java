@@ -35,9 +35,10 @@ public interface CategoriesDao {
   @Query("SELECT * FROM item_sub_category WHERE item_category_id = :item_category_id order by item_sub_category_name")
   LiveData<List<ItemSubCategoryData>> getSub(String item_category_id);
 
+  @Query("SELECT * FROM item_category WHERE item_category_id = :id")
+  ItemCategoryData getCategory(String id);
 
-
-
-
+  @Query("SELECT * FROM item_sub_category WHERE item_category_id = :id")
+  ItemSubCategoryData getSubCategory(String id);
 
 }

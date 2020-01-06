@@ -73,7 +73,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     mViewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
-    fetchListener =(OnCategoryFetchListener) this;
+    fetchListener = this;
 
     View view = inflater.inflate(R.layout.item_details_fragment, container, false);
     Toolbar detailsToolbar = view.findViewById(R.id.details_toolbar);
@@ -110,7 +110,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
         tvItemName.setText(item.getItem_title());
         tvDateAdded.setText(extractDate(item.getItem_joined()));
         getCategory(item.getItem_category_id());
-        //getSubCategory(item.getItem_sub_category_id());
+        getSubCategory(item.getItem_sub_category_id());
 
         if (item.getItem_images().size() != 0) {
           String uri = url + item.getItem_images().get(0).getItemLargeImageName();
@@ -153,11 +153,11 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     executor.execute(new Runnable() {
       @Override
       public void run() {
-        //ItemCategoryData itemCategoryData = mViewModel.getCategory(id);
-//        if (itemCategoryData != null)
-//          fetchListener.onCategoryFetch(itemCategoryData.getItem_category_name());
-//        else
-//          fetchListener.onCategoryFetch("Others");
+        ItemCategoryData itemCategoryData = mViewModel.getCategory(id);
+        if (itemCategoryData != null)
+          fetchListener.onCategoryFetch(itemCategoryData.getItem_category_name());
+        else
+          fetchListener.onCategoryFetch("Others");
    }
 
 
@@ -169,12 +169,12 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     executor.execute(new Runnable() {
       @Override
       public void run() {
-       // ItemSubCategoryData itemSubCategoryData = mViewModel.getSubCategory(id);
-//        if (itemSubCategoryData != null)
-//          fetchListener.onSubCategory(itemSubCategoryData.getItem_sub_category_name());
-//        else
-//          fetchListener.onSubCategory("Others");
-//
+        ItemSubCategoryData itemSubCategoryData = mViewModel.getSubCategory(id);
+        if (itemSubCategoryData != null)
+          fetchListener.onSubCategory(itemSubCategoryData.getItem_sub_category_name());
+        else
+          fetchListener.onSubCategory("Others");
+
       }
     });
 
