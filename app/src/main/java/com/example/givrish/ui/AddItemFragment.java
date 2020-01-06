@@ -44,7 +44,6 @@ import com.example.givrish.Dashboard;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
-import com.example.givrish.models.DeleteImageClass;
 import com.example.givrish.models.ItemModel;
 import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.R;
@@ -69,7 +68,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executor;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
