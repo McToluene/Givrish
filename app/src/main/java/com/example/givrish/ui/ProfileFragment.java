@@ -1,8 +1,11 @@
 package com.example.givrish.ui;
 
+
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,20 +28,44 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+import com.example.givrish.Dashboard;
+import com.example.givrish.R;
+import com.example.givrish.database.Constants;
+import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.interfaces.IUserItemCallBackEvent;
+import com.example.givrish.interfaces.ListCallBackEvent;
+import com.example.givrish.models.AddItemResponse;
+import com.example.givrish.models.AddItemResponseData;
+import com.example.givrish.models.AllItemsResponse;
 
 import com.example.givrish.PhoneLoginActivity;
 import com.example.givrish.R;
 import com.example.givrish.UserDataPreference;
+
 import com.example.givrish.models.AllItemsResponseData;
+import com.example.givrish.models.ApiKey;
+import com.example.givrish.models.GetUserItemResponse;
+import com.example.givrish.models.GetUserItemResponseData;
+import com.example.givrish.models.ItemModel;
 import com.example.givrish.models.ProductModel;
 import com.example.givrish.models.ProfileAdapter;
+import com.example.givrish.models.UserId;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
+import com.example.givrish.viewmodel.ListViewModel;
 import com.example.givrish.viewmodel.ProfileViewModel;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -49,26 +77,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.givrish.database.Constants.*;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener{
-
-  private ProfileViewModel mViewModel;
+public class ProfileFragment extends Fragment implements View.OnClickListener, IUserItemCallBackEvent{
 
   private RecyclerView recyclerView;
   private RecyclerView.LayoutManager layoutManager;
-  private ProfileAdapter myAdapter;
-
-  private ArrayList<String> listString;
 
   private Button btnEditProf;
   private TextView txtUserNameProfile;
+    private CircleImageView imgProfile;
+
 
   private ApiEndpointInterface apiService;
-  private List<AllItemsResponseData> items;
+  private GetUserItemResponseData items;
 
-  private CircleImageView imgProfile;
+    private IUserItemCallBackEvent listCallBackEvent;
+    private ProfileViewModel mViewModel;
+    private ProfileAdapter profileAdapter;
+
+
+    private CallBackListener listener;
+    String pic;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof CallBackListener)
+            listener = (CallBackListener) context;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        setHasOptionsMenu(false);
+        listCallBackEvent = this;
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+        getAllItems();
+    }
+
+    @Override
 
 
 
@@ -109,52 +162,93 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
       ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
 
-
-    listString = ProductModel.getAllTitle();
+    toolbar.setNavigationOnClickListener(this);
 
     recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
     recyclerView.setHasFixedSize(true);
 
-    layoutManager = new LinearLayoutManager(this.getContext());
-    recyclerView.setLayoutManager(layoutManager);
-
-    myAdapter = new ProfileAdapter(listString, getContext());
-    recyclerView.setAdapter(myAdapter);
-
     btnEditProf=view.findViewById(R.id.btnEditProfile);
     btnEditProf.setOnClickListener(this);
+
+        setHasOptionsMenu(false);
 
     txtUserNameProfile=view.findViewById(R.id.id_username);
     txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
 
-    loadProfilePicture();
     imgProfile=view.findViewById(R.id.profile_image);
-    return view;
+    imgProfile.setOnClickListener(this);
+
+        mViewModel.getItems().observe(this, new Observer<List<GetUserItemResponseData>>() {
+            @Override
+            public void onChanged(List<GetUserItemResponseData> getUserItemResponseData) {
+                profileAdapter.setUserItemsResponseData(getUserItemResponseData);
+            }
+        });
+
+        if(getArguments() != null){
+            pic=getArguments().getString("pic");
+            Drawable theImage = Drawable.createFromPath(pic);
+            imgProfile.setImageDrawable(theImage);
+        }
+        else {
+            loadProfilePicture();
+        }
+
+        inflateRecycler();
+
+        return view;
   }
 
-  Bitmap theImage;
 
-  @Override
-  public void onResume() {
-    super.onResume();
-    if(ProfileEditFragment.returnValue.isEmpty() || ProfileEditFragment.returnValue.get(0).isEmpty())
-    loadProfilePicture();
-    else
-      theImage = BitmapFactory.decodeFile(ProfileEditFragment.returnValue.get(0));
-     imgProfile.setImageBitmap(theImage);
-  }
+    private void inflateRecycler() {
+        layoutManager = new LinearLayoutManager(this.getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        profileAdapter = new ProfileAdapter(this.getContext());
+        recyclerView.setAdapter(profileAdapter);
+    }
+
+    private void getAllItems() {
+        Gson gson = new Gson();
+        ApiKey apiKey=new ApiKey("test", CURRENT_USER_ID);
+        String apKey=gson.toJson(apiKey);
+
+        Call<GetUserItemResponse> call = apiService.getUserItem(apKey);
+        call.enqueue(new Callback<GetUserItemResponse>() {
+            @Override
+            public void onResponse(Call<GetUserItemResponse> call, Response<GetUserItemResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null && response.body().getResponseCode().equals("1")) {
+                         listCallBackEvent.userItemsLoaded(response.body().getData());
+                    }
+                    else {
+                        Toast.makeText(getContext(), "You have add no item", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetUserItemResponse> call, Throwable t) {
+                t.toString();
+                if (getView() != null)
+                    Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT)
+                            .show();
+            }
+        });
+    }
 
   private void loadProfilePicture() {
-    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
+      apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+      String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
 
-    try {
-      String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
-      Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile);
-    }
-    catch (Exception e){
-      e.printStackTrace();
-    }
+      try {
+          String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
+          Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile);
+      }
+      catch (Exception e){
+          e.printStackTrace();
+          imgProfile.setImageResource(R.drawable.defaultprofile);
+      }
   }
 
   @Override
@@ -163,16 +257,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
   }
 
-
+  private Boolean isImageFitToScreen;
   @Override
   public void onClick(View v) {
     switch (v.getId()){
       case R.id.btnEditProfile:
         ProfileEditFragment editFragment=new ProfileEditFragment();
-        loadFragment(editFragment, "1");
+         if(pic!=null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("pic", pic);
+            editFragment.setArguments(bundle);
+             }
+        loadFragment(editFragment, Dashboard.PROFILE_EDIT_FLAG);
         break;
+
+        case R.id.profile_toolbar:
+            listener.onBackClick(Dashboard.PROFILE_PAGE_FLAG);
+            break;
+        case R.id.profile_image:
+
+            break;
     }
   }
+
 //TODO send the string of the picture to the edit fragment
   private void loadFragment(Fragment fragment, String tag) {
     FragmentTransaction transaction;
@@ -183,4 +290,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
       transaction.commit();
     }
   }
+
+    @Override
+    public void userItemsLoaded(List<GetUserItemResponseData> items) {
+        mViewModel.insertAllItems(getNewItems(items));
+        profileAdapter.setUserItemsResponseData(items);
+    }
+
+    private List<GetUserItemResponseData> getNewItems(List<GetUserItemResponseData> items) {
+        if (items.size() > 20){
+            int lastIndex = items.size();
+            int fromIndex = lastIndex - 20;
+            return items.subList(fromIndex, lastIndex);
+        }
+        return items;
+    }
+
 }
