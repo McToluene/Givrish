@@ -20,14 +20,20 @@ public interface CategoriesDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertAllSub(List<ItemSubCategoryData> itemCategoryData);
 
-  @Query("SELECT * FROM item_sub_category")
+  @Query("SELECT * FROM item_sub_category order by item_sub_category_name")
   LiveData<List<ItemSubCategoryData>> getAllSub();
 
-  @Query("SELECT * FROM item_category")
+  @Query("SELECT * FROM item_category order by item_category_name")
   LiveData<List<ItemCategoryData>> getAllCategories();
 
   @Query("SELECT COUNT(*) FROM item_category")
   LiveData<Integer> getCount();
+
+  @Query("SELECT COUNT(*) FROM item_sub_category")
+  LiveData<Integer> getSubCount();
+
+  @Query("SELECT * FROM item_sub_category WHERE item_category_id = :item_category_id order by item_sub_category_name")
+  LiveData<List<ItemSubCategoryData>> getSub(String item_category_id);
 
   @Query("SELECT * FROM item_category WHERE item_category_id = :id")
   ItemCategoryData getCategory(String id);

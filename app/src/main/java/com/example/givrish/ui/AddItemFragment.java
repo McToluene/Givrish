@@ -36,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -89,7 +90,7 @@ public class AddItemFragment extends Fragment {
   private AutoCompleteTextView mainCategory;
   private AutoCompleteTextView subCategory;
   private AutoCompleteTextView colorSpinner;
-  private  static final String apiKey= "com.example.givrish.ui.APIKEY";
+  private static final String apiKey = "com.example.givrish.ui.APIKEY";
   private List<ItemSubCategoryData> itemSubCategoryDataList;
   private int selectedPosition;
   private ApiEndpointInterface apiService;
@@ -100,14 +101,15 @@ public class AddItemFragment extends Fragment {
   private List<String> imagePaths = new ArrayList<>();
   private FloatingActionButton addButton;
   private CallBackListener listener;
-//  private Context Thecontext;
-  LocationClass locationClass;
-  LocationClass.LocationResult locationResult;
-  boolean check=false;
-//  String addr;
+  private LocationClass locationClass;
+  private LocationClass.LocationResult locationResult;
+  boolean check = false;
   private String[] locationData;
   private String categoryId;
   private String subId;
+  private int imageCount = 5;
+  private TextView clearImageSelection;
+  private MenuItem clearAllselection;
 
 
   public static AddItemFragment newInstance() {
@@ -136,9 +138,11 @@ public class AddItemFragment extends Fragment {
     Toolbar toolbar = view.findViewById(R.id.add_toolbar);
     mainCategory = view.findViewById(R.id.mainCategory);
     subCategory = view.findViewById(R.id.subCategory);
-    colorSpinner =  view.findViewById(R.id.ItemColor);
+    colorSpinner = view.findViewById(R.id.ItemColor);
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
+    clearImageSelection = view.findViewById(R.id.clear_image_selection);
+    clearAllselection = view.findViewById(R.id.menu_hamburger);
 
     addButton = view.findViewById(R.id.addImagebtn);
 
@@ -190,12 +194,19 @@ public class AddItemFragment extends Fragment {
     colorArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
     colorSpinner.setAdapter(colorArrayAdapter);
 
+
+    clearImageSelection.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+          clearImageFunction();
+      }
+    });
     addButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         options = Options.init()
                 .setRequestCode(100)
-                .setCount(3)
+                .setCount(imageCount)
                 .setFrontfacing(false)
                 .setImageQuality(ImageQuality.REGULAR)
                 .setPreSelectedUrls(returnValue)
@@ -227,7 +238,22 @@ public class AddItemFragment extends Fragment {
     });
   }
 
-  @Override
+    private void clearFieldsFunction() {
+        itemName.setText(null);
+        itemDesc.setText(null);
+        mainCategory.setText(null);
+        subCategory.setText(null);
+        colorSpinner.setText(null);
+        clearImageFunction();
+    }
+    private void clearImageFunction() {
+        layout.removeAllViews();
+        imageCount = 5;
+        addButton.setEnabled(true);
+        imagePaths.clear();
+    }
+
+    @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.add_menu, menu);
@@ -235,8 +261,11 @@ public class AddItemFragment extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (item.getItemId() == android.R.id.home)
-      listener.onBackClick(Dashboard.ADD_ITEM_FRAGMENT_FLAG);
+    if (item.getItemId() == android.R.id.home) {
+        listener.onBackClick(Dashboard.ADD_ITEM_FRAGMENT_FLAG);
+    }else if(item.getItemId() == R.id.menu_hamburger){
+        clearFieldsFunction();
+    }
     return super.onOptionsItemSelected(item);
 
   }
@@ -325,6 +354,11 @@ public class AddItemFragment extends Fragment {
     if (resultCode == Activity.RESULT_OK && requestCode == RequestCode) {
       if (data != null) {
         ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+        imageCount = imageCount - returnValue.size();
+        if (imageCount == 0) {
+          addButton.setEnabled(false);
+          Toast.makeText(getContext(), "Maximum number of image(s) selected", Toast.LENGTH_LONG).show();
+        }
         if (returnValue != null) {
           loadImage(returnValue);
         }
@@ -353,7 +387,6 @@ public class AddItemFragment extends Fragment {
       image.setScaleType(ImageView.ScaleType.FIT_XY);
       Bitmap theImage = BitmapFactory.decodeFile(returnValue.get(i));
       image.setImageBitmap(theImage);
-//      imageArray.add(theImage);
       // Adds the view to the layout
       layout.addView(image);
       imagePaths.add(returnValue.get(i));
@@ -426,12 +459,7 @@ public class AddItemFragment extends Fragment {
               Log.i("USER", id);
               uploadImage(imagePaths.get(i), id);
             }
-            itemName.setText(null);
-            itemDesc.setText(null);
-            mainCategory.setText(null);
-            subCategory.setText(null);
-            colorSpinner.setText(null);
-
+            clearFieldsFunction();
           }
         }
 
@@ -442,8 +470,8 @@ public class AddItemFragment extends Fragment {
       });
 
     } else {
-    Toast.makeText(getContext(), "pls fill out all fields correctly", Toast.LENGTH_LONG).show();
-  }
+      Toast.makeText(getContext(), "pls fill out all fields correctly", Toast.LENGTH_LONG).show();
+    }
 
 }
 
@@ -500,9 +528,14 @@ public class AddItemFragment extends Fragment {
 
 
           //try to use if statement for checking empty string
+          country = country.equals("")  ? null : country;
+          state = state.equals("") ? null : state;
+          addressLine = addressLine .equals("") ? null : addressLine;
+          lng = lng.equals("") ? null : lng;
+          lat = lat.equals("") ? null : lat;
           String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
           locationData = addr.split("\\\\");
-//          Toast.makeText(getContext(), "i got the location"+ country + " " + state + " " + addressLine + " " + lng + " " + lat, Toast.LENGTH_LONG).show();
+//
 
         } catch (Exception e) {
           e.printStackTrace();
@@ -518,5 +551,4 @@ public class AddItemFragment extends Fragment {
       ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
   }
-
 }

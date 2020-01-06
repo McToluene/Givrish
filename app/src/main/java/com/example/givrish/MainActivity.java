@@ -3,30 +3,32 @@ package com.example.givrish;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
+import com.example.givrish.ui.ProfileEditFragment;
+import com.example.givrish.ui.ProfileFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if(SignUpActivity.monitoringUserSignupFlag != false && PhoneLoginActivity.monitoringUserLVFlag == true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){
-
-
-        }else if(SignUpActivity.monitoringUserSignupFlag != true && PhoneVerifyActivity.monitoringUserVerificationFlag == true){ }
-
-
-         if(retreiveUserRegistrationDetails() == true && retreiveUserLoginDetails() != true){
-            startActivity(new Intent(MainActivity.this, LoginActivity.class)); }
-        else if(FirebaseAuth.getInstance().getCurrentUser() != null && retreiveUserRegistrationDetails() != true && retreiveUserLoginDetails() != true){
-            startActivity(new Intent(MainActivity.this, SignUpActivity.class)); }
-        else if(retreiveUserLoginDetails() == true){
-            startActivity(new Intent(MainActivity.this, Dashboard.class)); }
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(retreiveUserLoginDetails()){
+           startActivity(new Intent(MainActivity.this,Dashboard.class));
+        }
+
+
+    }
 
 
     @Override
@@ -40,24 +42,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    private boolean retreiveUserRegistrationDetails(){
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_fullname));
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
-        return true;
-    }
-
-
+    //Todo
 
     private boolean retreiveUserLoginDetails(){
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
-        UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
-        return true;
+        String loginPhoneNumber = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
+        String loginPassword = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
+        return !TextUtils.isEmpty(loginPhoneNumber) && !TextUtils.isEmpty(loginPassword);
     }
-
-
-
 
 }
 

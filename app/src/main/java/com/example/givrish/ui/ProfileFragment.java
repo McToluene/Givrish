@@ -1,6 +1,8 @@
 package com.example.givrish.ui;
 
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -21,6 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -31,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
 import com.example.givrish.database.Constants;
@@ -40,6 +46,11 @@ import com.example.givrish.interfaces.ListCallBackEvent;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.AllItemsResponse;
+
+import com.example.givrish.PhoneLoginActivity;
+import com.example.givrish.R;
+import com.example.givrish.UserDataPreference;
+
 import com.example.givrish.models.AllItemsResponseData;
 import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.GetUserItemResponse;
@@ -89,6 +100,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     private ProfileViewModel mViewModel;
     private ProfileAdapter profileAdapter;
 
+
     private CallBackListener listener;
     String pic;
 
@@ -110,6 +122,32 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     }
 
     @Override
+
+
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.profile_menu,menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    if(item.getItemId() == R.id.logout){
+      UserDataPreference.getInstance(getContext()).clearPreference();
+      startActivity(new Intent(getContext(), PhoneLoginActivity.class));
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+
+  @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
     View view=inflater.inflate(R.layout.profile_fragment, container, false);

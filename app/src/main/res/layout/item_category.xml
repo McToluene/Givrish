@@ -58,11 +58,5 @@
         app:layout_constraintStart_toStartOf="@+id/sub_tv_name_v"
         app:layout_constraintTop_toBottomOf="@+id/sub_tvv" />
 
-<!--    <view-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="1dp"-->
-<!--        android:background="#000000"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/tv_cat_item"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tv_cat_item" />-->
+
 </androidx.constraintlayout.widget.ConstraintLayout>
