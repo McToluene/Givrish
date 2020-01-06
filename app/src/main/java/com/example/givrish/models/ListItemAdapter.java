@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListItemHolder> {
+
   private List<AllItemsResponseData> allItemsResponseData;
   private  LayoutInflater inflater;
   private Context context;
@@ -32,7 +33,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
     this.context = context;
     listener = (ItemSelectedListener) context;
   }
-
 
   @NonNull
   @Override

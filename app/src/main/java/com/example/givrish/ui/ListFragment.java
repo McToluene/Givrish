@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -32,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 
+import com.example.givrish.Dashboard;
 import com.example.givrish.R;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.interfaces.ListCallBackEvent;
@@ -61,7 +65,6 @@ import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTUR
 public class ListFragment extends Fragment implements ListCallBackEvent {
 
   public static final String CATEGORIES_FRAGMENT_FLAG= "4";
-  public static final String PROFILE_FRAGMENT_FLAG = "5";
   public static final String SEARCH_FRAGMENT_FLAG = "6";
 
   private ListViewModel mViewModel;
@@ -76,6 +79,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private LocationClass.LocationResult locationResult;
   boolean check = false;
   private String[] locationData;
+  String pic;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -89,7 +93,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     listCallBackEvent = this;
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
     getAllItems();
-
   }
 
   @Override
@@ -130,22 +133,31 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       }
     });
 
-    loadProfilePicture();
+    if(getArguments() != null){
+      pic=getArguments().getString("pic");
+      Drawable theImage = Drawable.createFromPath(pic);
+      profile.setImageDrawable(theImage);
+    }
+    else {
+      loadProfilePicture();
+    }
+
     inflateRecycler();
+
     toolbar.setTitle("Givrish");
     return view;
   }
 
-  private void loadProfilePicture() {
+  public void loadProfilePicture() {
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
     String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
-
     try {
       String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
       Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
     }
     catch (Exception e){
       e.printStackTrace();
+      profile.setImageResource(R.drawable.defaultprofile);
     }
   }
 
@@ -190,7 +202,12 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       @Override
       public void onClick(View v) {
         fragment = new ProfileFragment();
-        loadFragment(fragment, PROFILE_FRAGMENT_FLAG);
+        if(pic!=null){
+          Bundle bundle=new Bundle();
+          bundle.putString("pic", pic);
+          fragment.setArguments(bundle);
+        }
+        loadFragment(fragment, Dashboard.PROFILE_PAGE_FLAG);
       }
     });
 
@@ -284,6 +301,5 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
         ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
   }
-
 
 }

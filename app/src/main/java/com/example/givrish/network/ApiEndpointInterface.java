@@ -52,7 +52,10 @@ public interface ApiEndpointInterface {
   @POST("userlogin/user_profile_picture")
   Call<List<ProfileEditResponse>> updateProfilePix(@Part MultipartBody.Part file, @Part("name")RequestBody requestBody, @Query("user_id") String id);
 
-  @GET("/itemscontroller/load_item_details")
-  Call<List<GetUserItemResponse>> getUserItem(@Query("jsonString") String jsonString);
+  @POST("itemscontroller/get_user_item")
+  Call<GetUserItemResponse> getUserItem(@Query("jsonString") String jsonString);
+
+  @POST("userlogin/edit_user_record")
+  Call<AuthResponseDto> updateUserDetail(@Query("jsonString") String jsonString);
 
 }

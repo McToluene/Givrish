@@ -12,7 +12,7 @@ public class GetUserItemResponse {
     private String responseStatus;
 
     @SerializedName("data")
-    private List<ItemModel> data;
+    private List<GetUserItemResponseData> data;
 
     public String getResponseCode() {
         return responseCode;
@@ -22,7 +22,7 @@ public class GetUserItemResponse {
         return responseStatus;
     }
 
-    public List<ItemModel> getData() {
+    public List<GetUserItemResponseData> getData() {
         return data;
     }
 }

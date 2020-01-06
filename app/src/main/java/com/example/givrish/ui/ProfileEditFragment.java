@@ -2,9 +2,11 @@ package com.example.givrish.ui;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,6 +21,7 @@ import android.os.FileUtils;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,16 +30,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.givrish.Dashboard;
 import com.example.givrish.R;
 import com.example.givrish.database.Constants;
+import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
+import com.example.givrish.models.ApiKey;
+import com.example.givrish.models.AuthResponseDto;
 import com.example.givrish.models.ProfileEditResponse;
 import com.example.givrish.models.UserData;
+import com.example.givrish.models.UserId;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.ImageQuality;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -74,6 +83,17 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
 
     private ApiEndpointInterface apiService;
     ProfileFragment fragment;
+    String username;
+    String pic;
+
+    private CallBackListener listener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof CallBackListener)
+            listener = (CallBackListener) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +110,12 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
         }
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onBackClick(Dashboard.PROFILE_EDIT_FLAG);
+            }
+        });
         edtUsername=view.findViewById(R.id.edtProfileNameEditProfile);
         edtUsername.setText(CURRENT_USER_FULLNAME);
 
@@ -108,8 +133,14 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         btnSave=view.findViewById(R.id.btnSaveProfileEdit);
         btnSave.setOnClickListener(this);
 
-        returnValue.clear();
-        loadProfilePic();
+        if(getArguments() != null){
+            pic=getArguments().getString("pic");
+            Drawable theImage = Drawable.createFromPath(pic);
+            imgProfile.setImageDrawable(theImage);
+        }
+        else {
+            loadProfilePic();
+        }
 
         return view;
     }
@@ -124,6 +155,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         }
         catch (Exception e){
             e.printStackTrace();
+            imgProfile.setImageResource(R.drawable.defaultprofile);
         }
     }
 
@@ -133,33 +165,82 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             case R.id.tvChangeProfilePix:
                 Pix.start(getActivity(), Options.init().setRequestCode(PIX_REQUEST_CODE));
                 break;
+
             case R.id.btnSaveProfileEdit:
-                uploadImage(returnValue.get(0));
+                if(!returnValue.isEmpty()) {
+                    uploadImage(returnValue.get(0));
+                }
+                username=edtUsername.getText().toString().trim();
+                if(!(username.equals(CURRENT_USER_FULLNAME.trim()))) {
+                    updateFullname(username);
+                }
+                if(username.equals(CURRENT_USER_FULLNAME.trim()) && returnValue.isEmpty()) {
+                    Toast.makeText(getContext(), "Notice: You did not change any detail.", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
 
-    private void uploadImage(String path) {
-            File file = new File(path);
+    private void updateFullname(final String username) {
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+        UserId userId=new UserId(CURRENT_USER_ID, username);
+        Gson gson=new Gson();
+        String user=gson.toJson(userId);
+
+        Call<AuthResponseDto> call = apiService.updateUserDetail(user);
+        call.enqueue(new Callback<AuthResponseDto>() {
+            @Override
+            public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
+                CURRENT_USER_FULLNAME=username;
+                Toast.makeText(getContext(), "Successfully updated username", Toast.LENGTH_LONG).show();
+                loadProfile();
+            }
+
+            @Override
+            public void onFailure(Call<AuthResponseDto> call, Throwable t) {
+                Toast.makeText(getContext(), "Failed to update the details", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void loadProfile() {
+        ListFragment fragment=new ListFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+        fragment.setArguments(bundle);
+        loadFragment(fragment, Dashboard.LIST_ITEM_FRAGMENT_FLAG);
+    }
+
+    private void uploadImage(final String path) {
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+            final File file = new File(path);
             //Request body
             final RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), fileReqBody);
             RequestBody description = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-            Call<List<ProfileEditResponse>> call = apiService.updateProfilePix(part, description, CURRENT_USER_ID);
-            call.enqueue(new Callback<List<ProfileEditResponse>>() {
-                @Override
-                public void onResponse(Call<List<ProfileEditResponse>> call, Response<List<ProfileEditResponse>> response) {
-                    CURRENT_USER_PROFILE_PICTURE=returnValue.get(0);
-                    ProfileFragment profileFragment=new ProfileFragment();
-                    loadFragment(profileFragment, "22");
-                }
+            try {
+                Call<List<ProfileEditResponse>> call = apiService.updateProfilePix(part, description, CURRENT_USER_ID);
+                call.enqueue(new Callback<List<ProfileEditResponse>>() {
+                    @Override
+                    public void onResponse(Call<List<ProfileEditResponse>> call, Response<List<ProfileEditResponse>> response) {
+                        CURRENT_USER_PROFILE_PICTURE = returnValue.get(0);
+                        returnValue.clear();
+                        Toast.makeText(getContext(), "Successfully updated picture", Toast.LENGTH_LONG).show();
+                        if (username.trim().equals(CURRENT_USER_FULLNAME.trim())) {
+                            loadProfile();
+                        }
+                    }
 
-                @Override
-                public void onFailure(Call<List<ProfileEditResponse>> call, Throwable t) {
-                    Toast.makeText(getContext(), "Failed to save the image", Toast.LENGTH_LONG).show();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<List<ProfileEditResponse>> call, Throwable t) {
+                        Toast.makeText(getContext(), "Failed to save the image", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
     private void loadFragment(Fragment fragment, String tag) {
@@ -185,11 +266,14 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             }
         }
         else {
-            if(ProfileEditFragment.returnValue.isEmpty() || ProfileEditFragment.returnValue.get(0).isEmpty())
+            if(getArguments() != null){
+                pic=getArguments().getString("pic");
+                Drawable theImage = Drawable.createFromPath(pic);
+                imgProfile.setImageDrawable(theImage);
+            }
+            else {
                 loadProfilePic();
-            else
-                theImage = BitmapFactory.decodeFile(ProfileEditFragment.returnValue.get(0));
-            imgProfile.setImageBitmap(theImage);
+            }
         }
     }
 }
