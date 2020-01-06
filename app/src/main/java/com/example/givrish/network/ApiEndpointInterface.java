@@ -5,8 +5,10 @@ import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AuthResponseDto;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.models.ItemSubCategoryResponse;
+import com.example.givrish.models.JsonResponse;
 import com.example.givrish.models.LoginResponse;
 import com.example.givrish.models.ProfileEditResponse;
+import com.example.givrish.models.SignUpResponse;
 import com.example.givrish.models.UserData;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import retrofit2.http.Query;
 
 public interface ApiEndpointInterface {
   @POST("userlogin/add_user")
-  Call<AuthResponseDto> createUser(@Query("jsonString") String jsonString);
+  Call<JsonResponse<SignUpResponse>> createUser(@Query("jsonString") String jsonString);
 
   @GET("userlogin/get_user_login")
   Call<AuthResponseDto> checkUser(@Query("jsonString") String jsonString);
