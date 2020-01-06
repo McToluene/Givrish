@@ -39,4 +39,8 @@
   <string name="call_giver">Call Giver</string>
   <string name="i_want">I Want It</string>
   <string name="similar_items">Similar Items</string>
+  <string name="call_button">Call button</string>
+  <string name="message_button">Message button</string>
+    <string name="clear_image">clear selection</string>
+  <string name="clear_selection">Clear image selection</string>
 </resources>
