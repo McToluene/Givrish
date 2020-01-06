@@ -51,4 +51,9 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="valid_number_error">Enter valid code</string>
     <string name="try_again_msg">Please try again...</string>
+    <string name="category">Category :-</string>
+    <string name="sub_cat">Subcategory :-</string>
+    <string name="call_giver">Call Giver</string>
+    <string name="i_want">I Want It</string>
+    <string name="similar_items">Similar Items</string>
 </resources>

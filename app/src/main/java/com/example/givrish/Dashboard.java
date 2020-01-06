@@ -9,11 +9,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.ui.AddItemFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
@@ -22,13 +23,14 @@ import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener {
+public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
 
   public static final String LIST_ITEM_FRAGMENT_FLAG = "1";
   public static final String ADD_ITEM_FRAGMENT_FLAG = "2";
   public static final String MESSAGE_FRAGMENT_FLAG = "3";
   public static final String FAVOURITES_FRAGMENT_FLAG = "5";
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
+
 
   private static int FLAG = 0;
   BottomNavigationView bottomNavigationView;
@@ -41,10 +43,14 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
+
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     fab = findViewById(R.id.fab);
     fab.setColorFilter(getResources().getColor(R.color.white));
+
+
+
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -103,8 +109,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     transaction.commit();
   }
 
-
-
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -112,8 +116,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
       fragment.onActivityResult(requestCode, resultCode, data);
     }
   }
-
-
 
   @Override
   public void onBackClick(String tag) {
@@ -123,4 +125,17 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     FLAG = 0;
   }
 
+  @Override
+  public void loadItem(Fragment fragment, String tag) {
+    Log.i("Success", "WE DEY");
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    transaction.replace(R.id.dashboard_layout, fragment, tag);
+    transaction.addToBackStack(tag);
+    transaction.commit();
+  }
+
+  @Override
+  public void onCloseItem(String tag) {
+    onBackClick(tag);
+  }
 }

@@ -64,6 +64,8 @@
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+
+
     <ProgressBar
         android:id="@+id/loading_items"
         style="?android:attr/progressBarStyle"
