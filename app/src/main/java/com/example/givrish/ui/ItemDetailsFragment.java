@@ -73,7 +73,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     mViewModel = ViewModelProviders.of(this).get(ItemDetailsViewModel.class);
-    fetchListener =(OnCategoryFetchListener) this;
+    fetchListener = this;
 
     View view = inflater.inflate(R.layout.item_details_fragment, container, false);
     Toolbar detailsToolbar = view.findViewById(R.id.details_toolbar);
@@ -158,7 +158,9 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
           fetchListener.onCategoryFetch(itemCategoryData.getItem_category_name());
         else
           fetchListener.onCategoryFetch("Others");
-      }
+   }
+
+
     });
   }
 
@@ -172,8 +174,11 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
           fetchListener.onSubCategory(itemSubCategoryData.getItem_sub_category_name());
         else
           fetchListener.onSubCategory("Others");
+
       }
     });
+
+
   }
 
   @Override

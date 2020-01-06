@@ -16,4 +16,8 @@ this.user_id = user_id;
       this.phone_number = phone_number;
       this.password = password;
     }
+
+    public UserLoginModel(String pass) {
+      this.phone_number = pass;
+    }
 }

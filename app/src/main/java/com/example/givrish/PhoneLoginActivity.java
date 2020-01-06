@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -20,10 +21,12 @@ import com.example.givrish.network.RetrofitClientInstance;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.hbb20.CountryCodePicker;
-import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,8 +43,13 @@ public class PhoneLoginActivity extends AppCompatActivity {
   private String registeredUser;
   private String registeringUserToFirebase;
    ProgressDialog progressDialog;
-   public static boolean monitoringUserLVFlag = false;
-   public static int mLVFlag = 1;
+private Executor executor = Executors.newSingleThreadExecutor();
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,36 +62,39 @@ public class PhoneLoginActivity extends AppCompatActivity {
     cpp = findViewById(R.id.ccp);
     cpp.registerCarrierNumberEditText(edtPhoneNumberLogin);
     cpp.setFullNumber(edtPhoneNumberLogin.getText().toString().trim());
-
     btnCheck.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(final View view) {
         registeringUserToFirebase = cpp.getFullNumber();
         registeredUser = 0 + cpp.getFullNumber().substring(3);
 
+
         if(cpp.isValidFullNumber() != true){
             Snackbar.make(view, "Enter valid number", Snackbar.LENGTH_LONG).show();edtPhoneNumberLogin.requestFocus();return; }
         else if (!isConnectionActive()) {
-          Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show(); } else { progressDialogMethod();
-          new Thread(new Runnable() {
+          Snackbar.make(view, getString(R.string.connection_error), Snackbar.LENGTH_LONG).show(); } else {
+          progressDialogMethod();
+          executor.execute(new Runnable() {
             @Override
             public void run() {
-              try{
+              try {
                 onCheckHandler(view,registeredUser);
-              }catch (Exception e){e.printStackTrace();}
+                }catch (Exception e){e.printStackTrace();}
             }
-          }).start();
+          });
+
         }
       }
     });
   }
+
     private void progressDialogMethod() {
         progressDialog = new ProgressDialog(PhoneLoginActivity.this,R.style.progressDialogStyle);
         progressDialog.setMessage("Please wait..");
         progressDialog.setTitle("Welcome");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
     }
 
     private void onCheckHandler(final View view, final String phoneNumber) {
@@ -94,17 +105,16 @@ public class PhoneLoginActivity extends AppCompatActivity {
     callUser.enqueue(new Callback<AuthResponseDto>() {
       @Override
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
-        Log.i("Success", response.toString());
         if (response.body().getResponseCode().equals("1")) {
-          Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-          intent.putExtra(PhoneLoginActivity.phoneLoginKey, registeredUser);
-          monitoringUserLVFlag = true;
+           Intent intent  = new Intent(getApplicationContext(), LoginActivity.class);
+         intent.putExtra(PhoneLoginActivity.phoneLoginKey, registeredUser);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-          startActivity(intent);
-        } else if (response.body().getResponseCode().equals("0")) {
+            startActivity(intent);
+        }
+        else if (response.body().getResponseCode().equals("0")) {
           Intent intent = new Intent(getApplicationContext(), PhoneVerifyActivity.class);
-          monitoringUserLVFlag= false;
-          intent.putExtra(PhoneLoginActivity.phoneLoginKeyFirebase, registeringUserToFirebase);
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),registeredUser);
+            intent.putExtra(PhoneLoginActivity.phoneLoginKeyFirebase, registeringUserToFirebase);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
           startActivity(intent);
         }
@@ -112,8 +122,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 
       @Override
       public void onFailure(Call<AuthResponseDto> call, Throwable t) {
-        Log.i("Error", t.getMessage());
-        Toast.makeText(PhoneLoginActivity.this, t.getMessage(), Toast.LENGTH_LONG);
+        Toast.makeText(PhoneLoginActivity.this, getString(R.string.network_erroe), Toast.LENGTH_LONG);
       }
     });
 
@@ -125,36 +134,5 @@ public class PhoneLoginActivity extends AppCompatActivity {
     return activeNetworkInfo != null && activeNetworkInfo.isConnected();
   }
 
-
-  private class LoginAsynTaskext extends AsyncTask<Void,Void,Void> {
-
-    @Override
-    protected void onPreExecute() {
-
-      progressDialog = new ProgressDialog(PhoneLoginActivity.this);
-      progressDialog.setMessage("Please wait..");
-      progressDialog.setTitle("Welcome");
-      progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-      progressDialog.show();
-
-      super.onPreExecute();
-    }
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-      View view = findViewById(android.R.id.content);
-      onCheckHandler(view,registeredUser);
-      return null;
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      if(progressDialog.isShowing() && progressDialog != null){
-        progressDialog.dismiss();
-      }
-      super.onPostExecute(aVoid);
-
-    }
-  }
 
 }

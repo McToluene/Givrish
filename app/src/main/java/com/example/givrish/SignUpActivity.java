@@ -21,9 +21,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
-
   private ApiEndpointInterface apiService;
- public static boolean monitoringUserSignupFlag = false;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
     final TextInputEditText fullName = findViewById(R.id.ed_fullName);
     final TextInputEditText number = findViewById(R.id.edt_phoneNumber);
     final TextInputEditText password = findViewById(R.id.ed_password);
+    final TextInputEditText comPassword = findViewById(R.id.ed_compassword);
     MaterialButton signUp = findViewById(R.id.btn_signUp);
 
     String phone = getIntent().getStringExtra(PhoneVerifyActivity.phoneverifyKey);
@@ -46,20 +46,22 @@ public class SignUpActivity extends AppCompatActivity {
         String name = fullName.getText().toString();
         String phone = number.getText().toString();
         String pass = password.getText().toString();
-        if (name.isEmpty()){
-          fullName.setError("Name cannot be empty!");
-        } else if (pass.isEmpty()){
-          password.setError("Password cannot be empty!");
+        String comPass = comPassword.getText().toString();
+        if (name.isEmpty() || pass.isEmpty() || comPass.isEmpty() || phone.isEmpty()){
+          Snackbar.make(v,getResources().getString(R.string.empty_error), Snackbar.LENGTH_LONG).show();
+        } else if (!pass.equals(comPass)){
+          Snackbar.make(v,getResources().getString(R.string.password_error), Snackbar.LENGTH_LONG).show();
         }else {
-          onSubmitHandler(v, name, phone, pass);
+         onSubmitHandler(v, name, phone, pass);
         }
 
       }
     });
+
   }
 
   private void onSubmitHandler(final View v, final String name, final String phone, final String pass) {
-    UserRegisterModel userRegisterModel = new UserRegisterModel(name, phone, pass);
+    UserRegisterModel userRegisterModel = new UserRegisterModel(name, phone, "", pass, "3", "1.14.0");
     Gson gson = new Gson();
     String userString = gson.toJson(userRegisterModel);
 
@@ -68,18 +70,18 @@ public class SignUpActivity extends AppCompatActivity {
       @Override
       public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
         if (response.body().getResponseCode().equals("1")) {
-          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_fullname), name);
-          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_number_Keystore), phone);
-          UserDataPreference.getInstance(SignUpActivity.this).savePreference(getString(R.string.user_phone_password_Keystore), pass);
-          monitoringUserSignupFlag = true;
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),phone);
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_password_Keystore),pass);
           startActivity(new Intent(SignUpActivity.this, Dashboard.class));
-        }else{monitoringUserSignupFlag = false;}
+        }else if (response.body().getResponseCode().equals("0")){
+          Snackbar snackBar = Snackbar .make(v, response.body().getResponseStatus(), Snackbar.LENGTH_LONG);
+          snackBar.show();
+        }
       }
-
 
       @Override
       public void onFailure(Call<AuthResponseDto> call, Throwable t) {
-        Snackbar snackBar = Snackbar .make(v, "Please try again", Snackbar.LENGTH_LONG);
+        Snackbar snackBar = Snackbar .make(v, getString(R.string.network_erroe), Snackbar.LENGTH_LONG);
         snackBar.show();
       }
     });

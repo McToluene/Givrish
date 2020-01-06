@@ -22,6 +22,8 @@ public class CategoryViewModel extends AndroidViewModel {
     itemCategories = categoriesRepository.getAllCategories();
   }
 
+
+
   public LiveData<List<ItemCategoryData>> getAllCategories() {return itemCategories;}
   public void insert(List<ItemCategoryData> itemCategoryData) {categoriesRepository.insert(itemCategoryData);}
   public LiveData<Integer> getCount() { return categoriesRepository.getCount();}
