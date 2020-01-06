@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.models.LoginResponse;
@@ -24,41 +25,51 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
-  private TextInputEditText phoneNumber;
   private TextInputEditText password;
   private  MaterialButton loginBtn;
   private ProgressBar progressBar;
-  public static  boolean monitoringUserLoginFlag = false;
+   private TextView newUserRegistration;
+  private String incomingNumber;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
 
-    phoneNumber = findViewById(R.id.edt_phoneNumber);
     password = findViewById(R.id.ed_password);
     loginBtn = findViewById(R.id.btn_login);
     progressBar = findViewById(R.id.progressBar2);
+    newUserRegistration = findViewById(R.id.new_user_reg);
+
     progressBar.setVisibility(View.INVISIBLE);
     getNumber();
+
+    newUserRegistration.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(LoginActivity.this,PhoneLoginActivity.class));
+        }
+    });
 
     loginBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        String number =  phoneNumber.getText().toString();
         String pass = password.getText().toString();
         progressBar.setVisibility(View.VISIBLE);
         loginBtn.setEnabled(false);
-        onSubmitHandler(number, pass);
+        try {
+          onSubmitHandler(incomingNumber,pass);
+        }catch (Exception e){
+          Toast.makeText(getApplicationContext(),"Request failed",Toast.LENGTH_LONG).show();
+        }
       }
     });
 
   }
 
-  private void onSubmitHandler(final String number, final String pass) {
-    UserLoginModel userLogin = new UserLoginModel(number, pass);
+  private void onSubmitHandler( final String incomingNumber,final String pass) {
+    UserLoginModel userLogin = new UserLoginModel(incomingNumber,pass);
     ApiEndpointInterface  apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-
     Gson gson = new GsonBuilder().create();
     String login = gson.toJson(userLogin);
     Log.i("USER", login);
@@ -70,14 +81,15 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
-          monitoringUserLoginFlag = true;
-          UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),number);
-          UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),incomingNumber);
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_password_Keystore),pass);
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
         else if(response.body().getResponseCode().equals("0")){
             Toast.makeText(LoginActivity.this,response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
-            monitoringUserLoginFlag = false;
+        }
+
+        else{ Toast.makeText(LoginActivity.this,getString(R.string.network_erroe),Toast.LENGTH_LONG).show();
         }
       }
 
@@ -86,13 +98,16 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("ERROR", t.toString());
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
-        monitoringUserLoginFlag = false;
       }
     });
   }
 
+
   private void getNumber() {
-    String incomingNumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
-    if (incomingNumber != null) phoneNumber.setText(incomingNumber);
+    incomingNumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
+
   }
+
+
+
 }

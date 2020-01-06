@@ -9,9 +9,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.ui.AddItemFragment;
@@ -21,9 +21,8 @@ import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textview.MaterialTextView;
 
-public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener{
+public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
   public static final String LIST_ITEM_FRAGMENT_FLAG = "1";
   public static final String ADD_ITEM_FRAGMENT_FLAG = "2";
@@ -31,12 +30,10 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String FAVOURITES_FRAGMENT_FLAG = "5";
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
 
-
   private static int FLAG = 0;
   BottomNavigationView bottomNavigationView;
   private final AddItemFragment addItemFragment = new AddItemFragment();
-  private MaterialTextView tvSearch;
-  private Fragment fragment = new  ListFragment();
+  private Fragment fragment = new ListFragment();
   private FloatingActionButton fab;
 
 
@@ -44,23 +41,14 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
-
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     fab = findViewById(R.id.fab);
     fab.setColorFilter(getResources().getColor(R.color.white));
-
-
-//    tvSearch = findViewById(R.id.tv_search);
-//    toolbar=findViewById(R.id.toolbar);
-//    setSupportActionBar(toolbar);
-
-
-
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (FLAG == 0){
+        if (FLAG == 0) {
           loadFragments(addItemFragment, ADD_ITEM_FRAGMENT_FLAG);
           fab.setImageDrawable(getDrawable(R.drawable.ic_add_box_));
           FLAG = 1;
@@ -82,7 +70,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
         loadFragments(fragment, LIST_ITEM_FRAGMENT_FLAG);
         fab.setImageDrawable(getDrawable(R.drawable.gift_box));
         FLAG = 0;
-       return true;
+        return true;
 
       case R.id.navigation_favorite:
         fragment = new FavouritesFragment();
@@ -115,25 +103,24 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     transaction.commit();
   }
 
+
+
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-	  super.onActivityResult(requestCode, resultCode, data);
-	  for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-		  fragment.onActivityResult(requestCode, resultCode, data);
-	  }
+    super.onActivityResult(requestCode, resultCode, data);
+    for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+      fragment.onActivityResult(requestCode, resultCode, data);
+    }
   }
+
+
 
   @Override
   public void onBackClick(String tag) {
     FragmentManager manager = getSupportFragmentManager();
     manager.popBackStack();
+    fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+    FLAG = 0;
   }
 
-//  private void removeFragments(String tag) {
-////    Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-////    if (fragment != null)
-////      getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-//    FragmentManager manager = getSupportFragmentManager();
-//    manager.popBackStack();
-//  }
 }

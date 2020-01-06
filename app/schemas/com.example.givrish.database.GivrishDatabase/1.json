@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c96098d6e822ee7afe2badc69a3233f5",
+    "identityHash": "7c5fd22c02efd986124604146be3198a",
     "entities": [
       {
         "tableName": "item_category",
@@ -112,7 +112,7 @@
       },
       {
         "tableName": "item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`item_id` TEXT NOT NULL, `user_id` TEXT, `user_ip` TEXT, `user_browser` TEXT, `item_joined` TEXT, `item_active_status` TEXT, `item_status` TEXT, `item_ref_code` TEXT, `item_title` TEXT, `item_color` TEXT, `item_country` TEXT, `item_address` TEXT, `item_longitude` TEXT, `item_latitude` TEXT, `item_description` TEXT, `item_category_id` TEXT, `item_sub_category_id` TEXT, `item_images` TEXT, PRIMARY KEY(`item_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`item_id` TEXT NOT NULL, `user_id` TEXT, `user_ip` TEXT, `user_browser` TEXT, `item_joined` TEXT, `item_active_status` TEXT, `item_status` TEXT, `item_ref_code` TEXT, `item_title` TEXT, `item_color` TEXT, `item_country` TEXT, `item_address` TEXT, `item_longitude` TEXT, `item_latitude` TEXT, `item_description` TEXT, `item_category_id` TEXT, `item_sub_category_id` TEXT, `phone_number` TEXT, `fullname` TEXT, `item_images` TEXT, PRIMARY KEY(`item_id`))",
         "fields": [
           {
             "fieldPath": "item_id",
@@ -217,6 +217,18 @@
             "notNull": false
           },
           {
+            "fieldPath": "phone_number",
+            "columnName": "phone_number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullname",
+            "columnName": "fullname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "item_images",
             "columnName": "item_images",
             "affinity": "TEXT",
@@ -286,7 +298,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c96098d6e822ee7afe2badc69a3233f5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c5fd22c02efd986124604146be3198a')"
     ]
   }
 }

@@ -3,6 +3,7 @@ package com.example.givrish.models;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
+import com.example.givrish.ui.CategoryFragment;
+import com.example.givrish.ui.ItemSubCategoryFragment;
+import com.example.givrish.ui.ListFragment;
 
 import java.util.List;
 import java.util.Random;
@@ -22,9 +29,16 @@ public class ItemSubCategoryAdapter extends RecyclerView.Adapter<ItemSubCategory
     private List<ItemSubCategoryData> itemSubCategoryData;
     private LayoutInflater inflater;
 
-    public ItemSubCategoryAdapter(List<ItemSubCategoryData> itemSubCategoryData, Context mContext) {
+    public ItemSubCategoryAdapter(Context mContext,List<ItemSubCategoryData> itemSubCategoryData) {
         this.mContext = mContext;
         this.itemSubCategoryData = itemSubCategoryData;
+        inflater = LayoutInflater.from(mContext);
+    }
+
+
+
+    public ItemSubCategoryAdapter(Context mContext) {
+        this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
     }
 
@@ -69,14 +83,12 @@ public class ItemSubCategoryAdapter extends RecyclerView.Adapter<ItemSubCategory
             super(itemView);
             fSubTitle = itemView.findViewById(R.id.sub_tvv);
             itemSubCatTitle = itemView.findViewById(R.id.sub_tv_name_v);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-
-
                 }
+
             });
 
 

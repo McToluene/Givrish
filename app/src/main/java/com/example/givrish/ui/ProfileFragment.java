@@ -1,28 +1,40 @@
 package com.example.givrish.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
-
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.givrish.LoginActivity;
+import com.example.givrish.MainActivity;
+import com.example.givrish.PhoneLoginActivity;
 import com.example.givrish.R;
+import com.example.givrish.UserDataPreference;
 import com.example.givrish.models.ProductModel;
 import com.example.givrish.models.ProfileAdapter;
 import com.example.givrish.viewmodel.ProfileViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -33,15 +45,24 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
   private RecyclerView recyclerView;
   private RecyclerView.LayoutManager layoutManager;
   private ProfileAdapter myAdapter;
-
   private ArrayList<String> listString;
-
   private Button btnEditProf;
   private TextView txtUserNameProfile;
 
 
+
+
+
+
+
   public static ProfileFragment newInstance() {
     return new ProfileFragment();
+  }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
   }
 
   @Override
@@ -51,6 +72,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     Toolbar toolbar=view.findViewById(R.id.profile_toolbar);
     toolbar.setTitle("My Profile");
+
+
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -73,10 +96,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     btnEditProf=view.findViewById(R.id.btnEditProfile);
     btnEditProf.setOnClickListener(this);
-
     txtUserNameProfile=view.findViewById(R.id.id_username);
-
     return view;
+
   }
 
   @Override
@@ -85,6 +107,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
     // TODO: Use the ViewModel
   }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.profile_menu,menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    if(item.getItemId() == R.id.logout){
+      UserDataPreference.getInstance(getContext()).clearPreference();
+      startActivity(new Intent(getContext(), PhoneLoginActivity.class));
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
 
   @Override
   public void onClick(View v) {

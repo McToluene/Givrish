@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.givrish.models.UserLoginModel;
-import com.example.givrish.models.UserRegisterModel;
-
 public class UserDataPreference {
-    private static final String DEFAULT_VALUE = " ";
+    private static final String DEFAULT_VALUE = "";
     private static UserDataPreference outInstance = new UserDataPreference();
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
@@ -33,15 +30,27 @@ public class UserDataPreference {
         editor.commit();
     }
 
-  public void clearPreference(String key){
-        editor.remove(key);
+    public void userLoggedOut(){
         editor.clear();
         editor.commit();
+    }
+
+
+
+
+  public boolean clearPreference(){
+        return editor.clear().commit();
   }
 
 
   public String retrievePreference(String key){
         return sharedPreferences.getString(key,DEFAULT_VALUE);
+  }
+
+  public boolean isLoggedOut(String key){
+        editor.clear();
+        editor.commit();
+      return sharedPreferences.getString(key,DEFAULT_VALUE).isEmpty();
   }
 
 }

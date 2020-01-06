@@ -1,7 +1,6 @@
 package com.example.givrish.models;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +24,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
   private  LayoutInflater inflater;
   private Context context;
 
-  public ListItemAdapter(Context context) {
+  public ListItemAdapter(Context context, List<AllItemsResponseData> items) {
     inflater = LayoutInflater.from(context);
     this.context = context;
+    allItemsResponseData = items;
   }
 
   @NonNull
@@ -52,9 +52,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
       holder.itemImage.setImageResource(R.drawable.download);
 
     }
-
     holder.title.setText(item.getItem_title());
-//    holder.location.setText(product.get);
     holder.position = position;
   }
 
@@ -68,40 +66,40 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
   public void setAllItemsResponseData(List<AllItemsResponseData> responseDataList) {
     allItemsResponseData = responseDataList;
+    notifyDataSetChanged();
   }
 
   class ListItemHolder extends RecyclerView.ViewHolder {
 
     private final TextView title;
+    private final ImageView itemImage;
     private final TextView location;
     private int position;
-    private final ImageView itemImage;
 
     ListItemHolder(@NonNull View itemView) {
       super(itemView);
 
       title = itemView.findViewById(R.id.tv_title);
-      location = itemView.findViewById(R.id.tv_location);
       itemImage = itemView.findViewById(R.id.item_image);
+      location = itemView.findViewById(R.id.tv_location);
 
 
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-          Bundle bundle = new Bundle();
-          bundle.putInt("POSITION", position);
-          ItemDetailsFragment itemDetails = new ItemDetailsFragment();
-          itemDetails.setArguments(bundle);
+          AllItemsResponseData selectedItem = allItemsResponseData.get(position);
+          ItemDetailsFragment itemDetails = ItemDetailsFragment.newInstance(selectedItem);
           loadDetail(itemDetails);
         }
 
         private void loadDetail(Fragment itemDetails) {
           FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
           transaction.replace(R.id.dashboard_layout, itemDetails);
-          transaction.addToBackStack(null);
+          transaction.addToBackStack("");
           transaction.commit();
         }
       });
     }
+
   }
 }

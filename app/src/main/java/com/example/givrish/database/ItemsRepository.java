@@ -8,13 +8,12 @@ import com.example.givrish.models.AllItemsResponseData;
 
 import java.util.List;
 
-public class ItemRepository {
-  private GivrishDatabase database;
+public class ItemsRepository {
   private ItemsDao itemsDao;
   private LiveData<List<AllItemsResponseData>> items;
 
-  public ItemRepository(Application application) {
-    database = GivrishDatabase.getDatabase(application);
+  public ItemsRepository(Application application) {
+    GivrishDatabase database = GivrishDatabase.getDatabase(application);
     itemsDao = database.itemsDao();
     items = itemsDao.getAllItems();
   }
@@ -25,7 +24,7 @@ public class ItemRepository {
     GivrishDatabase.databaseWriteExecutor.execute(new Runnable() {
       @Override
       public void run() {
-        database.itemsDao().insertAll(items);
+        itemsDao.insertAll(items);
       }
     });
   }
