@@ -58,4 +58,5 @@
     <string name="message_button">Message button</string>
     <string name="clear_image">clear selection</string>
     <string name="clear_selection">Clear image selection</string>
+    <string name="user_id" >User_ID</string>
 </resources>

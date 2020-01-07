@@ -87,12 +87,18 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
 
+
+        String id = response.body().getData().get(0).getUser_id();
+        UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_id),id);
+        String save = UserDataPreference.getInstance(LoginActivity.this).retrievePreference(getString(R.string.user_id));
+
         Log.i("correct",response.body().getResponseCode());
         Log.i("error",response.body().getResponseStatus());
         if(response.body().getResponseCode().equals("1")){
           Log.i("correct","my_logout");
           UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),incomingNumber);
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
+
 
         }
         else if(response.body().getResponseCode().equals("0")){
