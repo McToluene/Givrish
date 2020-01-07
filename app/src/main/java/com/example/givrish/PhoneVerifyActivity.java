@@ -39,86 +39,90 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PhoneVerifyActivity extends AppCompatActivity {
-      public static final String phoneverifyKey = "com.example.givrish.KeyVerify";
-      private TextInputEditText edtPhoneNumber;
-      private AppCompatEditText edtPhoneCode;
-      private String verificationId;
-      private MaterialButton btnVerify;
-      private FirebaseAuth mAuth;
-      private ProgressBar progressBar;
-      private String phonenumber;
-      private String resendCodeString = "Resend code ";
+    public static final String phoneverifyKey = "com.example.givrish.KeyVerify";
+    private TextInputEditText edtPhoneNumber;
+    private AppCompatEditText edtPhoneCode;
+    private String verificationId;
+    private MaterialButton btnVerify;
+    private FirebaseAuth mAuth;
+    private ProgressBar progressBar;
+    private String phonenumber;
+    private String resendCodeString = "Resend code";
     private PhoneAuthProvider.ForceResendingToken mResendToken;
-  private TextView resendCode;
-  private String realUserNumber;
- public static boolean monitoringUserVerificationFlag = false;
- private ProfileViewModel profileViewModel;
+    private TextView resendCode;
+    private String realUserNumber;
+    private ProfileViewModel profileViewModel;
 
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        profileViewModel.saveOriginalState(outState);
+       // profileViewModel.saveOriginalState(outState);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
-        ViewModelProvider viewModelProvider = new ViewModelProvider(getViewModelStore(),ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
-        profileViewModel = viewModelProvider.get(ProfileViewModel.class);
-        //Todo RestorenInstance state
-        if(savedInstanceState != null){
-            profileViewModel.RestoreOriginalState(savedInstanceState);
-        }
+//        ViewModelProvider viewModelProvider = new ViewModelProvider(getViewModelStore(),ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+//        profileViewModel = viewModelProvider.get(ProfileViewModel.class);
+//        //Todo RestorenInstance state
+//        if(savedInstanceState != null){
+//            profileViewModel.RestoreOriginalState(savedInstanceState);
+//        }
 
-        mAuth = FirebaseAuth.getInstance();
+         mAuth = FirebaseAuth.getInstance();
+        //Todo
         progressBar = findViewById(R.id.progressBar);
         edtPhoneNumber = findViewById(R.id.ed_phoneNumber);
         edtPhoneCode = findViewById(R.id.edt_phoneCode);
         TextView otpMessage = findViewById(R.id.tv_otpMessage);
+
         resendCode = findViewById(R.id.tv_resend_code);
-
-
-
-
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKeyFirebase);
          if(phonenumber != null) {
            edtPhoneNumber.setText(phonenumber);
            otpMessage.setText(buildMessage(phonenumber));
          }
 
-         final String realUserNumberR = "+" + phonenumber;
-         realUserNumber = 0 + phonenumber.substring(3);
-         sendVerificationCode(realUserNumberR);
+        //Todo
+
+        final String realUserNumberR = "+" + phonenumber;
+        realUserNumber = 0 + phonenumber.substring(3);
+
+        sendVerificationCode(realUserNumberR);
          getCoundDown();
-
-
           resendCode.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-              resendVerificationCode(realUserNumberR,mResendToken);
+              resendCode.setTextColor(getResources().getColor(R.color.colorPrimary));
+              resendCode.setEnabled(false);
+             resendVerificationCode(realUserNumberR,mResendToken);
 
           }
       });
 
+
+        //todo
 
       btnVerify = findViewById(R.id.btn_phoneVerify);
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String code = edtPhoneCode.getText().toString().trim();
-                if (code.isEmpty() || code.length() != 6) {
-//                    edtPhoneCode.setError("Enter valid code");
-                    Snackbar.make(view,"Enter valid code",Snackbar.LENGTH_LONG).show();
-                    edtPhoneCode.requestFocus();
-                    return;
-                }else{ profileViewModel.originalKey = code;
-                        profileViewModel.originalPhoneNumber = realUserNumberR;
-                    btnVerify.setEnabled(false);verifyCode(code);}
+                if (code.isEmpty() || code.length() != 6)
+                { Snackbar.make(view,getResources().getString(R.string.valid_number_error),Snackbar.LENGTH_LONG).show();edtPhoneCode.requestFocus();
+                    return; } else{
+                   // profileViewModel.originalKey = code;
+                       //profileViewModel.originalPhoneNumber = realUserNumberR;
+                  try { verifyCode(code); }catch (Exception e){
+                      Toast.makeText(getApplicationContext(), getString(R.string.try_again_msg),Toast.LENGTH_LONG).show(); }
+                }
             }
         });
     }
+
+        //Todo
 
     private void resendVerificationCode(String realUserNumberR, PhoneAuthProvider.ForceResendingToken mResendToken) {
          PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -131,27 +135,29 @@ public class PhoneVerifyActivity extends AppCompatActivity {
          );
     }
 
-    //A method to verify code that is detected or entered by the user
+
+        //Todo
+        //A method to verify code that is detected or entered by the user
         private void verifyCode(String code){
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,code);
        //Allows the user to sign In
         signInWithCredential(credential);
         }
-//
+
+      //  Todo
+
         private void signInWithCredential(PhoneAuthCredential credential) {
       btnVerify.setEnabled(true);
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                if(task.isSuccessful()){
-                   monitoringUserVerificationFlag = true;
                    Intent intent = new Intent(PhoneVerifyActivity.this,SignUpActivity.class);
                    intent.putExtra(PhoneVerifyActivity.phoneverifyKey,realUserNumber);
                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                    startActivity(intent);
                }else{
-                   progressBar.setVisibility(View.INVISIBLE);
-                   monitoringUserVerificationFlag = false;
+                   //progressBar.setVisibility(View.INVISIBLE);
                    Toast.makeText(PhoneVerifyActivity.this,getString(R.string.code_error),Toast.LENGTH_LONG).show();
                }
 
@@ -161,6 +167,10 @@ public class PhoneVerifyActivity extends AppCompatActivity {
        }
 
 //        //A method to send verification code
+
+
+        //Todo
+
     private void sendVerificationCode(String number){
        progressBar.setVisibility(View.VISIBLE);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -173,13 +183,15 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     }
 
+        //Todo
     private  PhoneAuthProvider.OnVerificationStateChangedCallbacks
-            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+           mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks()
+    {
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             verificationId = s;
-            mResendToken = forceResendingToken;
+           mResendToken = forceResendingToken;
         }
 
         //Called when verification is completed
@@ -202,12 +214,14 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     };
 
+
+        //Todo
     private String buildMessage(String phonenumber) {
       return String.format("Verification code has been sent to you on your mobile %s please enter it below.", phonenumber);
     }
 
     private CountDownTimer getCoundDown(){
-      return new CountDownTimer(60000, 1000) {
+      return new CountDownTimer(40000, 1000) {
         public void onTick(long millisUntilFinished) {
           resendCode.setText(resendCodeString + millisUntilFinished / 1000);
         }
@@ -217,5 +231,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
           resendCode.setEnabled(true);
         }
       }.start();
+
     }
+
 }

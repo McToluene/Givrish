@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.givrish.database.Constants;
 import com.example.givrish.models.LoginResponse;
 import com.example.givrish.models.UserData;
 import com.example.givrish.models.UserLoginModel;
@@ -20,94 +20,76 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.givrish.database.Constants.*;
-
 public class LoginActivity extends AppCompatActivity {
-  private TextInputEditText phoneNumber;
   private TextInputEditText password;
   private  MaterialButton loginBtn;
   private ProgressBar progressBar;
-  public static  boolean monitoringUserLoginFlag = false;
-
-//  @Override
-////  protected void onStart() {
-////    super.onStart();
-////    if(UserDataPreference.getInstance(this).isLoggedIn()){
-////      startActivity(new Intent(LoginActivity.this, Dashboard.class));
-////
-////    }
-////  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
-
-
-  }
+   private TextView newUserRegistration;
+  private String incomingNumber;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
 
-    phoneNumber = findViewById(R.id.edt_phoneNumber);
     password = findViewById(R.id.ed_password);
     loginBtn = findViewById(R.id.btn_login);
     progressBar = findViewById(R.id.progressBar2);
+    newUserRegistration = findViewById(R.id.new_user_reg);
+
     progressBar.setVisibility(View.INVISIBLE);
     getNumber();
+
+    newUserRegistration.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(LoginActivity.this,PhoneLoginActivity.class));
+        }
+    });
 
     loginBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        String number =  phoneNumber.getText().toString();
         String pass = password.getText().toString();
         progressBar.setVisibility(View.VISIBLE);
         loginBtn.setEnabled(false);
-        onSubmitHandler(number, pass);
+        try {
+          onSubmitHandler(incomingNumber,pass);
+        }catch (Exception e){
+          Toast.makeText(getApplicationContext(),"Request failed",Toast.LENGTH_LONG).show();
+        }
       }
     });
 
   }
 
-  private void onSubmitHandler(final String number, final String pass) {
-    UserLoginModel userLogin = new UserLoginModel(number, pass);
+  private void onSubmitHandler( final String incomingNumber,final String pass) {
+    UserLoginModel userLogin = new UserLoginModel(incomingNumber,pass);
     ApiEndpointInterface  apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-
     Gson gson = new GsonBuilder().create();
-    final String login = gson.toJson(userLogin);
+    String login = gson.toJson(userLogin);
     Log.i("USER", login);
     Call<LoginResponse> call = apiService.login(login);
     call.enqueue(new Callback<LoginResponse>() {
-
       @Override
       public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
         Log.i("RES", response.body().getResponseStatus());
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
-          monitoringUserLoginFlag = true;
-          UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_number_Keystore),number);
-          UserDataPreference.getInstance(LoginActivity.this).savePreference(getString(R.string.user_phone_password_Keystore),pass);
-
-          UserData loginUser = response.body().getData().get(0);
-          CURRENT_USER_ID = loginUser.getUser_id();
-          CURRENT_USER_FULLNAME = loginUser.getFullname();
-          CURRENT_USER_EMAIL = loginUser.getEmail();
-          CURRENT_USER_PHONE_NUMBER = loginUser.getPhone_number();
-          CURRENT_USER_PROFILE_PICTURE = loginUser.getProfile_picture();
-
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),incomingNumber);
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_password_Keystore),pass);
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
         else if(response.body().getResponseCode().equals("0")){
             Toast.makeText(LoginActivity.this,response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
-            monitoringUserLoginFlag = false;
+        }
+
+        else{ Toast.makeText(LoginActivity.this,getString(R.string.network_erroe),Toast.LENGTH_LONG).show();
         }
       }
 
@@ -120,8 +102,12 @@ public class LoginActivity extends AppCompatActivity {
     });
   }
 
+
   private void getNumber() {
-    String incomingNumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
-    if (incomingNumber != null) phoneNumber.setText(incomingNumber);
+    incomingNumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
+
   }
+
+
+
 }

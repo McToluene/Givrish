@@ -2,6 +2,7 @@ package com.example.givrish.models;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
@@ -11,6 +12,7 @@ public class ItemSubCategoryData {
 	@PrimaryKey
 	@NonNull
 	private String item_sub_category_id;
+
 	private String item_category_id;
 	private String item_sub_category_name;
 	private String item_sub_category_descp;
