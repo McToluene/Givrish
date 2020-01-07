@@ -435,7 +435,7 @@ public class AddItemFragment extends Fragment {
     String color = colorSpinner.getText().toString();
     String userId = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
 
-    if (!userId.isEmpty() || !name.isEmpty() || !desc.isEmpty()) {
+    if (!name.isEmpty() && !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
       ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
 
