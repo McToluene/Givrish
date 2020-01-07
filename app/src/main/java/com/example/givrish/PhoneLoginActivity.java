@@ -56,6 +56,8 @@ private Executor executor = Executors.newSingleThreadExecutor();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_phone_login);
 
+
+
     edtPhoneNumberLogin = findViewById(R.id.edt_phoneNumber);
     btnCheck = findViewById(R.id.btn_check);
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
@@ -88,7 +90,15 @@ private Executor executor = Executors.newSingleThreadExecutor();
     });
   }
 
-    private void progressDialogMethod() {
+
+
+  private boolean retreiveUserLoginDetails(){
+    String loginPhoneNumber = UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
+    String loginPassword = UserDataPreference.getInstance(PhoneLoginActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
+    return !TextUtils.isEmpty(loginPhoneNumber) && !TextUtils.isEmpty(loginPassword);
+  }
+
+  private void progressDialogMethod() {
         progressDialog = new ProgressDialog(PhoneLoginActivity.this,R.style.progressDialogStyle);
         progressDialog.setMessage("Please wait..");
         progressDialog.setTitle("Welcome");
@@ -113,7 +123,6 @@ private Executor executor = Executors.newSingleThreadExecutor();
         }
         else if (response.body().getResponseCode().equals("0")) {
           Intent intent = new Intent(getApplicationContext(), PhoneVerifyActivity.class);
-            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),registeredUser);
             intent.putExtra(PhoneLoginActivity.phoneLoginKeyFirebase, registeringUserToFirebase);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
           startActivity(intent);
