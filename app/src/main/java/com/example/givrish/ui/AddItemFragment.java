@@ -107,6 +107,7 @@ public class AddItemFragment extends Fragment {
   private String subId;
   private int imageCount = 5;
   private TextView clearImageSelection;
+  private MenuItem clearAllselection;
 
 
   public static AddItemFragment newInstance() {
@@ -139,6 +140,7 @@ public class AddItemFragment extends Fragment {
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
     clearImageSelection = view.findViewById(R.id.clear_image_selection);
+    clearAllselection = view.findViewById(R.id.menu_hamburger);
 
     addButton = view.findViewById(R.id.addImagebtn);
 
@@ -243,7 +245,8 @@ public class AddItemFragment extends Fragment {
         clearImageFunction();
     }
     private void clearImageFunction() {
-        layout.removeAllViews();
+
+        if (layout ==null){}else {layout.removeAllViews();}
         imageCount = 5;
         addButton.setEnabled(true);
         imagePaths.clear();
@@ -431,7 +434,7 @@ public class AddItemFragment extends Fragment {
     String color = colorSpinner.getText().toString();
     String userId = Constants.CURRENT_USER_ID;
 
-    if (!name.isEmpty() || !desc.isEmpty()) {
+    if (!userId.isEmpty() || !name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
       ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
 
