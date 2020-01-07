@@ -3,6 +3,7 @@ package com.example.givrish.network;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AuthResponseDto;
+import com.example.givrish.models.GetUserItemResponse;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.models.ItemSubCategoryResponse;
 import com.example.givrish.models.JsonResponse;
@@ -53,10 +54,10 @@ public interface ApiEndpointInterface {
   @POST("userlogin/user_profile_picture")
   Call<List<ProfileEditResponse>> updateProfilePix(@Part MultipartBody.Part file, @Part("name")RequestBody requestBody, @Query("user_id") String id);
 
-  @GET("profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/")
-  Call<ProfileEditResponse> getImageDetails(@Query("jsonString") String jsonString);
+  @POST("itemscontroller/get_user_item")
+  Call<GetUserItemResponse> getUserItem(@Query("jsonString") String jsonString);
 
- /* @GET("api/RetrofitAndroidImageResponse")
-  Call<ResponseBody> getImageDetails();*/
+  @POST("userlogin/edit_user_record")
+  Call<AuthResponseDto> updateUserDetail(@Query("jsonString") String jsonString);
 
 }

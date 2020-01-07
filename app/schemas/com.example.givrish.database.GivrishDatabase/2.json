@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "7c5fd22c02efd986124604146be3198a",
+    "identityHash": "3e3282b0e424c3c0f64c55d393d6ef6d",
     "entities": [
       {
         "tableName": "item_category",
@@ -293,12 +293,92 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "user_item",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `item_title` TEXT, `item_color` TEXT, `item_country` TEXT, `item_state` TEXT, `item_address` TEXT, `item_longitude` TEXT, `item_latitude` TEXT, `item_description` TEXT, `item_category_id` TEXT, `item_sub_category_id` TEXT, PRIMARY KEY(`user_id`))",
+        "fields": [
+          {
+            "fieldPath": "user_id",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "item_title",
+            "columnName": "item_title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_color",
+            "columnName": "item_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_country",
+            "columnName": "item_country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_state",
+            "columnName": "item_state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_address",
+            "columnName": "item_address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_longitude",
+            "columnName": "item_longitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_latitude",
+            "columnName": "item_latitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_description",
+            "columnName": "item_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_category_id",
+            "columnName": "item_category_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "item_sub_category_id",
+            "columnName": "item_sub_category_id",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "user_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c5fd22c02efd986124604146be3198a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3e3282b0e424c3c0f64c55d393d6ef6d')"
     ]
   }
 }
