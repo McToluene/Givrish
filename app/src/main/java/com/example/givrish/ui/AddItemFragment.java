@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 
 import com.example.givrish.Dashboard;
+import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
@@ -91,9 +92,7 @@ public class AddItemFragment extends Fragment {
   private AutoCompleteTextView colorSpinner;
   private static final String apiKey = "com.example.givrish.ui.APIKEY";
   private List<ItemSubCategoryData> itemSubCategoryDataList;
-  private int selectedPosition;
   private ApiEndpointInterface apiService;
-  private List<Bitmap> imageArray;
   private TextInputEditText itemName;
   private TextInputEditText itemDesc;
   private Gson gson;
@@ -102,7 +101,7 @@ public class AddItemFragment extends Fragment {
   private CallBackListener listener;
   private LocationClass locationClass;
   private LocationClass.LocationResult locationResult;
-  boolean check = false;
+  private boolean check = false;
   private String[] locationData;
   private String categoryId;
   private String subId;
@@ -434,8 +433,8 @@ public class AddItemFragment extends Fragment {
     String name = itemName.getText().toString();
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
-    String userId = "5";
-
+    String userId = Constants.CURRENT_USER_ID;
+    String imgCount = String.valueOf(layout.getChildCount());
 
     if (!name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude

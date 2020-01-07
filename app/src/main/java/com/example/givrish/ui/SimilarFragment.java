@@ -6,10 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +82,7 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
     RecyclerView similarRecycler = view.findViewById(R.id.similar_recycler);
     adapter = new ListItemAdapter(getContext());
     similarRecycler.setAdapter(adapter);
-    similarRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+    similarRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
     return view;
   }

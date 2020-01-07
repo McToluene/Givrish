@@ -15,6 +15,8 @@ import android.view.View;
 
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
+import com.example.givrish.network.ApiEndpointInterface;
+import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.AddItemFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
@@ -22,6 +24,13 @@ import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
 
@@ -30,6 +39,8 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String MESSAGE_FRAGMENT_FLAG = "3";
   public static final String FAVOURITES_FRAGMENT_FLAG = "5";
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
+  public static final String PROFILE_PAGE_FLAG="7";
+  public static final String PROFILE_EDIT_FLAG="8";
 
 
   private static int FLAG = 0;
@@ -37,7 +48,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private Fragment fragment = new ListFragment();
   private FloatingActionButton fab;
-
+  ApiEndpointInterface apiService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +59,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     fab = findViewById(R.id.fab);
     fab.setColorFilter(getResources().getColor(R.color.white));
-
-
 
     fab.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -64,6 +73,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
         }
       }
     });
+
     loadFragments(fragment, "1");
   }
 
@@ -127,7 +137,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 
   @Override
   public void loadItem(Fragment fragment, String tag) {
-    Log.i("Success", "WE DEY");
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.dashboard_layout, fragment, tag);
     transaction.addToBackStack(tag);

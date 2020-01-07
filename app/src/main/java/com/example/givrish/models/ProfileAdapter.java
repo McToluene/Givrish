@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,57 +16,69 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
+import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.ui.ItemDetailsFragment;
+import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
-    private ArrayList<String> listString;
     private Context context;
-    private ArrayList<ProductModel> productModels;
-    private ProductModel gottenItem;
+    private List<GetUserItemResponseData> allItemsResponseData;
 
-    public ProfileAdapter(ArrayList<String> listStr, Context context) {
-        listString = listStr;
+    public ProfileAdapter(Context context) {
         this.context = context;
-        productModels=ProductModel.createProduct();
-        gottenItem=new ProductModel();
     }
-
 
     @NonNull
     @Override
     public ProfileAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_gift_list_row, parent, false);
-
-        ViewHolder vh=new ViewHolder(v);
-        return vh;
+       View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_gift_list_row, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String prodName=listString.get(position);
-        holder.txtList.setText(prodName);
+
+            GetUserItemResponseData item = allItemsResponseData.get(position);
+        holder.txtList.setText(item.getItem_title());
+        holder.txtLocation.setText(item.getItem_address());
         holder.position = position;
 
-        int prodPosition=listString.indexOf(prodName);
-        gottenItem=productModels.get(prodPosition);
-        holder.txtLocation.setText(gottenItem.getItem_Location());
-    }
+     /*   String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
 
+        if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
+            String uri =  url + item.getItem_images().get(0).getItemSmallImageName();
+            Picasso.get().load(uri).resize(100, 100).centerCrop().placeholder(R.drawable.download).into( holder.itemImage);
+
+        } else {
+            holder.itemImage.setImageResource(R.drawable.download);
+        }*/
+
+    }
 
     @Override
     public int getItemCount() {
-        return listString.size();
+        if (allItemsResponseData != null)
+            return allItemsResponseData.size();
+        else
+            return 0;
+    }
+
+    public void setUserItemsResponseData(List<GetUserItemResponseData> getUserItemResponseData) {
+        allItemsResponseData = getUserItemResponseData;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        //declered variables
+        //declared variables
         TextView txtList;
-        private int position;
         ImageView productImgAdp;
         TextView txtLocation;
+        private int position;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -82,6 +95,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     ItemDetailsFragment itemDetails = new ItemDetailsFragment();
                     itemDetails.setArguments(bundle);
                     loadDetail(itemDetails);*/
+
+
+                  /*  AllItemsResponseData selectedItem = allItemsResponseData.get(position);
+                    ItemDetailsFragment itemDetails = ItemDetailsFragment.newInstance(selectedItem, gottenDistance );
+                    listener.loadItem(itemDetails, ItemDetailsFragment.ITEM_DETAILS_TAG);*/
+
                 }
             });
         }

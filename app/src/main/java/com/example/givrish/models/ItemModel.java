@@ -1,6 +1,7 @@
 package com.example.givrish.models;
 
 public class ItemModel {
+
   private String user_id;
   private String item_title;
   private String item_color;
