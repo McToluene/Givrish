@@ -98,6 +98,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
               resendCode.setTextColor(getResources().getColor(R.color.colorPrimary));
               resendCode.setEnabled(false);
              resendVerificationCode(realUserNumberR,mResendToken);
+             getCoundDown();
 
           }
       });
@@ -111,12 +112,15 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String code = edtPhoneCode.getText().toString().trim();
                 if (code.isEmpty() || code.length() != 6)
-                { Snackbar.make(view,getResources().getString(R.string.valid_number_error),Snackbar.LENGTH_LONG).show();edtPhoneCode.requestFocus();
+                {
+                    Snackbar.make(view,getResources().getString(R.string.valid_number_error),Snackbar.LENGTH_LONG).show();
+                    edtPhoneCode.requestFocus();
                     return; } else{
                    // profileViewModel.originalKey = code;
                        //profileViewModel.originalPhoneNumber = realUserNumberR;
                   try { verifyCode(code); }catch (Exception e){
-                      Toast.makeText(getApplicationContext(), getString(R.string.try_again_msg),Toast.LENGTH_LONG).show(); }
+                      Snackbar.make(view,getResources().getString(R.string.valid_number_error),Snackbar.LENGTH_LONG).show();
+                  }
                 }
             }
         });
@@ -210,7 +214,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         @Override
         public void onVerificationFailed(FirebaseException e) {
             progressBar.setVisibility(View.INVISIBLE);
-            Toast.makeText(PhoneVerifyActivity.this,getString(R.string.code_error),Toast.LENGTH_LONG).show();}
+        }
 
     };
 
@@ -223,7 +227,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
     private CountDownTimer getCoundDown(){
       return new CountDownTimer(40000, 1000) {
         public void onTick(long millisUntilFinished) {
-          resendCode.setText(resendCodeString + millisUntilFinished / 1000);
+          resendCode.setText(resendCodeString + " " + millisUntilFinished / 1000);
         }
 
         public void onFinish() {
