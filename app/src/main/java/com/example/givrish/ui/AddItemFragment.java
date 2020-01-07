@@ -245,7 +245,8 @@ public class AddItemFragment extends Fragment {
         clearImageFunction();
     }
     private void clearImageFunction() {
-        layout.removeAllViews();
+
+        if (layout ==null){}else {layout.removeAllViews();}
         imageCount = 5;
         addButton.setEnabled(true);
         imagePaths.clear();
@@ -333,8 +334,6 @@ public class AddItemFragment extends Fragment {
         if (response.body() != null && response.body().getResponseCode().equals("1")) {
           mViewModel.insertAll(response.body().getData());
           itemCategoryDataList = mViewModel.getLiveItemCategories().getValue();
-//          ArrayAdapter<ItemCategoryData> arrayAdapter = new ArrayAdapter<>( getContext(), android.R.layout.simple_dropdown_item_1line, itemCategoryDataList);
-//          mainCategory.setAdapter(arrayAdapter);
         }
       }
 
@@ -434,9 +433,8 @@ public class AddItemFragment extends Fragment {
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
     String userId = Constants.CURRENT_USER_ID;
-    String imgCount = String.valueOf(layout.getChildCount());
 
-    if (!name.isEmpty() || !desc.isEmpty()) {
+    if (!userId.isEmpty() || !name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
       ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
 
