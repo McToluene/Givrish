@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "357742137439",
+    "firebase_url": "https://givrish-595e3.firebaseio.com",
+    "project_id": "givrish-595e3",
+    "storage_bucket": "givrish-595e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357742137439:android:b20237b4e977b9be384bea",
+        "android_client_info": {
+          "package_name": "com.example.givrish"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "357742137439-rs2n1sb3h2mjiv55bnhjonlv176gd0dk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.givrish",
+            "certificate_hash": "027bc0528f87e2a14a80fabd5901b0c7e867ec14"
+          }
+        },
+        {
+          "client_id": "357742137439-pug5dbhf8v26l20nosdobh19djig9aj5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXOmS78MXR5QzK169MpXXYAkRd3iUQxOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "357742137439-pug5dbhf8v26l20nosdobh19djig9aj5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

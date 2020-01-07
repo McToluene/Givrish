@@ -148,8 +148,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     return view;
   }
 
-  public void loadProfilePicture() {
-    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+  private void loadProfilePicture() {
     String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
     try {
       String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;

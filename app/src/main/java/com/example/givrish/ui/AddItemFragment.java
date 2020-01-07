@@ -92,9 +92,7 @@ public class AddItemFragment extends Fragment {
   private AutoCompleteTextView colorSpinner;
   private static final String apiKey = "com.example.givrish.ui.APIKEY";
   private List<ItemSubCategoryData> itemSubCategoryDataList;
-  private int selectedPosition;
   private ApiEndpointInterface apiService;
-  private List<Bitmap> imageArray;
   private TextInputEditText itemName;
   private TextInputEditText itemDesc;
   private Gson gson;
@@ -103,7 +101,7 @@ public class AddItemFragment extends Fragment {
   private CallBackListener listener;
   private LocationClass locationClass;
   private LocationClass.LocationResult locationResult;
-  boolean check = false;
+  private boolean check = false;
   private String[] locationData;
   private String categoryId;
   private String subId;

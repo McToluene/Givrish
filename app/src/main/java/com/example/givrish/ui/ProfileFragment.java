@@ -3,10 +3,7 @@ package com.example.givrish.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,59 +18,44 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
-import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.IUserItemCallBackEvent;
-import com.example.givrish.interfaces.ListCallBackEvent;
-import com.example.givrish.models.AddItemResponse;
-import com.example.givrish.models.AddItemResponseData;
-import com.example.givrish.models.AllItemsResponse;
+
 
 import com.example.givrish.PhoneLoginActivity;
-import com.example.givrish.R;
+
 import com.example.givrish.UserDataPreference;
 
-import com.example.givrish.models.AllItemsResponseData;
+
 import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.GetUserItemResponse;
 import com.example.givrish.models.GetUserItemResponseData;
-import com.example.givrish.models.ItemModel;
-import com.example.givrish.models.ProductModel;
+
 import com.example.givrish.models.ProfileAdapter;
-import com.example.givrish.models.UserId;
+
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
-import com.example.givrish.viewmodel.ListViewModel;
+
 import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
+
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -121,15 +103,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         getAllItems();
     }
 
-    @Override
-
-
-
-  @Override
-  public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setHasOptionsMenu(true);
-  }
 
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
