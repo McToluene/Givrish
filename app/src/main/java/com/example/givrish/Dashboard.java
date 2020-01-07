@@ -130,7 +130,12 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   @Override
   public void onBackClick(String tag) {
     FragmentManager manager = getSupportFragmentManager();
-    manager.popBackStack();
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+
+    if (fragment != null){
+      manager.beginTransaction().remove(fragment).commit();
+    }
+
     fab.setImageDrawable(getDrawable(R.drawable.gift_box));
     FLAG = 0;
   }

@@ -76,10 +76,8 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ListCallBackEvent listCallBackEvent;
   private RecyclerView listRecyclerView;
   private LocationClass locationClass;
-  private LocationClass.LocationResult locationResult;
-  boolean check = false;
-  private String[] locationData;
-  String pic;
+  private boolean check = false;
+  private String pic;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -126,12 +124,12 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
-    mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
-      @Override
-      public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
-        listItemAdapter.setAllItemsResponseData(allItemsResponseData);
-      }
-    });
+//    mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
+//      @Override
+//      public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+//        listItemAdapter.setAllItemsResponseData(allItemsResponseData);
+//      }
+//    });
 
     if(getArguments() != null){
       pic=getArguments().getString("pic");
@@ -260,7 +258,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
   private void displayLocation() {
 
-    locationResult = new LocationClass.LocationResult(){
+    LocationClass.LocationResult locationResult = new LocationClass.LocationResult() {
 
       @Override
       public void gotLocation(Location location) {
@@ -268,10 +266,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-          String country = addressList.get(0).getCountryName();
-          String state = addressList.get(0).getAdminArea();
-          String addressLine = addressList.get(0).getAddressLine(0);
 
           DecimalFormat df = new DecimalFormat("#.###");
 
@@ -281,9 +275,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
           listItemAdapter.setLongitude(lng);
           listItemAdapter.setLatitude(lat);
 
-          //try to use if statement for checking empty string
-          String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
-          locationData = addr.split("\\\\");
 
         } catch (Exception e) {
           e.printStackTrace();
