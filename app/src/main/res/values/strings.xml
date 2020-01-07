@@ -5,6 +5,7 @@
     <string name="sign_up">SignUp</string>
     <string name="password">Enter password</string>
     <string name="name">Full Name</string>
+    <string name="user_id">UserID</string>
     <string name="phone_number">Phone Number</string>
     <string name="lets_go">Lets go</string>
     <string name="connection_error">Check internet connection</string>
