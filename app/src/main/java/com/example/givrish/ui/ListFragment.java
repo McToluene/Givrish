@@ -266,7 +266,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
           DecimalFormat df = new DecimalFormat("#.###");
 
           String lng = df.format(addressList.get(0).getLongitude());
@@ -274,7 +273,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
           listItemAdapter.setLongitude(lng);
           listItemAdapter.setLatitude(lat);
-
 
         } catch (Exception e) {
           e.printStackTrace();
