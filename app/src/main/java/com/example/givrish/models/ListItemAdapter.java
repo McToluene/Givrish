@@ -22,7 +22,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
   private List<AllItemsResponseData> allItemsResponseData;
   private  LayoutInflater inflater;
-  private Context context;
   private ItemSelectedListener listener;
   private double latitude;
   private double longitude;
@@ -30,7 +29,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
   public ListItemAdapter(Context context) {
     inflater = LayoutInflater.from(context);
-    this.context = context;
     listener = (ItemSelectedListener) context;
   }
 
@@ -49,7 +47,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
     if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
       String uri =  url + item.getItem_images().get(0).getItemSmallImageName();
-      Picasso.get().load(uri).resize(150, 150).placeholder(R.drawable.download).into( holder.itemImage);
+      Picasso.get().load(uri).fit().placeholder(R.drawable.download).into( holder.itemImage);
 
     } else {
       holder.itemImage.setImageResource(R.drawable.download);
@@ -65,10 +63,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
 
   @Override
   public int getItemCount() {
-    if (allItemsResponseData != null)
-      return allItemsResponseData.size();
-    else
-      return 0;
+    return allItemsResponseData != null ? allItemsResponseData.size() : 0;
   }
 
   public void setAllItemsResponseData(List<AllItemsResponseData> responseDataList) {
@@ -160,6 +155,5 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ListIt
         }
       });
     }
-
   }
 }

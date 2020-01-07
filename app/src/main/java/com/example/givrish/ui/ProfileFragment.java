@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
         listCallBackEvent = this;
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         getAllItems();

@@ -178,7 +178,6 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
       }
     });
 
-
   }
 
   @Override

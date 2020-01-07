@@ -29,7 +29,6 @@ public class UserItemRepository {
         });
     }
 
-
     public LiveData<List<GetUserItemResponseData>> getItems() {
         return items;
     }

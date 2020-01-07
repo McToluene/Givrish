@@ -9,14 +9,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
-import com.example.givrish.network.ApiEndpointInterface;
-import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.AddItemFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
@@ -24,13 +21,7 @@ import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
 
@@ -48,7 +39,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private Fragment fragment = new ListFragment();
   private FloatingActionButton fab;
-  ApiEndpointInterface apiService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +105,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   private void loadFragments(Fragment fragment, String tag) {
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.frame_container, fragment, tag);
-    transaction.addToBackStack(tag);
+    transaction.addToBackStack(null);
     transaction.commit();
   }
 
@@ -137,14 +127,22 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 
   @Override
   public void loadItem(Fragment fragment, String tag) {
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.dashboard_layout, fragment, tag);
-    transaction.addToBackStack(tag);
-    transaction.commit();
+    FragmentTransaction getTransaction = getSupportFragmentManager().beginTransaction();
+    getTransaction.replace(R.id.dashboard_layout, fragment, tag);
+    getTransaction.addToBackStack(tag);
+    getTransaction.commit();
   }
 
   @Override
   public void onCloseItem(String tag) {
-    onBackClick(tag);
+    FragmentManager manager = getSupportFragmentManager();
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+
+    if (fragment != null){
+      manager.beginTransaction().remove(fragment).commit();
+    }
+
+    fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+    FLAG = 0;
   }
 }
