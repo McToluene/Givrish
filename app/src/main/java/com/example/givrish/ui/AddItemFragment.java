@@ -434,7 +434,6 @@ public class AddItemFragment extends Fragment {
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
     String userId = Constants.CURRENT_USER_ID;
-    String imgCount = String.valueOf(layout.getChildCount());
 
     if (!name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude

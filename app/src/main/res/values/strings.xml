@@ -47,7 +47,7 @@
     <string name="password_error">Password mismatch</string>
     <string name="empty_error">All fields are required</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="valid_number_error">Enter valid code</string>
+    <string name="valid_number_error">Invalid OTP</string>
     <string name="try_again_msg">Please try again...</string>
     <string name="category">Category :-</string>
     <string name="sub_cat">Subcategory :-</string>
