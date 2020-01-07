@@ -1,13 +1,11 @@
 package com.example.givrish.models;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,26 +14,22 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
-import com.example.givrish.interfaces.ItemSelectedListener;
-import com.example.givrish.ui.ItemDetailsFragment;
-import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
+import com.example.givrish.ui.AddItemFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
+public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.ViewHolder> {
 
     private Context context;
     private List<GetUserItemResponseData> allItemsResponseData;
 
-    public ProfileAdapter(Context context) {
+    public UserProfileAdapter(Context context) {
         this.context = context;
     }
 
     @NonNull
     @Override
-    public ProfileAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserProfileAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
        View v= LayoutInflater.from(parent.getContext()).inflate(R.layout.profile_gift_list_row, parent, false);
         return new ViewHolder(v);
     }
@@ -43,10 +37,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-            GetUserItemResponseData item = allItemsResponseData.get(position);
+        GetUserItemResponseData item = allItemsResponseData.get(position);
         holder.txtList.setText(item.getItem_title());
         holder.txtLocation.setText(item.getItem_address());
-        holder.position = position;
 
      /*   String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
 
@@ -73,12 +66,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         //declared variables
         TextView txtList;
         ImageView productImgAdp;
         TextView txtLocation;
-        private int position;
+
+        ImageView edit, delete;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,29 +80,26 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             productImgAdp = itemView.findViewById(R.id.imgProdProfileEdit);
             txtLocation = itemView.findViewById(R.id.txtProdLocMyProfile);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                   /* Bundle bundle = new Bundle();
-                    bundle.putInt("POSITION", position);
-                    bundle.putString("itemClick", txtList.getText().toString());
-                    ItemDetailsFragment itemDetails = new ItemDetailsFragment();
-                    itemDetails.setArguments(bundle);
-                    loadDetail(itemDetails);*/
+            edit=itemView.findViewById(R.id.imgEditItem);
+            edit.setOnClickListener(this);
+        }
 
-
-                  /*  AllItemsResponseData selectedItem = allItemsResponseData.get(position);
-                    ItemDetailsFragment itemDetails = ItemDetailsFragment.newInstance(selectedItem, gottenDistance );
-                    listener.loadItem(itemDetails, ItemDetailsFragment.ITEM_DETAILS_TAG);*/
-
-                }
-            });
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.imgEditItem:
+                    GetUserItemResponseData clickItem = allItemsResponseData.get(getAdapterPosition());
+                    ItemModel itemModel=new ItemModel(clickItem.getUser_id(), clickItem.getItem_title(), clickItem.getItem_color(), clickItem.getItem_description(), clickItem.getItem_category_id(), clickItem.getItem_sub_category_id());
+                    AddItemFragment addItemFragment=AddItemFragment.newParcelableInstance(itemModel);
+                    loadDetail(addItemFragment);
+                    break;
+            }
         }
     }
 
     private void loadDetail(Fragment itemDetails) {
         FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.search_layout, itemDetails);
+        transaction.replace(R.id.dashboard_layout, itemDetails);
         transaction.addToBackStack(null);
         transaction.commit();
     }

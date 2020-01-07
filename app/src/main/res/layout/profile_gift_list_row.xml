@@ -24,6 +24,7 @@
             app:srcCompat="@drawable/flag_nigeria" />
 
         <ImageView
+            android:id="@+id/imgEditItem"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@android:drawable/ic_menu_edit"
@@ -31,6 +32,7 @@
             android:layout_marginTop="55dp"/>
 
         <ImageView
+            android:id="@+id/imgDeleteItem"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@android:drawable/ic_menu_delete"
@@ -43,18 +45,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="55dp"
-            android:textStyle="bold"
             android:padding="15dp"
-            android:textSize="20sp" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/txtProdLocMyProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="70dp"
             android:layout_marginTop="55dp"
-            android:id="@+id/txtProdLocMyProfile"
-            android:textSize="18sp"/>
+            android:textSize="12sp" />
 
     </androidx.cardview.widget.CardView>
 

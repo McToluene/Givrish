@@ -9,14 +9,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.network.ApiEndpointInterface;
-import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.AddItemFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
@@ -24,12 +22,8 @@ import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
+import static com.example.givrish.database.Constants.*;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
@@ -41,6 +35,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
   public static final String PROFILE_PAGE_FLAG="7";
   public static final String PROFILE_EDIT_FLAG="8";
+  public static final String PICTURE_FULLSCREEN_FLAG="9";
 
 
   private static int FLAG = 0;
@@ -54,6 +49,12 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
+
+    CURRENT_USER_ID = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_id));
+    CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
+    CURRENT_USER_EMAIL = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_email_Keystore));
+    CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
+    CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_picture));
 
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -147,4 +148,5 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public void onCloseItem(String tag) {
     onBackClick(tag);
   }
+
 }

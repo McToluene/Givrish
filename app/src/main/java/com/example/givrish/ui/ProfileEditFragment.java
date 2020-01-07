@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
+import com.example.givrish.UserDataPreference;
 import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
@@ -142,6 +143,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             loadProfilePic();
         }
 
+        imgProfile.setOnClickListener(this);
+
         return view;
     }
 
@@ -177,6 +180,15 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                 if(username.equals(CURRENT_USER_FULLNAME.trim()) && returnValue.isEmpty()) {
                     Toast.makeText(getContext(), "Notice: You did not change any detail.", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.profile_imageEdit:
+                PictureFullScreen pictureFullScreen =new PictureFullScreen();
+                if(pic!=null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("pic", pic);
+                    pictureFullScreen.setArguments(bundle);
+                }
+                loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
                 break;
         }
     }
@@ -225,6 +237,7 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                     @Override
                     public void onResponse(Call<List<ProfileEditResponse>> call, Response<List<ProfileEditResponse>> response) {
                         CURRENT_USER_PROFILE_PICTURE = returnValue.get(0);
+                        UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.user_picture), CURRENT_USER_PROFILE_PICTURE);
                         returnValue.clear();
                         Toast.makeText(getContext(), "Successfully updated picture", Toast.LENGTH_LONG).show();
                         if (username.trim().equals(CURRENT_USER_FULLNAME.trim())) {

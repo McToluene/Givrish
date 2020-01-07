@@ -81,8 +81,20 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setEnabled(true);
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
+
+          String userId=response.body().getData().get(0).getUser_id();
+          String userFullName = response.body().getData().get(0).getFullname();
+          String userEmail = response.body().getData().get(0).getEmail();
+          String userPicture = response.body().getData().get(0).getProfile_picture();
+
           UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),incomingNumber);
           UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_password_Keystore),pass);
+
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_id), userId);
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_fullname_Keystore), userFullName);
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_email_Keystore), userEmail);
+          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_picture), userPicture);
+          
           startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
         else if(response.body().getResponseCode().equals("0")){

@@ -43,6 +43,7 @@ import android.widget.Toast;
 import com.example.givrish.Dashboard;
 import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.ItemModel;
@@ -107,8 +108,11 @@ public class AddItemFragment extends Fragment {
   private String subId;
   private int imageCount = 5;
   private TextView clearImageSelection;
-  private MenuItem clearAllselection;
+  private ItemModel itemModel;
 
+
+  public AddItemFragment() {
+  }
 
   public static AddItemFragment newInstance() {
     return new AddItemFragment();
@@ -119,6 +123,15 @@ public class AddItemFragment extends Fragment {
     super.onAttach(context);
     if (context instanceof CallBackListener)
       listener = (CallBackListener) context;
+  }
+
+
+  public static AddItemFragment newParcelableInstance(ItemModel itemModel){
+    Bundle args=new Bundle();
+    args.putParcelable("msg", itemModel);
+    AddItemFragment fragment=new AddItemFragment();
+    fragment.setArguments(args);
+    return fragment;
   }
 
 
@@ -140,7 +153,6 @@ public class AddItemFragment extends Fragment {
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
     clearImageSelection = view.findViewById(R.id.clear_image_selection);
-    clearAllselection = view.findViewById(R.id.menu_hamburger);
 
     addButton = view.findViewById(R.id.addImagebtn);
 
@@ -152,6 +164,17 @@ public class AddItemFragment extends Fragment {
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
+
+    if(getArguments().get("msg")!=null){
+      itemModel = getArguments().getParcelable("msg");
+    }
+
+    if(itemModel!=null) {
+     itemName.setText(itemModel.getItem_title());
+     itemDesc.setText(itemModel.getItem_description());
+     //get all the rest
+    }
+
     return view;
   }
 
@@ -434,7 +457,6 @@ public class AddItemFragment extends Fragment {
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
     String userId = Constants.CURRENT_USER_ID;
-    String imgCount = String.valueOf(layout.getChildCount());
 
     if (!name.isEmpty() || !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude

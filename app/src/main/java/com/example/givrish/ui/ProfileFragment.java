@@ -45,7 +45,7 @@ import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.GetUserItemResponse;
 import com.example.givrish.models.GetUserItemResponseData;
 
-import com.example.givrish.models.ProfileAdapter;
+import com.example.givrish.models.UserProfileAdapter;
 
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
@@ -80,7 +80,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
 
     private IUserItemCallBackEvent listCallBackEvent;
     private ProfileViewModel mViewModel;
-    private ProfileAdapter profileAdapter;
+    private UserProfileAdapter profileAdapter;
 
 
     private CallBackListener listener;
@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         listCallBackEvent = this;
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         getAllItems();
@@ -143,8 +143,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     btnEditProf=view.findViewById(R.id.btnEditProfile);
     btnEditProf.setOnClickListener(this);
 
-        setHasOptionsMenu(false);
-
     txtUserNameProfile=view.findViewById(R.id.id_username);
     txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
 
@@ -177,7 +175,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        profileAdapter = new ProfileAdapter(this.getContext());
+        profileAdapter = new UserProfileAdapter(this.getContext());
         recyclerView.setAdapter(profileAdapter);
     }
 
@@ -230,7 +228,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
   }
 
-  private Boolean isImageFitToScreen;
+
   @Override
   public void onClick(View v) {
     switch (v.getId()){
@@ -248,7 +246,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
             listener.onBackClick(Dashboard.PROFILE_PAGE_FLAG);
             break;
         case R.id.profile_image:
-
+            PictureFullScreen pictureFullScreen =new PictureFullScreen();
+            if(pic!=null) {
+                Bundle bundle = new Bundle();
+                bundle.putString("pic", pic);
+                pictureFullScreen.setArguments(bundle);
+            }
+            loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
             break;
     }
   }
