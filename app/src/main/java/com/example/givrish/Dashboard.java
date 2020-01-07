@@ -103,9 +103,9 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   }
 
   private void loadFragments(Fragment fragment, String tag) {
-    FragmentTransaction  transaction = getSupportFragmentManager().beginTransaction();
+    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.frame_container, fragment, tag);
-    transaction.addToBackStack(tag);
+    transaction.addToBackStack(null);
     transaction.commit();
   }
 
@@ -127,10 +127,10 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 
   @Override
   public void loadItem(Fragment fragment, String tag) {
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.dashboard_layout, fragment, tag);
-    transaction.addToBackStack(tag);
-    transaction.commit();
+    FragmentTransaction getTransaction = getSupportFragmentManager().beginTransaction();
+    getTransaction.replace(R.id.dashboard_layout, fragment, tag);
+    getTransaction.addToBackStack(tag);
+    getTransaction.commit();
   }
 
   @Override

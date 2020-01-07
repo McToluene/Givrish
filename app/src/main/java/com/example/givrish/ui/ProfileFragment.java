@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         listCallBackEvent = this;
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         getAllItems();
@@ -142,8 +142,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
 
     btnEditProf=view.findViewById(R.id.btnEditProfile);
     btnEditProf.setOnClickListener(this);
-
-        setHasOptionsMenu(false);
 
     txtUserNameProfile=view.findViewById(R.id.id_username);
     txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
