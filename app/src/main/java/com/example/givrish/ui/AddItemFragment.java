@@ -255,7 +255,7 @@ public class AddItemFragment extends Fragment {
     subCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        subId = itemSubCategoryDataList.get(position).getItem_category_id();
+        subId = itemSubCategoryDataList.get(position).getItem_sub_category_id();
       }
     });
   }
@@ -464,12 +464,11 @@ public class AddItemFragment extends Fragment {
 
       String itemString = gson.toJson(itemModel);
 
-      Log.i("Item", itemString);
       Call<List<AddItemResponse>> call = apiService.addItem(itemString);
       call.enqueue(new Callback<List<AddItemResponse>>() {
         @Override
         public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
-          Log.i("RES", response.body().get(0).getResponseCode());
+
           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
             Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
             AddItemResponseData data = response.body().get(0).getData();
@@ -498,9 +497,6 @@ public class AddItemFragment extends Fragment {
   private void uploadImage(String path, String id) {
     File file = new File(path);
 
-//    File file = FileUtils.getFile( getContext(), Uri.parse(path));
-
-    //Request body
     RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
 
     MultipartBody.Part part = MultipartBody.Part.createFormData("file[]", file.getName(), fileReqBody);
