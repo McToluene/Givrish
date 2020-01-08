@@ -89,6 +89,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
 
     String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
     MaterialTextView tvItemName = view.findViewById(R.id.tv_itemName);
+    MaterialTextView tvItemDescription = view.findViewById(R.id.tv_itemDesc);
     MaterialTextView tvLocation = view.findViewById(R.id.tv_itemLocation);
     ImageView itemImage = view.findViewById(R.id.items_image);
     tvCate = view.findViewById(R.id.tv_ItemCate);
@@ -108,6 +109,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
 
       if (item != null) {
         tvItemName.setText(item.getItem_title());
+        tvItemDescription.setText(item.getItem_description());
         tvDateAdded.setText(extractDate(item.getItem_joined()));
         getCategory(item.getItem_category_id());
         getSubCategory(item.getItem_sub_category_id());
@@ -174,7 +176,6 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
           fetchListener.onSubCategory(itemSubCategoryData.getItem_sub_category_name());
         else
           fetchListener.onSubCategory("Others");
-
       }
     });
 
