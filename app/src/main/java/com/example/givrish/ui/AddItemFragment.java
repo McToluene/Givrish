@@ -165,7 +165,7 @@ public class AddItemFragment extends Fragment {
       ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
 
-    if(getArguments().get("msg")!=null){
+    if(getArguments()!=null){
       itemModel = getArguments().getParcelable("msg");
     }
 

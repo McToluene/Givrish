@@ -74,17 +74,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   private TextView txtUserNameProfile;
     private CircleImageView imgProfile;
 
-
   private ApiEndpointInterface apiService;
-  private GetUserItemResponseData items;
 
     private IUserItemCallBackEvent listCallBackEvent;
     private ProfileViewModel mViewModel;
     private UserProfileAdapter profileAdapter;
-
-
     private CallBackListener listener;
-    String pic;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -135,7 +130,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
       ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
 
-    toolbar.setNavigationOnClickListener(this);
+    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getContext(), Dashboard.class);
+            intent.putExtra("pic", CURRENT_USER_PROFILE_PICTURE);
+            startActivity(intent);
+        }
+    });
 
     recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
     recyclerView.setHasFixedSize(true);
@@ -157,8 +159,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         });
 
         if(getArguments() != null){
-            pic=getArguments().getString("pic");
-            Drawable theImage = Drawable.createFromPath(pic);
+            CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
+           Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
             imgProfile.setImageDrawable(theImage);
         }
         else {
@@ -200,7 +202,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
 
             @Override
             public void onFailure(Call<GetUserItemResponse> call, Throwable t) {
-                t.toString();
                 if (getView() != null)
                     Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT)
                             .show();
@@ -234,22 +235,18 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     switch (v.getId()){
       case R.id.btnEditProfile:
         ProfileEditFragment editFragment=new ProfileEditFragment();
-         if(pic!=null) {
+         if(CURRENT_USER_PROFILE_PICTURE!=null) {
             Bundle bundle = new Bundle();
-            bundle.putString("pic", pic);
+            bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
             editFragment.setArguments(bundle);
              }
         loadFragment(editFragment, Dashboard.PROFILE_EDIT_FLAG);
         break;
-
-        case R.id.profile_toolbar:
-            listener.onBackClick(Dashboard.PROFILE_PAGE_FLAG);
-            break;
         case R.id.profile_image:
             PictureFullScreen pictureFullScreen =new PictureFullScreen();
-            if(pic!=null) {
-                Bundle bundle = new Bundle();
-                bundle.putString("pic", pic);
+            if(CURRENT_USER_PROFILE_PICTURE!=null) {
+              Bundle  bundle = new Bundle();
+                bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
                 pictureFullScreen.setArguments(bundle);
             }
             loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);

@@ -85,7 +85,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
     private ApiEndpointInterface apiService;
     ProfileFragment fragment;
     String username;
-    String pic;
 
     private CallBackListener listener;
 
@@ -114,7 +113,11 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onBackClick(Dashboard.PROFILE_EDIT_FLAG);
+                ProfileFragment fragment=new ProfileFragment();
+                Bundle bundle=new Bundle();
+                bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+                fragment.setArguments(bundle);
+                loadFragment(fragment, Dashboard.PROFILE_PAGE_FLAG);
             }
         });
         edtUsername=view.findViewById(R.id.edtProfileNameEditProfile);
@@ -135,8 +138,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         btnSave.setOnClickListener(this);
 
         if(getArguments() != null){
-            pic=getArguments().getString("pic");
-            Drawable theImage = Drawable.createFromPath(pic);
+            CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
+            Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
             imgProfile.setImageDrawable(theImage);
         }
         else {
@@ -183,9 +186,9 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.profile_imageEdit:
                 PictureFullScreen pictureFullScreen =new PictureFullScreen();
-                if(pic!=null) {
+                if(CURRENT_USER_PROFILE_PICTURE!=null) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("pic", pic);
+                    bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
                     pictureFullScreen.setArguments(bundle);
                 }
                 loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
@@ -205,7 +208,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
                 CURRENT_USER_FULLNAME=username;
                 Toast.makeText(getContext(), "Successfully updated username", Toast.LENGTH_LONG).show();
-                loadProfile();
             }
 
             @Override
@@ -213,14 +215,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                 Toast.makeText(getContext(), "Failed to update the details", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void loadProfile() {
-        ListFragment fragment=new ListFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-        fragment.setArguments(bundle);
-        loadFragment(fragment, Dashboard.LIST_ITEM_FRAGMENT_FLAG);
     }
 
     private void uploadImage(final String path) {
@@ -240,9 +234,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                         UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.user_picture), CURRENT_USER_PROFILE_PICTURE);
                         returnValue.clear();
                         Toast.makeText(getContext(), "Successfully updated picture", Toast.LENGTH_LONG).show();
-                        if (username.trim().equals(CURRENT_USER_FULLNAME.trim())) {
-                            loadProfile();
-                        }
                     }
 
                     @Override
@@ -280,8 +271,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         }
         else {
             if(getArguments() != null){
-                pic=getArguments().getString("pic");
-                Drawable theImage = Drawable.createFromPath(pic);
+                CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
+                Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
                 imgProfile.setImageDrawable(theImage);
             }
             else {

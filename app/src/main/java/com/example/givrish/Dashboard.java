@@ -56,6 +56,15 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
     CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_picture));
 
+    if(getIntent().getExtras() != null) {
+      Bundle bundle = getIntent().getExtras();
+      CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
+    }
+
+    /*  bundle = new Bundle();
+      bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+      fragment.setArguments(bundle);*/
+
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     fab = findViewById(R.id.fab);

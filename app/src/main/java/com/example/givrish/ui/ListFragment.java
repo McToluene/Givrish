@@ -32,11 +32,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ProgressBar;
 
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
+import com.example.givrish.UserDataPreference;
+import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.interfaces.ListCallBackEvent;
 import com.example.givrish.models.AllItemsResponse;
@@ -60,6 +63,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
+import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
+import static com.example.givrish.database.Constants.CURRENT_USER_ID;
+import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class ListFragment extends Fragment implements ListCallBackEvent {
@@ -78,8 +85,8 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private LocationClass locationClass;
   private LocationClass.LocationResult locationResult;
   boolean check = false;
+  Drawable drawable;
   private String[] locationData;
-  String pic;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -88,6 +95,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     setHasOptionsMenu(true);
     listCallBackEvent = this;
@@ -133,14 +141,31 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       }
     });
 
-    if(getArguments() != null){
-      pic=getArguments().getString("pic");
-      Drawable theImage = Drawable.createFromPath(pic);
-      profile.setImageDrawable(theImage);
+
+    profile.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        fragment = new ProfileFragment();
+        if (CURRENT_USER_PROFILE_PICTURE != null) {
+          Bundle bundle = new Bundle();
+          bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+          fragment.setArguments(bundle);
+        }
+        loadFragment(fragment, Dashboard.PROFILE_PAGE_FLAG);
+      }
+    });
+
+try {
+  if (CURRENT_USER_PROFILE_PICTURE.isEmpty()) {
+    loadProfilePicture();
+  } else{
+    drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+    profile.setImageDrawable(drawable);
+  }
+}catch (Exception e){
+  e.printStackTrace();
     }
-    else {
-      loadProfilePicture();
-    }
+
 
     inflateRecycler();
 
@@ -150,13 +175,19 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
   private void loadProfilePicture() {
     String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
-    try {
-      String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
-      Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
+    String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
+
+    if(URLUtil.isValidUrl(uri)) {
+      try {
+        Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
+      } catch (Exception e) {
+        e.printStackTrace();
+        profile.setImageResource(R.drawable.defaultprofile);
+      }
     }
-    catch (Exception e){
-      e.printStackTrace();
-      profile.setImageResource(R.drawable.defaultprofile);
+    else {
+      drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+      profile.setImageDrawable(drawable);
     }
   }
 
@@ -196,20 +227,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     super.onActivityCreated(savedInstanceState);
     locationClass=new LocationClass();
     displayLocation();
-
-    profile.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        fragment = new ProfileFragment();
-        if(pic!=null){
-          Bundle bundle=new Bundle();
-          bundle.putString("pic", pic);
-          fragment.setArguments(bundle);
-        }
-        loadFragment(fragment, Dashboard.PROFILE_PAGE_FLAG);
-      }
-    });
-
   }
 
   @Override
