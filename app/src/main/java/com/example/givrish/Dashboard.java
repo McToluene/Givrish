@@ -35,6 +35,7 @@ import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
 import static com.example.givrish.database.Constants.CURRENT_USER_ID;
 import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
+import static com.example.givrish.database.Constants.PROFILE_PICTURE;
 
 public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
 
@@ -65,16 +66,12 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
       CURRENT_USER_EMAIL = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_email_Keystore));
       CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
       CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_picture));
+      PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.PicAvailable)));
 
       if(getIntent().getExtras() != null) {
           Bundle bundle = getIntent().getExtras();
           CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
       }
-
-    /*  bundle = new Bundle();
-      bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-      fragment.setArguments(bundle);*/
-
 
       bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);

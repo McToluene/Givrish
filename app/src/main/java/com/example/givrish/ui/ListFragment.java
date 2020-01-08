@@ -54,15 +54,19 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.givrish.database.Constants.*;
 import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
 import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
 import static com.example.givrish.database.Constants.CURRENT_USER_ID;
@@ -86,6 +90,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     private LocationClass.LocationResult locationResult;
     boolean check = false;
     Drawable drawable;
+  Executor executor;
     private String[] locationData;
 
   public static ListFragment newInstance() {
@@ -95,6 +100,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setConstants();
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     setHasOptionsMenu(true);
     listCallBackEvent = this;
@@ -155,16 +161,25 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       });
 
       try {
-          if (CURRENT_USER_PROFILE_PICTURE.isEmpty()) {
-              loadProfilePicture();
+          if (CURRENT_USER_PROFILE_PICTURE.isEmpty() || !PROFILE_PICTURE) {
+            executor.execute(new Runnable() {
+              @Override
+              public void run() {
+                loadProfilePicture();
+              }
+            });
           } else{
+            if(PROFILE_PICTURE) {
               drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
               profile.setImageDrawable(drawable);
+            }
+              else{
+              profile.setImageResource(R.drawable.defaultprofile);
+            }
           }
       }catch (Exception e){
-          e.printStackTrace();
+        profile.setImageResource(R.drawable.defaultprofile);
       }
-
 
       inflateRecycler();
 
@@ -173,27 +188,40 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
   private void loadProfilePicture() {
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
     String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
-      String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
+    String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
 
-      if(URLUtil.isValidUrl(uri)) {
-          try {
-              Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
-          } catch (Exception e) {
-              e.printStackTrace();
-              profile.setImageResource(R.drawable.defaultprofile);
-          }
-      }
-      else {
-          drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
-          profile.setImageDrawable(drawable);
-      }
+    try {
+      Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
+        UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.PicAvailable), "true");
+
+    } catch (Exception e) {
+      profile.setImageResource(R.drawable.defaultprofile);
+      e.printStackTrace();
+    }
   }
 
   private void inflateRecycler() {
     listItemAdapter = new ListItemAdapter(getContext());
     listRecyclerView.setAdapter(listItemAdapter);
     listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) );
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    setConstants();
+  }
+
+  private void setConstants() {
+    CURRENT_USER_ID = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
+    CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
+    CURRENT_USER_EMAIL = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_email_Keystore));
+    CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
+    CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_picture));
+    PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.PicAvailable)));
+
   }
 
   private void getAllItems() {
@@ -261,7 +289,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     mViewModel.insertAllItems(getNewItems(items));
     listItemAdapter.setAllItemsResponseData(items);
     loading.setVisibility(View.INVISIBLE);
-
   }
 
   // This get new items into database by selecting last 20;

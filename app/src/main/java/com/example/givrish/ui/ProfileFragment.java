@@ -26,12 +26,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
+import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.IUserItemCallBackEvent;
 
@@ -56,6 +58,7 @@ import com.squareup.picasso.Picasso;
 
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -72,6 +75,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   private Button btnEditProf;
   private TextView txtUserNameProfile;
     private CircleImageView imgProfile;
+    private ImageView imgProfile2;
+    private TextView txtItemCount;
 
 
   private ApiEndpointInterface apiService;
@@ -104,18 +109,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-    inflater.inflate(R.menu.profile_menu,menu);
+    inflater.inflate(R.menu.profile_menu, menu);
   }
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if(item.getItemId() == R.id.logout){
-      UserDataPreference.getInstance(getContext()).clearPreference();
-      startActivity(new Intent(getContext(), PhoneLoginActivity.class));
-    }
+        switch (item.getItemId()){
+            case R.id.logout:
+                UserDataPreference.getInstance(getContext()).clearPreference();
+                startActivity(new Intent(getContext(), PhoneLoginActivity.class));
+                break;
+            case R.id.menuEditProfile:
+                ProfileEditFragment editFragment=new ProfileEditFragment();
+                if(CURRENT_USER_PROFILE_PICTURE!=null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+                    editFragment.setArguments(bundle);
+                }
+                loadFragment(editFragment, Dashboard.PROFILE_EDIT_FLAG);
+                break;
+        }
+
     return super.onOptionsItemSelected(item);
   }
-
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -141,16 +157,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         }
     });
 
-      recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
+    recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
     recyclerView.setHasFixedSize(true);
-
-    btnEditProf=view.findViewById(R.id.btnEditProfile);
-    btnEditProf.setOnClickListener(this);
 
     txtUserNameProfile=view.findViewById(R.id.id_username);
     txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
 
+    txtItemCount = view.findViewById(R.id.txtItemAdded);
+
     imgProfile=view.findViewById(R.id.profile_image);
+      imgProfile2=view.findViewById(R.id.profile_image2);
     imgProfile.setOnClickListener(this);
 
         mViewModel.getItems().observe(this, new Observer<List<GetUserItemResponseData>>() {
@@ -164,23 +180,35 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
             CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
             Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
             imgProfile.setImageDrawable(theImage);
+            imgProfile2.setImageDrawable(theImage);
         }
         else {
             loadProfilePicture();
         }
+        if(PROFILE_PICTURE == false){
+            imgProfile.setImageResource(R.drawable.defaultprofile);
+            imgProfile2.setImageResource(R.drawable.defaultprofile);
+        }
 
         inflateRecycler();
-
         return view;
   }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+        getAllItems();
+        inflateRecycler();
+    }
 
     private void inflateRecycler() {
         layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
-
         profileAdapter = new UserProfileAdapter(this.getContext());
         recyclerView.setAdapter(profileAdapter);
+
+        txtItemCount.setText(String.valueOf(ITEM_COUNT));
     }
 
     private void getAllItems() {
@@ -218,10 +246,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
       try {
           String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
           Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile);
+          Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile2);
       }
       catch (Exception e){
           e.printStackTrace();
           imgProfile.setImageResource(R.drawable.defaultprofile);
+          imgProfile2.setImageResource(R.drawable.defaultprofile);
       }
   }
 
@@ -231,19 +261,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     mViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
   }
 
-
   @Override
   public void onClick(View v) {
     switch (v.getId()){
-      case R.id.btnEditProfile:
-        ProfileEditFragment editFragment=new ProfileEditFragment();
-          if(CURRENT_USER_PROFILE_PICTURE!=null) {
-              Bundle bundle = new Bundle();
-              bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-              editFragment.setArguments(bundle);
-          }
-          loadFragment(editFragment, Dashboard.PROFILE_EDIT_FLAG);
-          break;
         case R.id.profile_image:
             PictureFullScreen pictureFullScreen =new PictureFullScreen();
             if(CURRENT_USER_PROFILE_PICTURE!=null) {

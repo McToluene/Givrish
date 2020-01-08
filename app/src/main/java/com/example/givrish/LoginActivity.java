@@ -100,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_fullname_Keystore), userFullName);
             UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_email_Keystore), userEmail);
             UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_picture), userPicture);
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.PicAvailable), "false");
 
             startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }

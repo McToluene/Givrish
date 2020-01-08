@@ -146,6 +146,10 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             loadProfilePic();
         }
 
+        if(PROFILE_PICTURE == false){
+            imgProfile.setImageResource(R.drawable.defaultprofile);
+        }
+
         imgProfile.setOnClickListener(this);
 
         return view;
@@ -231,6 +235,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                     @Override
                     public void onResponse(Call<List<ProfileEditResponse>> call, Response<List<ProfileEditResponse>> response) {
                         CURRENT_USER_PROFILE_PICTURE = returnValue.get(0);
+                        PROFILE_PICTURE = true;
+                        UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.PicAvailable), String.valueOf(PROFILE_PICTURE));
                         UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.user_picture), CURRENT_USER_PROFILE_PICTURE);
                         returnValue.clear();
                         Toast.makeText(getContext(), "Successfully updated picture", Toast.LENGTH_LONG).show();

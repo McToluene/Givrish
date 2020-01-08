@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.List;
+
 @Entity(tableName = "user_item")
 public class GetUserItemResponseData implements Parcelable {
     @PrimaryKey
@@ -22,10 +24,9 @@ public class GetUserItemResponseData implements Parcelable {
     private String item_description;
     private String item_category_id;
     private String item_sub_category_id;
+    private List<GetUserItemImageData> item_images;
 
-//   private List<AllItemsResponseImageData> item_images;
-
-    public GetUserItemResponseData(@NonNull String user_id, String item_title, String item_color, String item_country, String item_state, String item_address, String item_longitude, String item_latitude, String item_description, String item_category_id, String item_sub_category_id) {
+    public GetUserItemResponseData(@NonNull String user_id, String item_title, String item_color, String item_country, String item_state, String item_address, String item_longitude, String item_latitude, String item_description, String item_category_id, String item_sub_category_id, List<GetUserItemImageData> item_images) {
         this.user_id = user_id;
         this.item_title = item_title;
         this.item_color = item_color;
@@ -37,6 +38,7 @@ public class GetUserItemResponseData implements Parcelable {
         this.item_description = item_description;
         this.item_category_id = item_category_id;
         this.item_sub_category_id = item_sub_category_id;
+        this.item_images = item_images;
     }
 
     protected GetUserItemResponseData(Parcel in) {
@@ -108,6 +110,9 @@ public class GetUserItemResponseData implements Parcelable {
 
     public String getItem_sub_category_id() {
         return item_sub_category_id;
+    }
+    public List<GetUserItemImageData> getItem_images() {
+        return item_images;
     }
 
     @Override
