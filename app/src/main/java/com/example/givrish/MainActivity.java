@@ -39,15 +39,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this,PhoneLoginActivity.class));
+
+
             }
         });
     }
     //Todo
 
+
+
+
     private boolean retreiveUserLoginDetails(){
         String loginPhoneNumber = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_number_Keystore));
-        String loginPassword = UserDataPreference.getInstance(MainActivity.this).retrievePreference(getString(R.string.user_phone_password_Keystore));
-        return !TextUtils.isEmpty(loginPhoneNumber) && !TextUtils.isEmpty(loginPassword);
+        return !TextUtils.isEmpty(loginPhoneNumber);
     }
 
 }

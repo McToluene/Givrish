@@ -88,11 +88,10 @@ public class SignUpActivity extends AppCompatActivity {
       @Override
       public void onResponse(@NonNull Call<JsonResponse<SignUpResponse>> call, @NonNull Response<JsonResponse<SignUpResponse>> response) {
         if (response.body() != null && response.body().getResponseCode().equals("1")) {
+            String userId=response.body().getData().get(0).getUserId();
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_id), userId);
 
-          String userId=response.body().getData().get(0).getUserId();
-          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_id), userId);
-
-          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),phone);
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),phone);
           UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_password_Keystore),pass);
 
           startActivity(new Intent(SignUpActivity.this, Dashboard.class));

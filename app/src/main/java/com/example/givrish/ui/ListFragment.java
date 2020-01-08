@@ -83,10 +83,10 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ListCallBackEvent listCallBackEvent;
   private RecyclerView listRecyclerView;
   private LocationClass locationClass;
-  private LocationClass.LocationResult locationResult;
-  boolean check = false;
-  Drawable drawable;
-  private String[] locationData;
+    private LocationClass.LocationResult locationResult;
+    boolean check = false;
+    Drawable drawable;
+    private String[] locationData;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -95,7 +95,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     setHasOptionsMenu(true);
     listCallBackEvent = this;
@@ -142,32 +141,32 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     });
 
 
-    profile.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        fragment = new ProfileFragment();
-        if (CURRENT_USER_PROFILE_PICTURE != null) {
-          Bundle bundle = new Bundle();
-          bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-          fragment.setArguments(bundle);
-        }
-        loadFragment(fragment, Dashboard.PROFILE_PAGE_FLAG);
+      profile.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              fragment = new ProfileFragment();
+              if (CURRENT_USER_PROFILE_PICTURE != null) {
+                  Bundle bundle = new Bundle();
+                  bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+                  fragment.setArguments(bundle);
+              }
+              loadFragment(fragment, Dashboard.PROFILE_PAGE_FLAG);
+          }
+      });
+
+      try {
+          if (CURRENT_USER_PROFILE_PICTURE.isEmpty()) {
+              loadProfilePicture();
+          } else{
+              drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+              profile.setImageDrawable(drawable);
+          }
+      }catch (Exception e){
+          e.printStackTrace();
       }
-    });
-
-try {
-  if (CURRENT_USER_PROFILE_PICTURE.isEmpty()) {
-    loadProfilePicture();
-  } else{
-    drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
-    profile.setImageDrawable(drawable);
-  }
-}catch (Exception e){
-  e.printStackTrace();
-    }
 
 
-    inflateRecycler();
+      inflateRecycler();
 
     toolbar.setTitle("Givrish");
     return view;
@@ -175,20 +174,20 @@ try {
 
   private void loadProfilePicture() {
     String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
-    String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
+      String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
 
-    if(URLUtil.isValidUrl(uri)) {
-      try {
-        Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
-      } catch (Exception e) {
-        e.printStackTrace();
-        profile.setImageResource(R.drawable.defaultprofile);
+      if(URLUtil.isValidUrl(uri)) {
+          try {
+              Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
+          } catch (Exception e) {
+              e.printStackTrace();
+              profile.setImageResource(R.drawable.defaultprofile);
+          }
       }
-    }
-    else {
-      drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
-      profile.setImageDrawable(drawable);
-    }
+      else {
+          drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+          profile.setImageDrawable(drawable);
+      }
   }
 
   private void inflateRecycler() {
@@ -285,22 +284,13 @@ try {
 
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-          String country = addressList.get(0).getCountryName();
-          String state = addressList.get(0).getAdminArea();
-          String addressLine = addressList.get(0).getAddressLine(0);
-
-          DecimalFormat df = new DecimalFormat("#.###");
+     DecimalFormat df = new DecimalFormat("#.###");
 
           String lng = df.format(addressList.get(0).getLongitude());
           String lat = df.format(addressList.get(0).getLatitude());
 
           listItemAdapter.setLongitude(lng);
           listItemAdapter.setLatitude(lat);
-
-          //try to use if statement for checking empty string
-          String addr = country + "\\" + state + "\\" + addressLine + "\\" + lng + "\\" + lat;
-          locationData = addr.split("\\\\");
 
         } catch (Exception e) {
           e.printStackTrace();

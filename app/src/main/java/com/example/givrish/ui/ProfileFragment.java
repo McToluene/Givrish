@@ -46,7 +46,6 @@ import com.example.givrish.models.GetUserItemResponse;
 import com.example.givrish.models.GetUserItemResponseData;
 
 import com.example.givrish.models.UserProfileAdapter;
-
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 
@@ -74,11 +73,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   private TextView txtUserNameProfile;
     private CircleImageView imgProfile;
 
+
   private ApiEndpointInterface apiService;
+  private GetUserItemResponseData items;
 
     private IUserItemCallBackEvent listCallBackEvent;
     private ProfileViewModel mViewModel;
     private UserProfileAdapter profileAdapter;
+
     private CallBackListener listener;
 
     @Override
@@ -139,7 +141,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         }
     });
 
-    recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
+      recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
     recyclerView.setHasFixedSize(true);
 
     btnEditProf=view.findViewById(R.id.btnEditProfile);
@@ -160,7 +162,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
 
         if(getArguments() != null){
             CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
-           Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+            Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
             imgProfile.setImageDrawable(theImage);
         }
         else {
@@ -235,17 +237,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     switch (v.getId()){
       case R.id.btnEditProfile:
         ProfileEditFragment editFragment=new ProfileEditFragment();
-         if(CURRENT_USER_PROFILE_PICTURE!=null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-            editFragment.setArguments(bundle);
-             }
-        loadFragment(editFragment, Dashboard.PROFILE_EDIT_FLAG);
-        break;
+          if(CURRENT_USER_PROFILE_PICTURE!=null) {
+              Bundle bundle = new Bundle();
+              bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+              editFragment.setArguments(bundle);
+          }
+          loadFragment(editFragment, Dashboard.PROFILE_EDIT_FLAG);
+          break;
         case R.id.profile_image:
             PictureFullScreen pictureFullScreen =new PictureFullScreen();
             if(CURRENT_USER_PROFILE_PICTURE!=null) {
-              Bundle  bundle = new Bundle();
+                Bundle  bundle = new Bundle();
                 bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
                 pictureFullScreen.setArguments(bundle);
             }

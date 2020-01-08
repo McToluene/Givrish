@@ -9,12 +9,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.network.ApiEndpointInterface;
+import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.AddItemFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
@@ -22,8 +24,16 @@ import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 
-import static com.example.givrish.database.Constants.*;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
+import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
+import static com.example.givrish.database.Constants.CURRENT_USER_ID;
+import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
@@ -35,7 +45,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
   public static final String PROFILE_PAGE_FLAG="7";
   public static final String PROFILE_EDIT_FLAG="8";
-  public static final String PICTURE_FULLSCREEN_FLAG="9";
+    public static final String PICTURE_FULLSCREEN_FLAG="9";
 
 
   private static int FLAG = 0;
@@ -50,22 +60,23 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_dashboard);
 
-    CURRENT_USER_ID = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_id));
-    CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
-    CURRENT_USER_EMAIL = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_email_Keystore));
-    CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
-    CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_picture));
+      CURRENT_USER_ID = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_id));
+      CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
+      CURRENT_USER_EMAIL = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_email_Keystore));
+      CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
+      CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getApplicationContext()).retrievePreference(getString(R.string.user_picture));
 
-    if(getIntent().getExtras() != null) {
-      Bundle bundle = getIntent().getExtras();
-      CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
-    }
+      if(getIntent().getExtras() != null) {
+          Bundle bundle = getIntent().getExtras();
+          CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
+      }
 
     /*  bundle = new Bundle();
       bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
       fragment.setArguments(bundle);*/
 
-    bottomNavigationView = findViewById(R.id.navigation);
+
+      bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     fab = findViewById(R.id.fab);
     fab.setColorFilter(getResources().getColor(R.color.white));
@@ -125,8 +136,8 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   private void loadFragments(Fragment fragment, String tag) {
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.frame_container, fragment, tag);
-    transaction.addToBackStack(tag);
-    transaction.commit();
+      transaction.addToBackStack(null);
+      transaction.commit();
   }
 
   @Override
@@ -147,15 +158,22 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 
   @Override
   public void loadItem(Fragment fragment, String tag) {
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.dashboard_layout, fragment, tag);
-    transaction.addToBackStack(tag);
-    transaction.commit();
+      FragmentTransaction getTransaction = getSupportFragmentManager().beginTransaction();
+      getTransaction.replace(R.id.dashboard_layout, fragment, tag);
+      getTransaction.addToBackStack(tag);
+      getTransaction.commit();
   }
 
   @Override
   public void onCloseItem(String tag) {
-    onBackClick(tag);
-  }
+      FragmentManager manager = getSupportFragmentManager();
+      Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
 
+      if (fragment != null){
+          manager.beginTransaction().remove(fragment).commit();
+      }
+
+      fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+      FLAG = 0;
+  }
 }

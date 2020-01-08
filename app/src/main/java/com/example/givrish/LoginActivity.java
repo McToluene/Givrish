@@ -16,6 +16,7 @@ import com.example.givrish.models.UserLoginModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -55,13 +56,18 @@ public class LoginActivity extends AppCompatActivity {
       @Override
       public void onClick(View v) {
         String pass = password.getText().toString();
-        progressBar.setVisibility(View.VISIBLE);
-        loginBtn.setEnabled(false);
-        try {
-          onSubmitHandler(incomingNumber,pass);
-        }catch (Exception e){
-          Toast.makeText(getApplicationContext(),"Request failed",Toast.LENGTH_LONG).show();
-        }
+          if(pass.isEmpty()){
+              Snackbar.make(v,"Enter password",Snackbar.LENGTH_LONG).show();
+          }else {
+              progressBar.setVisibility(View.VISIBLE);
+              try {
+                  onSubmitHandler(incomingNumber, pass);
+              } catch (Exception e) {
+                  Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_LONG).show();
+              }
+          }
+
+
       }
     });
 
@@ -82,20 +88,20 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
         if(response.body().getResponseCode().equals("1")){
 
-          String userId=response.body().getData().get(0).getUser_id();
-          String userFullName = response.body().getData().get(0).getFullname();
-          String userEmail = response.body().getData().get(0).getEmail();
-          String userPicture = response.body().getData().get(0).getProfile_picture();
+            String userId=response.body().getData().get(0).getUser_id();
+            String userFullName = response.body().getData().get(0).getFullname();
+            String userEmail = response.body().getData().get(0).getEmail();
+            String userPicture = response.body().getData().get(0).getProfile_picture();
 
-          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),incomingNumber);
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_number_Keystore),incomingNumber);
           UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_phone_password_Keystore),pass);
 
-          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_id), userId);
-          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_fullname_Keystore), userFullName);
-          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_email_Keystore), userEmail);
-          UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_picture), userPicture);
-          
-          startActivity(new Intent(LoginActivity.this, Dashboard.class));
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_id), userId);
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_fullname_Keystore), userFullName);
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_email_Keystore), userEmail);
+            UserDataPreference.getInstance(getApplicationContext()).savePreference(getString(R.string.user_picture), userPicture);
+
+            startActivity(new Intent(LoginActivity.this, Dashboard.class));
         }
         else if(response.body().getResponseCode().equals("0")){
             Toast.makeText(LoginActivity.this,response.body().getResponseStatus(),Toast.LENGTH_LONG).show();
