@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="actionBarPopupTheme">@style/menuTheme</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean" >@font/roboto_mono</item>
     </style>
 
 
@@ -68,7 +69,13 @@
         <item name="cornerRadius">24dp</item>
         <item name="android:height">55dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="elevation">4dp</item>
     </style>
+
+  <style name="detailsButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <item name="android:height">55dp</item>
+    <item name="backgroundTint">@color/colorPrimary</item>
+  </style>
 
 
   <style name="progressBar" parent="Widget.AppCompat.ProgressBar">
