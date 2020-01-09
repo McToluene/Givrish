@@ -163,6 +163,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     listItemAdapter = new ListItemAdapter(getContext());
     listRecyclerView.setAdapter(listItemAdapter);
     listRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+//    listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
   }
 
   private void getAllItems() {
