@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="actionBarPopupTheme">@style/menuTheme</item>
-        <item name="android:fontFamily" tools:targetApi="jelly_bean" >@font/roboto_mono</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean" >@font/segoe_ui</item>
     </style>
 
 
@@ -46,16 +46,7 @@
     </style>
 
 
-    <style name="locationStyle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:background">@drawable/rounded_edge</item>
-        <item name="android:paddingTop">3dp</item>
-        <item name="android:paddingBottom">3dp</item>
-        <item name="android:paddingRight">6dp</item>
-        <item name="android:paddingLeft">6dp</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-    <style name="categoryStyle" parent="Widget.MaterialComponents.TextView">
+  <style name="categoryStyle" parent="Widget.MaterialComponents.TextView">
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@drawable/cat_rounded_edge</item>
         <item name="android:paddingTop">3dp</item>
@@ -72,9 +63,9 @@
         <item name="elevation">4dp</item>
     </style>
 
-  <style name="detailsButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+  <style name="detailsButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
     <item name="android:height">55dp</item>
-    <item name="backgroundTint">@color/colorPrimary</item>
+    <item name="strokeColor">@color/colorPrimary</item>
   </style>
 
 

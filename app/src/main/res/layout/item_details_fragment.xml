@@ -42,19 +42,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-      <ImageView
-          android:id="@+id/items_image"
+      <com.synnapps.carouselview.CarouselView
+          android:id="@+id/carouselView"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="250dp"
           android:adjustViewBounds="true"
-          android:contentDescription="@string/item_image"
           android:scaleType="fitCenter"
-          android:src="@drawable/download"
+          app:fillColor="#FFFFFFFF"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
-
+          app:layout_constraintTop_toTopOf="parent"
+          app:pageColor="#00000000"
+          app:radius="6dp"
+          app:slideInterval="3000"
+          app:strokeColor="#FF777777"
+          app:strokeWidth="1dp" />
 
       <com.google.android.material.card.MaterialCardView
           android:id="@+id/content_card"
@@ -67,7 +69,7 @@
           app:cardElevation="2sp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/items_image">
+          app:layout_constraintTop_toBottomOf="@+id/carouselView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -163,6 +165,7 @@
               android:layout_height="wrap_content"
               android:layout_marginStart="8dp"
               android:layout_marginTop="9dp"
+              android:gravity="end"
               app:layout_constraintEnd_toEndOf="@+id/messageButton"
               app:layout_constraintStart_toEndOf="@+id/textView3"
               app:layout_constraintTop_toBottomOf="@+id/divider" />
@@ -187,6 +190,7 @@
               android:layout_marginStart="8dp"
               android:layout_marginTop="10dp"
               android:layout_marginBottom="16dp"
+              android:gravity="end"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintEnd_toEndOf="@+id/tv_ItemCate"
               app:layout_constraintStart_toEndOf="@+id/textView5"

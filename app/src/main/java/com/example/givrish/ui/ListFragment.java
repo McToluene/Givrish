@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
@@ -161,7 +162,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private void inflateRecycler() {
     listItemAdapter = new ListItemAdapter(getContext());
     listRecyclerView.setAdapter(listItemAdapter);
-    listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) );
+    listRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
   }
 
   private void getAllItems() {
@@ -257,7 +258,6 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
   private void displayLocation() {
-
     LocationClass.LocationResult locationResult = new LocationClass.LocationResult() {
 
       @Override
