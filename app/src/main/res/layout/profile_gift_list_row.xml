@@ -25,14 +25,14 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:layout_height="wrap_content">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgProdProfileEdit"
                     android:layout_width="33dp"
                     android:layout_height="33dp"
                     android:layout_alignParentStart="true"
+                    android:layout_marginStart="8dp"
                     android:src="@drawable/flag_nigeria"
                     app:civ_border_color="@color/colorPrimary"
                     app:civ_border_width="2dp"
@@ -74,8 +74,10 @@
 
                 <ImageButton
                     android:id="@+id/imgBtnUserItemList"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#9C837D7D"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -89,29 +91,32 @@
         android:id="@+id/tv_menuShow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:background="#4B3939"
+        android:backgroundTint="#9C837D7D"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
         app:layout_constraintEnd_toEndOf="@+id/constraintLayout4"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.98"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
         <ImageButton
             android:id="@+id/btnEditItemProfile"
-            android:contentDescription="Edit"
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:contentDescription="Edit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@android:drawable/ic_menu_edit" />
 
         <ImageButton
             android:id="@+id/btnViewedItemProfile"
-            android:contentDescription="Viewed"
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:contentDescription="Viewed"
             app:layout_constraintBottom_toTopOf="@+id/btnDeleteItemProfile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -121,9 +126,9 @@
 
         <ImageButton
             android:id="@+id/btnDeleteItemProfile"
-            android:contentDescription="Delete"
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:contentDescription="Delete"
             app:layout_constraintBottom_toTopOf="@+id/btnEditItemProfile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
