@@ -72,11 +72,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   private RecyclerView recyclerView;
   private RecyclerView.LayoutManager layoutManager;
 
-  private Button btnEditProf;
   private TextView txtUserNameProfile;
     private CircleImageView imgProfile;
     private ImageView imgProfile2;
-    private TextView txtItemCount;
+    public static TextView txtItemCount;
 
 
   private ApiEndpointInterface apiService;
@@ -206,9 +205,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         recyclerView.setLayoutManager(layoutManager);
         profileAdapter = new UserProfileAdapter(this.getContext());
         recyclerView.setAdapter(profileAdapter);
-
-        profileAdapter.notifyDataSetChanged();
-        txtItemCount.setText(String.valueOf(profileAdapter.getItemCount()));
     }
 
     private void getAllItems() {

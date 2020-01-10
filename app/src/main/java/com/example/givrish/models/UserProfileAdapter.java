@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.givrish.R;
 import com.example.givrish.database.Constants;
 import com.example.givrish.ui.AddItemFragment;
+import com.example.givrish.ui.ProfileFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -31,7 +32,6 @@ import static com.example.givrish.database.Constants.*;
 public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.ViewHolder> {
 
     private Context context;
-    private List<GetUserItemResponseData> allItemsResponseData;
 
     public UserProfileAdapter(Context context) {
         this.context = context;
@@ -44,57 +44,60 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
         return new ViewHolder(v);
     }
 
+    GetUserItemResponseData item;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if(allItemsResponseData != null) {
-            GetUserItemResponseData item = allItemsResponseData.get(position);
-            holder.txtList.setText(item.getItem_title().toUpperCase());
-            holder.txtLocation.setText(item.getItem_address());
+        try {
+            if (allItemsResponseData != null && theAllItemsResponseData != null) {
+                if (allItemsResponseData.size() == 1) {
+                    item = allItemsResponseData.get(position);
+                }
+                if (theAllItemsResponseData.size() > 1) {
+                    item = theAllItemsResponseData.get(position);
+                }
+                holder.txtList.setText(item.getItem_title().toUpperCase());
+                holder.txtLocation.setText(item.getItem_address());
 
-            String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
+                String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
 
-            if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
-                String uri = url + item.getItem_images().get(0).getItemSmallImageName();
-                try {
-                    Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(holder.productImgAdp);
-                } catch (Exception e) {
+                if (item.getItem_images().size() != 0 && item.getItem_images().get(0).getItemLargeImageName() != null) {
+                    String uri = url + item.getItem_images().get(0).getItemSmallImageName();
+                    try {
+                        Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(holder.productImgAdp);
+                    } catch (Exception e) {
+                        holder.productImgAdp.setImageResource(R.drawable.download);
+                    }
+                } else {
                     holder.productImgAdp.setImageResource(R.drawable.download);
                 }
-            } else {
-                holder.productImgAdp.setImageResource(R.drawable.download);
+                ProfileFragment.txtItemCount.setText(String.valueOf(ITEM_COUNT_MORE));
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
-
-
-    boolean isOneItem=false;
-    boolean isMoreItem=false;
 
     @Override
     public int getItemCount() {
-        if(isOneItem==true && ITEM_COUNT_MORE==0)
-            return ITEM_COUNT_ONE;
-        else if(isMoreItem==true && ITEM_COUNT_ONE>0)
-            return ITEM_COUNT_MORE;
-        else
-            return 0;
+        return ITEM_COUNT_MORE;
     }
 
     public void setUserItemsResponseData(List<GetUserItemResponseData> getUserItemResponseData) {
-        if(isMoreItem==false && getUserItemResponseData.size()>1) {
+        int count=getUserItemResponseData.size();
+        if(count==1 && ITEM_COUNT_MORE==1){
             allItemsResponseData = getUserItemResponseData;
-            ITEM_COUNT_MORE=getUserItemResponseData.size();
-          //  notifyDataSetChanged();
-            isMoreItem=true;
-        }else if(isOneItem == false && getUserItemResponseData.size()==1){
+            notifyDataSetChanged();
+        }else if(ITEM_COUNT_MORE>1 && IS_MORE_ITEM==false) {
             allItemsResponseData = getUserItemResponseData;
-            ITEM_COUNT_ONE = getUserItemResponseData.size();
-          //  notifyDataSetChanged();
-            isOneItem=true;
+            theAllItemsResponseData=getUserItemResponseData;
+            notifyDataSetChanged();
+            IS_MORE_ITEM=true;
         }
-
-
-
+        else if(count==1 && ITEM_COUNT_MORE==0){
+            ITEM_COUNT_MORE=count;
+        }else if(count>1){
+            ITEM_COUNT_MORE=count ;
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
