@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3e3282b0e424c3c0f64c55d393d6ef6d",
+    "identityHash": "0fcbc8beea4eb387fc4a647e8b91a996",
     "entities": [
       {
         "tableName": "item_category",
@@ -296,7 +296,7 @@
       },
       {
         "tableName": "user_item",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `item_title` TEXT, `item_color` TEXT, `item_country` TEXT, `item_state` TEXT, `item_address` TEXT, `item_longitude` TEXT, `item_latitude` TEXT, `item_description` TEXT, `item_category_id` TEXT, `item_sub_category_id` TEXT, PRIMARY KEY(`user_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `item_title` TEXT, `item_color` TEXT, `item_country` TEXT, `item_state` TEXT, `item_address` TEXT, `item_longitude` TEXT, `item_latitude` TEXT, `item_description` TEXT, `item_category_id` TEXT, `item_sub_category_id` TEXT, `item_images` TEXT, PRIMARY KEY(`user_id`))",
         "fields": [
           {
             "fieldPath": "user_id",
@@ -363,6 +363,12 @@
             "columnName": "item_sub_category_id",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "item_images",
+            "columnName": "item_images",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -373,12 +379,62 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "user_item_images",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemImageId` TEXT NOT NULL, `itemId` TEXT, `itemLargeImageName` TEXT, `itemSmallImageName` TEXT, `itemImageRefCode` TEXT, `itemImageStatus` TEXT, PRIMARY KEY(`itemImageId`))",
+        "fields": [
+          {
+            "fieldPath": "itemImageId",
+            "columnName": "itemImageId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemId",
+            "columnName": "itemId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemLargeImageName",
+            "columnName": "itemLargeImageName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemSmallImageName",
+            "columnName": "itemSmallImageName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemImageRefCode",
+            "columnName": "itemImageRefCode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemImageStatus",
+            "columnName": "itemImageStatus",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "itemImageId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3e3282b0e424c3c0f64c55d393d6ef6d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0fcbc8beea4eb387fc4a647e8b91a996')"
     ]
   }
 }
