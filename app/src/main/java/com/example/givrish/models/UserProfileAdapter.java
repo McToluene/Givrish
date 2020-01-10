@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,7 +32,6 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
 
     private Context context;
     private List<GetUserItemResponseData> allItemsResponseData;
-    boolean check=true;
 
     public UserProfileAdapter(Context context) {
         this.context = context;
@@ -66,23 +66,35 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
         }
     }
 
+
+    boolean isOneItem=false;
+    boolean isMoreItem=false;
+
     @Override
     public int getItemCount() {
-        return ITEM_COUNT;
+        if(isOneItem==true && ITEM_COUNT_MORE==0)
+            return ITEM_COUNT_ONE;
+        else if(isMoreItem==true && ITEM_COUNT_ONE>0)
+            return ITEM_COUNT_MORE;
+        else
+            return 0;
     }
 
     public void setUserItemsResponseData(List<GetUserItemResponseData> getUserItemResponseData) {
-        if(check==true || getUserItemResponseData.size()>1) {
+        if(isMoreItem==false && getUserItemResponseData.size()>1) {
             allItemsResponseData = getUserItemResponseData;
-            ITEM_COUNT=getUserItemResponseData.size();
-            check=false;
-            notifyDataSetChanged();
-        }else if(check == true && getUserItemResponseData.size()==1){
+            ITEM_COUNT_MORE=getUserItemResponseData.size();
+          //  notifyDataSetChanged();
+            isMoreItem=true;
+        }else if(isOneItem == false && getUserItemResponseData.size()==1){
             allItemsResponseData = getUserItemResponseData;
-            ITEM_COUNT=getUserItemResponseData.size();
-            check=false;
-            notifyDataSetChanged();
+            ITEM_COUNT_ONE = getUserItemResponseData.size();
+          //  notifyDataSetChanged();
+            isOneItem=true;
         }
+
+
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -91,6 +103,8 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
         ImageView productImgAdp;
         TextView txtLocation;
         private final ImageButton btnItemMenu;
+        private ConstraintLayout tvMenu;
+        private ImageButton btnEdit, btnDelete, btnViewed;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,21 +113,39 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
             txtLocation = itemView.findViewById(R.id.txtProdLocMyProfile);
 
             btnItemMenu =itemView.findViewById(R.id.imgBtnUserItemList);
+            tvMenu = itemView.findViewById(R.id.tv_menuShow);
+            btnEdit=itemView.findViewById(R.id.btnEditItemProfile);
+            btnDelete=itemView.findViewById(R.id.btnDeleteItemProfile);
+            btnViewed=itemView.findViewById(R.id.btnViewedItemProfile);
 
             btnItemMenu.setOnClickListener(this);
+            btnEdit.setOnClickListener(this);
+            btnDelete.setOnClickListener(this);
+            btnViewed.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.imgBtnUserItemList:
+                    if(tvMenu.getVisibility()==View.GONE) {
+                        tvMenu.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        tvMenu.setVisibility(View.GONE);
+                    }
+                    break;
+                case R.id.btnEditItemProfile:
                     GetUserItemResponseData clickItem = allItemsResponseData.get(getAdapterPosition());
                     ItemModel itemModel=new ItemModel(clickItem.getUser_id(), clickItem.getItem_title(), clickItem.getItem_color(), clickItem.getItem_description(), clickItem.getItem_category_id(), clickItem.getItem_sub_category_id());
                     AddItemFragment addItemFragment=AddItemFragment.newParcelableInstance(itemModel);
-
-                    //TODO: profile pic back pic, recycler item menu list, remove appbar icons, add setting and update to logout
                     loadDetail(addItemFragment);
-
+                    break;
+                case R.id.btnViewedItemProfile:
+                    Toast.makeText(context, "Go to view details", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.btnDeleteItemProfile:
+                    Toast.makeText(context, "Go to delete confirmation", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

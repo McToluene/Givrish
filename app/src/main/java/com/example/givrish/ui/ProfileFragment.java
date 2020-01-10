@@ -189,7 +189,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
             imgProfile.setImageResource(R.drawable.defaultprofile);
             imgProfile2.setImageResource(R.drawable.defaultprofile);
         }
-
         inflateRecycler();
         return view;
   }
@@ -208,7 +207,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         profileAdapter = new UserProfileAdapter(this.getContext());
         recyclerView.setAdapter(profileAdapter);
 
-        txtItemCount.setText(String.valueOf(ITEM_COUNT));
+        profileAdapter.notifyDataSetChanged();
+        txtItemCount.setText(String.valueOf(profileAdapter.getItemCount()));
     }
 
     private void getAllItems() {

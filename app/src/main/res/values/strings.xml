@@ -60,4 +60,6 @@
   <string name="clear_selection">Clear image selection</string>
   <string name="user_id">UserID</string>
     <string name="PicAvailable">PictureAvailable</string>
+    <string name="user_picture">UserPicture</string>
+    <string name="user_email_Keystore">UserEmail</string>
 </resources>

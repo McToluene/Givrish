@@ -73,7 +73,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
           CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
       }
 
-      bottomNavigationView = findViewById(R.id.navigation);
+    bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     fab = findViewById(R.id.fab);
     fab.setColorFilter(getResources().getColor(R.color.white));
