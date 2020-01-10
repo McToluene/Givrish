@@ -88,11 +88,11 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ListCallBackEvent listCallBackEvent;
   private RecyclerView listRecyclerView;
   private LocationClass locationClass;
-    private LocationClass.LocationResult locationResult;
-    boolean check = false;
-    Drawable drawable;
-    Executor executor;
-    private String[] locationData;
+  private LocationClass.LocationResult locationResult;
+  private boolean check = false;
+  private Drawable drawable;
+  private Executor executor;
+  private String[] locationData;
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -140,12 +140,12 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
-      mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
-          @Override
-          public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
-              listItemAdapter.setAllItemsResponseData(allItemsResponseData);
-          }
-      });
+//      mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
+//          @Override
+//          public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+//              listItemAdapter.setAllItemsResponseData(allItemsResponseData);
+//          }
+//      });
 
       profile.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -311,9 +311,9 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            DecimalFormat df = new DecimalFormat("#.###");
+          DecimalFormat df = new DecimalFormat("#.###");
 
-            String lng = df.format(addressList.get(0).getLongitude());
+          String lng = df.format(addressList.get(0).getLongitude());
           String lat = df.format(addressList.get(0).getLatitude());
 
           listItemAdapter.setLongitude(lng);
