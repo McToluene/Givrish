@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
@@ -53,7 +54,6 @@ import com.example.givrish.viewmodel.ListViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.text.DecimalFormat;
@@ -71,6 +71,7 @@ import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
 import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
 import static com.example.givrish.database.Constants.CURRENT_USER_ID;
 import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
+import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class ListFragment extends Fragment implements ListCallBackEvent {
@@ -90,7 +91,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     private LocationClass.LocationResult locationResult;
     boolean check = false;
     Drawable drawable;
-  Executor executor;
+    Executor executor;
     private String[] locationData;
 
   public static ListFragment newInstance() {
@@ -100,7 +101,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setConstants();
+      setConstants();
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     setHasOptionsMenu(true);
     listCallBackEvent = this;
@@ -139,13 +140,12 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
-    mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
-      @Override
-      public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
-        listItemAdapter.setAllItemsResponseData(allItemsResponseData);
-      }
-    });
-
+      mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
+          @Override
+          public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+              listItemAdapter.setAllItemsResponseData(allItemsResponseData);
+          }
+      });
 
       profile.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -162,69 +162,70 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
       try {
           if (CURRENT_USER_PROFILE_PICTURE.isEmpty() || !PROFILE_PICTURE) {
-            executor.execute(new Runnable() {
-              @Override
-              public void run() {
-                loadProfilePicture();
-              }
-            });
+              executor.execute(new Runnable() {
+                  @Override
+                  public void run() {
+                      loadProfilePicture();
+                  }
+              });
           } else{
-            if(PROFILE_PICTURE) {
-              drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
-              profile.setImageDrawable(drawable);
-            }
+              if(PROFILE_PICTURE) {
+                  drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+                  profile.setImageDrawable(drawable);
+              }
               else{
-              profile.setImageResource(R.drawable.defaultprofile);
-            }
+                  profile.setImageResource(R.drawable.defaultprofile);
+              }
           }
       }catch (Exception e){
-        profile.setImageResource(R.drawable.defaultprofile);
+          profile.setImageResource(R.drawable.defaultprofile);
       }
 
       inflateRecycler();
 
-    toolbar.setTitle("Givrish");
-    return view;
+      toolbar.setTitle("Givrish");
+      return view;
   }
 
-  private void loadProfilePicture() {
-    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
-    String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
 
-    try {
-      Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
-        UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.PicAvailable), "true");
+    private void loadProfilePicture() {
+        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+        String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
+        String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
 
-    } catch (Exception e) {
-      profile.setImageResource(R.drawable.defaultprofile);
-      e.printStackTrace();
-    }
+        try {
+            Picasso.get().load(uri).resize(100, 100).noFade().into(profile);
+            UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.PicAvailable), "true");
+
+        } catch (Exception e) {
+            profile.setImageResource(R.drawable.defaultprofile);
+            e.printStackTrace();
+        }
   }
 
   private void inflateRecycler() {
     listItemAdapter = new ListItemAdapter(getContext());
     listRecyclerView.setAdapter(listItemAdapter);
-    listRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2) );
+      listRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
   }
 
-  @Override
-  public void onResume() {
-    super.onResume();
-    setConstants();
-  }
+    @Override
+    public void onResume() {
+        super.onResume();
+        setConstants();
+    }
 
-  private void setConstants() {
-    CURRENT_USER_ID = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
-    CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
-    CURRENT_USER_EMAIL = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_email_Keystore));
-    CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
-    CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_picture));
-    PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.PicAvailable)));
+    private void setConstants() {
+        CURRENT_USER_ID = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
+        CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
+        CURRENT_USER_EMAIL = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_email_Keystore));
+        CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
+        CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_picture));
+        PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.PicAvailable)));
 
-  }
+    }
 
-  private void getAllItems() {
+    private void getAllItems() {
     ApiKey apiKey = new ApiKey("test");
     Gson gson = new Gson();
 
@@ -302,18 +303,17 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
   private void displayLocation() {
+      LocationClass.LocationResult locationResult = new LocationClass.LocationResult() {
 
-    locationResult = new LocationClass.LocationResult(){
-
-      @Override
+          @Override
       public void gotLocation(Location location) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-     DecimalFormat df = new DecimalFormat("#.###");
+            DecimalFormat df = new DecimalFormat("#.###");
 
-          String lng = df.format(addressList.get(0).getLongitude());
+            String lng = df.format(addressList.get(0).getLongitude());
           String lat = df.format(addressList.get(0).getLatitude());
 
           listItemAdapter.setLongitude(lng);

@@ -8,15 +8,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_signUp"
+        style="@style/buttonCustom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        android:elevation="@dimen/elevation"
         android:text="@string/login_with_phone"
         android:textColor="@android:color/white"
-        style="@style/buttonCustom"
         app:layout_constraintBottom_toTopOf="@+id/tvEmailEdit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
