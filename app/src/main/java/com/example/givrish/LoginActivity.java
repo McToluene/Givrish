@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
           try {
             onSubmitHandler(incomingNumber,pass);
           }catch (Exception e){
+            //Todo
             Toast.makeText(getApplicationContext(),"Request failed",Toast.LENGTH_LONG).show();
           }
         }
