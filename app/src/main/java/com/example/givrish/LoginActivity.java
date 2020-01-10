@@ -1,5 +1,6 @@
 package com.example.givrish;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +16,8 @@ import com.example.givrish.models.UserData;
 import com.example.givrish.models.UserLoginModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
+import com.example.givrish.ui.CategoryFragment;
+import com.example.givrish.ui.MessagesFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -48,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     newUserRegistration.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            startActivity(new Intent(LoginActivity.this,PhoneLoginActivity.class));
+         //   getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new MessagesFragment(),"DESTROY")
+            //        .commit();
         }
     });
 

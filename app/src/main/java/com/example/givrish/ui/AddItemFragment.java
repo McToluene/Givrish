@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 
 import com.example.givrish.Dashboard;
+import com.example.givrish.UserDataPreference;
 import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
@@ -432,9 +433,9 @@ public class AddItemFragment extends Fragment {
     String name = itemName.getText().toString();
     String desc = itemDesc.getText().toString();
     String color = colorSpinner.getText().toString();
-    String userId = Constants.CURRENT_USER_ID;
+    String userId = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
 
-    if (!userId.isEmpty() || !name.isEmpty() || !desc.isEmpty()) {
+    if (!name.isEmpty() && !desc.isEmpty()) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
       ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
       String itemString = gson.toJson(itemModel);
