@@ -113,6 +113,7 @@ public class AddItemFragment extends Fragment {
   private AddItemViewModel addItemViewModel;
   private int receivedItem;
   private int receivedSubItem;
+  private String toolbarTitle = "Add Item";
 
 
   public AddItemFragment() {
@@ -160,7 +161,7 @@ public class AddItemFragment extends Fragment {
 
     addButton = view.findViewById(R.id.addImagebtn);
 
-    toolbar.setTitle("Add Item");
+    toolbar.setTitle(toolbarTitle);
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -174,6 +175,8 @@ public class AddItemFragment extends Fragment {
     }
 
     if(itemModel!=null) {
+
+      toolbarTitle = "Edit Item";
       for (int i=0; i<itemCategoryDataList.size();i++) {
         if(itemCategoryDataList.get(i).getItem_category_id().equals(itemModel.getItem_category_id())){
           receivedItem = i;
