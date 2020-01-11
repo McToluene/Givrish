@@ -158,7 +158,7 @@ public class AddItemFragment extends Fragment {
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
     clearImageSelection = view.findViewById(R.id.clear_image_selection);
-
+    clearImageSelection.setVisibility(View.INVISIBLE);
     addButton = view.findViewById(R.id.addImagebtn);
 
     toolbar.setTitle(toolbarTitle);
@@ -405,6 +405,7 @@ public class AddItemFragment extends Fragment {
       if (data != null) {
         ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
         imageCount = imageCount - returnValue.size();
+        clearImageSelection.setVisibility(View.VISIBLE);
         if (imageCount == 0) {
           addButton.setEnabled(false);
           Toast.makeText(getContext(), "Maximum number of image(s) selected", Toast.LENGTH_LONG).show();
