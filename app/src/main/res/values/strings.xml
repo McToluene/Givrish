@@ -62,4 +62,6 @@
     <string name="PicAvailable">PictureAvailable</string>
     <string name="user_picture">UserPicture</string>
     <string name="user_email_Keystore">UserEmail</string>
+  <string name="edit_profile">Edit Profile</string>
+  <string name="logout">Logout</string>
 </resources>
