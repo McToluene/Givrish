@@ -162,9 +162,9 @@ public class AddItemFragment extends Fragment {
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
 
     if(getArguments()!=null){
@@ -515,8 +515,6 @@ public class AddItemFragment extends Fragment {
     call.enqueue(new Callback<List<AddItemResponse>>() {
       @Override
       public void onResponse(@NonNull Call<List<AddItemResponse>> call,@NonNull Response<List<AddItemResponse>> response) {
-        String message = response.body().get(0).getResponseCode();
-        Log.i("MESSAGE", response.body().get(0).getResponseCode());
         if (response.body() != null)
         Log.i("RES", response.body().get(0).getResponseStatus());
       }
@@ -538,8 +536,7 @@ public class AddItemFragment extends Fragment {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
         try {
-          List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),
-                  location.getLongitude(), 1);
+          List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
           String country = addressList.get(0).getCountryName();
           String state = addressList.get(0).getAdminArea();
