@@ -101,6 +101,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         setHasOptionsMenu(true);
         listCallBackEvent = this;
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+        if(ITEM_COUNT_MORE==0)
         getAllItems();
     }
 
@@ -135,45 +136,45 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    View view=inflater.inflate(R.layout.profile_fragment, container, false);
+      View view = inflater.inflate(R.layout.profile_fragment, container, false);
 
-    Toolbar toolbar=view.findViewById(R.id.profile_toolbar);
-    toolbar.setTitle("My Profile");
+      Toolbar toolbar = view.findViewById(R.id.profile_toolbar);
+      toolbar.setTitle("My Profile");
 
-    if(getActivity() != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
-    }
+      if (getActivity() != null) {
+          ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+          ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+          ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+          ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+      }
 
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getContext(), Dashboard.class);
-            intent.putExtra("pic", CURRENT_USER_PROFILE_PICTURE);
-            startActivity(intent);
-        }
-    });
+      toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              Intent intent = new Intent(getContext(), Dashboard.class);
+              intent.putExtra("pic", CURRENT_USER_PROFILE_PICTURE);
+              startActivity(intent);
+          }
+      });
 
-    recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
-    recyclerView.setHasFixedSize(true);
+      recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
+      recyclerView.setHasFixedSize(true);
 
-    txtUserNameProfile=view.findViewById(R.id.id_username);
-    txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
+      txtUserNameProfile = view.findViewById(R.id.id_username);
+      txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
 
-    txtItemCount = view.findViewById(R.id.txtItemAdded);
+      txtItemCount = view.findViewById(R.id.txtItemAdded);
 
-    imgProfile=view.findViewById(R.id.profile_image);
-      imgProfile2=view.findViewById(R.id.profile_image2);
-    imgProfile.setOnClickListener(this);
+      imgProfile = view.findViewById(R.id.profile_image);
+      imgProfile2 = view.findViewById(R.id.profile_image2);
+      imgProfile.setOnClickListener(this);
 
-        mViewModel.getItems().observe(this, new Observer<List<GetUserItemResponseData>>() {
-            @Override
-            public void onChanged(List<GetUserItemResponseData> getUserItemResponseData) {
-                profileAdapter.setUserItemsResponseData(getUserItemResponseData);
-            }
-        });
+      mViewModel.getItems().observe(this, new Observer<List<GetUserItemResponseData>>() {
+          @Override
+          public void onChanged(final List<GetUserItemResponseData> getUserItemResponseData) {
+              profileAdapter.setUserItemsResponseData(getUserItemResponseData);
+          }
+      });
 
         if(getArguments() != null){
             CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
@@ -196,7 +197,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     public void onResume() {
         super.onResume();
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-        getAllItems();
+        if(ITEM_COUNT_MORE==0) {
+            getAllItems();
+        }
         inflateRecycler();
     }
 
@@ -243,6 +246,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
           String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
           Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile);
           Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile2);
+          PROFILE_PICTURE =true;
       }
       catch (Exception e){
           e.printStackTrace();

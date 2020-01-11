@@ -13,6 +13,6 @@ public class Constants {
     public static boolean PROFILE_PICTURE;
     public static int ITEM_COUNT_MORE=0;
     public static boolean IS_MORE_ITEM=false;
+    public static boolean COME_ONE=false;
     public static List<GetUserItemResponseData> allItemsResponseData;
-    public static List<GetUserItemResponseData> theAllItemsResponseData;
 }

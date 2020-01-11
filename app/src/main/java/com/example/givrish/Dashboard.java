@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.network.ApiEndpointInterface;
@@ -30,12 +31,14 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.givrish.database.Constants.*;
 import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
 import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
 import static com.example.givrish.database.Constants.CURRENT_USER_ID;
 import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 import static com.example.givrish.database.Constants.PROFILE_PICTURE;
+import static com.example.givrish.database.Constants.allItemsResponseData;
 
 public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
 
@@ -47,6 +50,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String PROFILE_PAGE_FLAG="7";
   public static final String PROFILE_EDIT_FLAG="8";
     public static final String PICTURE_FULLSCREEN_FLAG="9";
+    public static final String USER_ITEM_MENU_DIALOG="10";
 
 
   private static int FLAG = 0;
@@ -72,6 +76,11 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
           Bundle bundle = getIntent().getExtras();
           CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
       }
+      //for profile item loading
+    ITEM_COUNT_MORE=0;
+    IS_MORE_ITEM=false;
+    COME_ONE=false;
+    allItemsResponseData=null;
 
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -173,4 +182,5 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
       fab.setImageDrawable(getDrawable(R.drawable.gift_box));
       FLAG = 0;
   }
+
 }
