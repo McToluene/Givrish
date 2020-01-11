@@ -24,7 +24,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +32,6 @@ import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
-import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.IUserItemCallBackEvent;
 
@@ -51,6 +49,7 @@ import com.example.givrish.models.UserProfileAdapter;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 
+import com.example.givrish.PhotoFullPopupWindow;
 import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -58,7 +57,6 @@ import com.squareup.picasso.Picasso;
 
 
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -274,13 +272,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   public void onClick(View v) {
     switch (v.getId()){
         case R.id.profile_image:
-            PictureFullScreen pictureFullScreen =new PictureFullScreen();
-            if(CURRENT_USER_PROFILE_PICTURE!=null) {
-                Bundle  bundle = new Bundle();
-                bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-                pictureFullScreen.setArguments(bundle);
-            }
-            loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
+
+          //loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
+          //  new PhotoFullPopupWindow(this.getContext(), R.layout.picture_fullscreen_layout, imgProfile, CURRENT_USER_PROFILE_PICTURE, null);
+
             break;
     }
   }

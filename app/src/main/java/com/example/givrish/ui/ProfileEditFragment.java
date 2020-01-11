@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
+import com.example.givrish.PhotoFullPopupWindow;
 import com.example.givrish.R;
 import com.example.givrish.UserDataPreference;
 import com.example.givrish.database.Constants;
@@ -189,13 +190,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.profile_imageEdit:
-                PictureFullScreen pictureFullScreen =new PictureFullScreen();
-                if(CURRENT_USER_PROFILE_PICTURE!=null) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-                    pictureFullScreen.setArguments(bundle);
-                }
-                loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
+               //loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
+               //new PhotoFullPopupWindow(, R.layout.picture_fullscreen_layout, imgProfile, CURRENT_USER_PROFILE_PICTURE, null);
                 break;
         }
     }
