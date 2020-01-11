@@ -243,7 +243,7 @@ public class AddItemFragment extends Fragment {
     mainCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        categoryId = itemCategoryDataList.get(position).getItem_category_id();
+
         try {
 //          ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
 //          getSub(selectedItem);
@@ -251,7 +251,8 @@ public class AddItemFragment extends Fragment {
           for (int i=0; i<itemCategoryDataList.size();i++) {
             if(itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString())|| itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString()+" ")){
             selectedItem = itemCategoryDataList.get(i).getItem_category_id();
-            getSub(selectedItem);
+              categoryId = itemCategoryDataList.get(i).getItem_category_id();
+                      getSub(selectedItem);
             break;}
           }
         } catch (Exception e) {
