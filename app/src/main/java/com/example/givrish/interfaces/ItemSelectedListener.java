@@ -4,5 +4,5 @@ import androidx.fragment.app.Fragment;
 
 public interface ItemSelectedListener {
   void loadItem(Fragment fragment, String tag);
-  void onCloseFragment(String tag);
+  void onCloseItem(String tag);
 }

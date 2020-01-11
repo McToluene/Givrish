@@ -42,9 +42,7 @@ import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.UserDataPreference;
-import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
-import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.ItemModel;
@@ -80,6 +78,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.example.givrish.viewmodel.AddItemViewModel;
+import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 public class AddItemFragment extends Fragment {
 
@@ -110,6 +111,10 @@ public class AddItemFragment extends Fragment {
   private int imageCount = 5;
   private TextView clearImageSelection;
   private ItemModel itemModel;
+  private AddItemViewModel addItemViewModel;
+  private int receivedItem;
+  private int receivedSubItem;
+  private String toolbarTitle = "Add Item";
 
 
   public AddItemFragment() {
@@ -154,10 +159,10 @@ public class AddItemFragment extends Fragment {
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
     clearImageSelection = view.findViewById(R.id.clear_image_selection);
-
+    clearImageSelection.setVisibility(View.INVISIBLE);
     addButton = view.findViewById(R.id.addImagebtn);
 
-    toolbar.setTitle("Add Item");
+    toolbar.setTitle(toolbarTitle);
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -171,8 +176,26 @@ public class AddItemFragment extends Fragment {
     }
 
     if(itemModel!=null) {
+
+      toolbarTitle = "Edit Item";
+      for (int i=0; i<itemCategoryDataList.size();i++) {
+        if(itemCategoryDataList.get(i).getItem_category_id().equals(itemModel.getItem_category_id())){
+          receivedItem = i;
+          categoryId = itemModel.getItem_category_id();
+          break;}
+      }
+      for (int i=0; i<itemSubCategoryDataList.size();i++) {
+        if(itemSubCategoryDataList.get(i).getItem_sub_category_id().equals(itemModel.getItem_sub_category_id())){
+          receivedSubItem = i;
+          subId = itemModel.getItem_sub_category_id();
+          break;}
+      }
      itemName.setText(itemModel.getItem_title());
      itemDesc.setText(itemModel.getItem_description());
+     mainCategory.setSelection(receivedItem);
+     subCategory.setSelection(receivedSubItem);
+     colorSpinner.setText(itemModel.getItem_color());
+
      //get all the rest
     }
 
@@ -242,11 +265,18 @@ public class AddItemFragment extends Fragment {
     mainCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        categoryId = itemCategoryDataList.get(position).getItem_category_id();
-        try {
-          ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
-          getSub(selectedItem);
 
+        try {
+//          ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
+//          getSub(selectedItem);
+          String selectedItem = null;
+          for (int i=0; i<itemCategoryDataList.size();i++) {
+            if(itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString())){
+            selectedItem = itemCategoryDataList.get(i).getItem_category_id();
+              categoryId = itemCategoryDataList.get(i).getItem_category_id();
+                      getSub(selectedItem);
+            break;}
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -324,16 +354,17 @@ public class AddItemFragment extends Fragment {
       }
 
       @Override
-      public void onFailure(@NonNull Call<ItemSubCategoryResponse> call, @NonNull Throwable t) {
+      public void onFailure(Call<ItemSubCategoryResponse> call, Throwable t) {
         Toast.makeText(getActivity(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
       }
     });
   }
 
-  private void getSub(ItemCategoryData selected) {
+  private void getSub(String selected) {
+//    Log.i("SELECT", selected.getItem_category_id());
     final List<ItemSubCategoryData> subCategoryOfCategory = new ArrayList<>();
     for (int i = 0; i < itemSubCategoryDataList.size(); i++) {
-      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())){
+      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected)){
         subCategoryOfCategory.add(itemSubCategoryDataList.get(i));
       }
     }
@@ -375,6 +406,7 @@ public class AddItemFragment extends Fragment {
       if (data != null) {
         ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
         imageCount = imageCount - returnValue.size();
+        clearImageSelection.setVisibility(View.VISIBLE);
         if (imageCount == 0) {
           addButton.setEnabled(false);
           Toast.makeText(getContext(), "Maximum number of image(s) selected", Toast.LENGTH_LONG).show();
@@ -387,33 +419,51 @@ public class AddItemFragment extends Fragment {
 
     }else{
       if(requestCode==123)
-        Toast.makeText(getContext(), "Phone permission granted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "phone permission granted", Toast.LENGTH_SHORT).show();
       displayLocation();
 
     }
   }
 
   private void loadImage(ArrayList<String> returnValue) {
-    if (getActivity() != null)
-      layout = getActivity().findViewById(R.id.addImageLinearLayout);
-
-    for (int i=0;i<returnValue.size();i++) {
-      ImageView image = new ImageView(getActivity());
-      image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150,150));
-      image.setPaddingRelative(4,4,4,4);
-      image.setMaxHeight(100);
-      image.setMaxWidth(100);
-      image.setMinimumHeight(100);
-      image.setMaxHeight(100);
-      image.setScaleType(ImageView.ScaleType.FIT_XY);
-      Bitmap theImage = BitmapFactory.decodeFile(returnValue.get(i));
-      image.setImageBitmap(theImage);
+    layout = getActivity().findViewById(R.id.addImageLinearLayout);
+    for(int i=0;i<returnValue.size();i++)
+    {
+      ImageView image = createImageFunction(returnValue.get(i));
       // Adds the view to the layout
       layout.addView(image);
       imagePaths.add(returnValue.get(i));
 
     }
   }
+
+  @NotNull
+  private ImageView createImageFunction(String imagePath) {
+    ImageView image = new ImageView(getActivity());
+    image.setLayoutParams(new ViewGroup.LayoutParams(150,150));
+    image.setPaddingRelative(4,4,4,4);
+    image.setMaxHeight(100);
+    image.setMaxWidth(100);
+    image.setMinimumHeight(100);
+    image.setMaxHeight(100);
+    image.setScaleType(ImageView.ScaleType.FIT_XY);
+    Bitmap theImage = BitmapFactory.decodeFile(imagePath);
+    image.setImageBitmap(theImage);
+    return image;
+  }
+  // TODO: 1/11/2020 after you get merge update 
+//  private void loadProfilePic() {
+//    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+//    String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
+//
+//    try {
+//      String uri =  
+//      Picasso.get().load(uri);
+//    }
+//    catch (Exception e){
+//      e.printStackTrace();
+//    }
+//  }
 
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -470,7 +520,7 @@ public class AddItemFragment extends Fragment {
         public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
 
           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-            Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "receivedItem added successfully", Toast.LENGTH_LONG).show();
             AddItemResponseData data = response.body().get(0).getData();
             String id = data.getRecord();
             Log.i("ID", id);
@@ -516,7 +566,7 @@ public class AddItemFragment extends Fragment {
         Log.i("ERROR", t.toString());
       }
     });
-
+    Log.i("WE", "HERE");
   }
 
   private void displayLocation() {
