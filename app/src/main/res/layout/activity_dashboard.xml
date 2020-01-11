@@ -35,7 +35,7 @@
             app:contentInsetRight="0dp"
             app:contentInsetStart="0dp"
             app:fabAlignmentMode="center"
-            app:fabCradleMargin="10dp"
+            app:fabCradleMargin="5dp"
             app:fabCradleRoundedCornerRadius="10dp"
             app:hideOnScroll="true"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">

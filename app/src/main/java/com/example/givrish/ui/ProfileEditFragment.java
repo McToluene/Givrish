@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
+import com.example.givrish.UserDataPreference;
 import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.models.AddItemResponse;
@@ -84,7 +85,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
     private ApiEndpointInterface apiService;
     ProfileFragment fragment;
     String username;
-    String pic;
 
     private CallBackListener listener;
 
@@ -113,7 +113,11 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onBackClick(Dashboard.PROFILE_EDIT_FLAG);
+                ProfileFragment fragment=new ProfileFragment();
+                Bundle bundle=new Bundle();
+                bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+                fragment.setArguments(bundle);
+                loadFragment(fragment, Dashboard.PROFILE_PAGE_FLAG);
             }
         });
         edtUsername=view.findViewById(R.id.edtProfileNameEditProfile);
@@ -134,13 +138,19 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         btnSave.setOnClickListener(this);
 
         if(getArguments() != null){
-            pic=getArguments().getString("pic");
-            Drawable theImage = Drawable.createFromPath(pic);
+            CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
+            Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
             imgProfile.setImageDrawable(theImage);
         }
         else {
             loadProfilePic();
         }
+
+        if(PROFILE_PICTURE == false){
+            imgProfile.setImageResource(R.drawable.defaultprofile);
+        }
+
+        imgProfile.setOnClickListener(this);
 
         return view;
     }
@@ -178,6 +188,15 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                     Toast.makeText(getContext(), "Notice: You did not change any detail.", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.profile_imageEdit:
+                PictureFullScreen pictureFullScreen =new PictureFullScreen();
+                if(CURRENT_USER_PROFILE_PICTURE!=null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
+                    pictureFullScreen.setArguments(bundle);
+                }
+                loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
+                break;
         }
     }
 
@@ -193,7 +212,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
             public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
                 CURRENT_USER_FULLNAME=username;
                 Toast.makeText(getContext(), "Successfully updated username", Toast.LENGTH_LONG).show();
-                loadProfile();
             }
 
             @Override
@@ -201,14 +219,6 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                 Toast.makeText(getContext(), "Failed to update the details", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void loadProfile() {
-        ListFragment fragment=new ListFragment();
-        Bundle bundle=new Bundle();
-        bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-        fragment.setArguments(bundle);
-        loadFragment(fragment, Dashboard.LIST_ITEM_FRAGMENT_FLAG);
     }
 
     private void uploadImage(final String path) {
@@ -225,11 +235,11 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                     @Override
                     public void onResponse(Call<List<ProfileEditResponse>> call, Response<List<ProfileEditResponse>> response) {
                         CURRENT_USER_PROFILE_PICTURE = returnValue.get(0);
+                        PROFILE_PICTURE = true;
+                        UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.PicAvailable), String.valueOf(PROFILE_PICTURE));
+                        UserDataPreference.getInstance(getContext()).savePreference(getString(R.string.user_picture), CURRENT_USER_PROFILE_PICTURE);
                         returnValue.clear();
                         Toast.makeText(getContext(), "Successfully updated picture", Toast.LENGTH_LONG).show();
-                        if (username.trim().equals(CURRENT_USER_FULLNAME.trim())) {
-                            loadProfile();
-                        }
                     }
 
                     @Override
@@ -267,8 +277,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
         }
         else {
             if(getArguments() != null){
-                pic=getArguments().getString("pic");
-                Drawable theImage = Drawable.createFromPath(pic);
+                CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
+                Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
                 imgProfile.setImageDrawable(theImage);
             }
             else {

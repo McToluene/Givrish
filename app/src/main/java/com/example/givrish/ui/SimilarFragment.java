@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.givrish.R;
 import com.example.givrish.interfaces.SimilarItemsCallBack;
@@ -45,7 +46,7 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
   private String categoryId;
   private String subCategory;
   private Executor executor = Executors.newSingleThreadExecutor();
-  private ContentLoadingProgressBar contentLoadingProgressBar;
+  private ProgressBar similarLoading;
 
   public SimilarFragment() {
     // Required empty public constructor
@@ -76,8 +77,7 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
       subCategory = getArguments().getString(SUBCATEGORY_ID_KEY);
     }
 
-    contentLoadingProgressBar = view.findViewById(R.id.similar_loading);
-    contentLoadingProgressBar.show();
+    similarLoading = view.findViewById(R.id.similar_loading);
 
     RecyclerView similarRecycler = view.findViewById(R.id.similar_recycler);
     adapter = new ListItemAdapter(getContext());
@@ -99,6 +99,7 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
         if (response.isSuccessful()) {
           if (response.body() != null && response.body().getResponseCode().equals("1")) {
             event.filterItems(response.body().getData());
+            similarLoading.setVisibility(View.INVISIBLE);
           }
         }
       }
@@ -152,7 +153,6 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
         @Override
         public void run() {
           adapter.setAllItemsResponseData(subList);
-          contentLoadingProgressBar.hide();
         }
       });
     }

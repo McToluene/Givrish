@@ -118,6 +118,7 @@ private Executor executor = Executors.newSingleThreadExecutor();
         if (response.body().getResponseCode().equals("1")) {
            Intent intent  = new Intent(getApplicationContext(), LoginActivity.class);
          intent.putExtra(PhoneLoginActivity.phoneLoginKey, registeredUser);
+         intent.putExtra("forgotPassword",registeringUserToFirebase);
           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
