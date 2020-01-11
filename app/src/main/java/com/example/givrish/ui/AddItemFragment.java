@@ -160,7 +160,7 @@ public class AddItemFragment extends Fragment {
 
     addButton = view.findViewById(R.id.addImagebtn);
 
-    toolbar.setTitle("Add receivedItem");
+    toolbar.setTitle("Add Item");
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
