@@ -45,7 +45,6 @@ import retrofit2.Response;
 public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
   private CategoryViewModel mViewModel;
   private RecyclerView recyclerView;
-  private ItemCategoryAdapter itemCategoryAdapter;
   private static final String api_key = "test";
   private CallBackListener callBackListener;
   private SwipeRefreshLayout refreshLayout;
@@ -114,7 +113,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
 
   private void getCategories() {
     pageFlag = 0;
-    itemCategoryAdapter = new ItemCategoryAdapter(context);
+    final ItemCategoryAdapter itemCategoryAdapter = new ItemCategoryAdapter(context);
     recyclerView.setAdapter(itemCategoryAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(context));
 

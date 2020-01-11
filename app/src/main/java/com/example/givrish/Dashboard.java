@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -188,5 +187,4 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
       listFragment.filter(subCategoryId);
     }
   }
-
 }

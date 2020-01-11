@@ -3,7 +3,6 @@ package com.example.givrish.models;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,93 +16,78 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
-import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.ICategoriesListener;
-import com.example.givrish.ui.ItemSubCategoryFragment;
 
 import java.util.List;
 import java.util.Random;
 
 public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ItemCategoryHolder>{
-    private List<ItemCategoryData> itemCategoryData;
-    private Context context;
-    private LayoutInflater inflater;
-    private ICategoriesListener listener;
+  private List<ItemCategoryData> itemCategoryData;
+  private Context context;
+  private LayoutInflater inflater;
+  private ICategoriesListener listener;
 
-    public static final String SUB_CATEGORIES_FRAGMENT_fLAG = "2001";
-
-
-    public ItemCategoryAdapter(Context context) {
-        this.context = context;
-        inflater = LayoutInflater.from(context);
-        listener = (ICategoriesListener) context;
-
-    }
-
-    @NonNull
-    @Override
-    public ItemCategoryAdapter.ItemCategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.item_category,parent,false);
-        return new ItemCategoryHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ItemCategoryAdapter.ItemCategoryHolder holder, int position) {
-        holder.itemCatTitle.setText(itemCategoryData.get(position).getItem_category_name());
-        holder.fTitle.setText(itemCategoryData.get(position).getItem_category_name().subSequence(0,1));
-        holder.position = position;
-
-        GradientDrawable drawable = (GradientDrawable) holder.fTitle.getBackground();
-        Random randomColor = new Random();
-        int color = Color.argb(100,randomColor.nextInt(110),randomColor.nextInt(110),randomColor.nextInt(110));
-        drawable.setColor(color);
+  public static final String SUB_CATEGORIES_FRAGMENT_fLAG = "2001";
 
 
-    }
+  public ItemCategoryAdapter(Context context) {
+    this.context = context;
+    inflater = LayoutInflater.from(context);
+    listener = (ICategoriesListener) context;
 
-    public void setCategories(List<ItemCategoryData> itemCategoryData){
-        this.itemCategoryData = itemCategoryData;
-        notifyDataSetChanged();
-    }
+  }
 
-    @Override
-    public int getItemCount() {
-        return itemCategoryData == null ? 0 : itemCategoryData.size();
-    }
+  @NonNull
+  @Override
+  public ItemCategoryAdapter.ItemCategoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    View itemView = inflater.inflate(R.layout.item_category,parent,false);
+    return new ItemCategoryHolder(itemView);
+  }
+
+  @Override
+  public void onBindViewHolder(@NonNull ItemCategoryAdapter.ItemCategoryHolder holder, int position) {
+    holder.itemCatTitle.setText(itemCategoryData.get(position).getItem_category_name());
+    holder.fTitle.setText(itemCategoryData.get(position).getItem_category_name().subSequence(0,1));
+    holder.position = position;
+
+    GradientDrawable drawable = (GradientDrawable) holder.fTitle.getBackground();
+    Random randomColor = new Random();
+    int color = Color.argb(100,randomColor.nextInt(110),randomColor.nextInt(110),randomColor.nextInt(110));
+    drawable.setColor(color);
 
 
-    public class ItemCategoryHolder extends RecyclerView.ViewHolder {
+  }
 
-        private TextView fTitle;
-        private AppCompatTextView itemCatTitle;
-        private int position;
+  public void setCategories(List<ItemCategoryData> itemCategoryData){
+    this.itemCategoryData = itemCategoryData;
+    notifyDataSetChanged();
+  }
 
-        public ItemCategoryHolder(@NonNull View itemView) {
-            super(itemView);
-            fTitle =  itemView.findViewById(R.id.sub_tvv);
-            itemCatTitle = itemView.findViewById(R.id.sub_tv_name_v);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("ITEMM",itemCategoryData.get(Position).getItem_category_id());
-//                    bundle.putInt("ITEM",Position);
-//                    ItemSubCategoryFragment itemSub = new ItemSubCategoryFragment();
-//                    itemSub.setArguments(bundle);
-//                    loadSub(itemSub, SUB_CATEGORIES_FRAGMENT_fLAG);
-                    listener.loadSub(itemCategoryData.get(position).getItem_category_id());
-                }
+  @Override
+  public int getItemCount() {
+    return itemCategoryData == null ? 0 : itemCategoryData.size();
+  }
 
-                private void loadSub(Fragment itemSub, String tag) {
-                    FragmentTransaction  transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.dashboard_layout,itemSub,tag);
-                    transaction.addToBackStack(tag);
-                    transaction.commit();
-                }
-            });
 
+  public class ItemCategoryHolder extends RecyclerView.ViewHolder {
+
+    private TextView fTitle;
+    private AppCompatTextView itemCatTitle;
+    private int position;
+
+    public ItemCategoryHolder(@NonNull View itemView) {
+      super(itemView);
+      fTitle =  itemView.findViewById(R.id.sub_tvv);
+      itemCatTitle = itemView.findViewById(R.id.sub_tv_name_v);
+      itemView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          listener.loadSub(itemCategoryData.get(position).getItem_category_id());
         }
+      });
 
     }
+
+  }
 
 }
