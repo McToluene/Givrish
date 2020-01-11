@@ -88,9 +88,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ListCallBackEvent listCallBackEvent;
   private RecyclerView listRecyclerView;
   private LocationClass locationClass;
-  private LocationClass.LocationResult locationResult;
-  private boolean check = false;
-  private Drawable drawable;
+
   private Executor executor;
   private String[] locationData;
 
@@ -101,12 +99,12 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-      setConstants();
+    setConstants();
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     setHasOptionsMenu(true);
     listCallBackEvent = this;
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    getAllItems();
+    getAllItems(null);
   }
 
   @Override
@@ -121,17 +119,17 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.items_swipe_refresh);
 
     swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-    swipeRefreshLayout.post(new Runnable() {
-      @Override
-      public void run() {
-        getAllItems();
-      }
-    });
+//    swipeRefreshLayout.post(new Runnable() {
+//      @Override
+//      public void run() {
+//        getAllItems(null);
+//      }
+//    });
 
     swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override
       public void onRefresh() {
-        getAllItems();
+        getAllItems(null);
         swipeRefreshLayout.setRefreshing(false);
       }
     });
@@ -170,7 +168,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
               });
           } else{
               if(PROFILE_PICTURE) {
-                  drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+                Drawable drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
                   profile.setImageDrawable(drawable);
               }
               else{
@@ -225,10 +223,15 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
     }
 
-    private void getAllItems() {
-    ApiKey apiKey = new ApiKey("test");
-    Gson gson = new Gson();
+    private void getAllItems(String subCategory) {
+    ApiKey apiKey;
+    if (subCategory != null) {
+      apiKey = new ApiKey("test", "", subCategory);
+    } else {
+      apiKey = new ApiKey("test");
+    }
 
+    Gson gson = new Gson();
     String stringApiKey = gson.toJson(apiKey);
     Call<AllItemsResponse> call = apiService.getAllItems(stringApiKey);
     call.enqueue(new Callback<AllItemsResponse>() {
@@ -244,8 +247,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       @Override
       public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
         if (getView() != null)
-        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT)
-                .show();
+        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT).show();
       }
     });
   }
@@ -303,9 +305,9 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
   private void displayLocation() {
-      LocationClass.LocationResult locationResult = new LocationClass.LocationResult() {
+    LocationClass.LocationResult locationResult = new LocationClass.LocationResult() {
 
-          @Override
+      @Override
       public void gotLocation(Location location) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
@@ -326,7 +328,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       }
     };
 
-    check = locationClass.getLocation(getContext(), locationResult);
+    boolean check = locationClass.getLocation(getContext(), locationResult);
 
     if(!check)
       //Ask for permission
@@ -335,4 +337,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
   }
 
+  public void filter(String subCategoryId) {
+    getAllItems(subCategoryId);
+  }
 }

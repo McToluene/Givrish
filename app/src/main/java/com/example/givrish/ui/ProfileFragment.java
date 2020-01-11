@@ -73,19 +73,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   private RecyclerView.LayoutManager layoutManager;
 
   private TextView txtUserNameProfile;
-    private CircleImageView imgProfile;
-    private ImageView imgProfile2;
-    public static TextView txtItemCount;
+  private CircleImageView imgProfile;
+  private ImageView imgProfile2;
+  public static TextView txtItemCount;
 
 
   private ApiEndpointInterface apiService;
   private GetUserItemResponseData items;
 
-    private IUserItemCallBackEvent listCallBackEvent;
-    private ProfileViewModel mViewModel;
-    private UserProfileAdapter profileAdapter;
+  private IUserItemCallBackEvent listCallBackEvent;
+  private ProfileViewModel mViewModel;
+  private UserProfileAdapter profileAdapter;
 
-    private CallBackListener listener;
+  private CallBackListener listener;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -133,18 +133,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   }
 
   @Override
+  public void onPrepareOptionsMenu(@NonNull Menu menu) {
+    menu.setGroupVisible(R.id.menu_main, false);
+    super.onPrepareOptionsMenu(menu);
+  }
+
+  @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
     View view=inflater.inflate(R.layout.profile_fragment, container, false);
 
     Toolbar toolbar=view.findViewById(R.id.profile_toolbar);
-    toolbar.setTitle("My Profile");
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
 
     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -165,31 +170,34 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     txtItemCount = view.findViewById(R.id.txtItemAdded);
 
     imgProfile=view.findViewById(R.id.profile_image);
-      imgProfile2=view.findViewById(R.id.profile_image2);
+    imgProfile2=view.findViewById(R.id.profile_image2);
     imgProfile.setOnClickListener(this);
 
-        mViewModel.getItems().observe(this, new Observer<List<GetUserItemResponseData>>() {
-            @Override
-            public void onChanged(List<GetUserItemResponseData> getUserItemResponseData) {
-                profileAdapter.setUserItemsResponseData(getUserItemResponseData);
-            }
-        });
 
-        if(getArguments() != null){
-            CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
-            Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
-            imgProfile.setImageDrawable(theImage);
-            imgProfile2.setImageDrawable(theImage);
-        }
-        else {
-            loadProfilePicture();
-        }
-        if(PROFILE_PICTURE == false){
-            imgProfile.setImageResource(R.drawable.defaultprofile);
-            imgProfile2.setImageResource(R.drawable.defaultprofile);
-        }
-        inflateRecycler();
-        return view;
+    mViewModel.getItems().observe(this, new Observer<List<GetUserItemResponseData>>() {
+      @Override
+      public void onChanged(List<GetUserItemResponseData> getUserItemResponseData) {
+        profileAdapter.setUserItemsResponseData(getUserItemResponseData);
+      }
+    });
+
+    if(getArguments() != null){
+      CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
+      Drawable theImage = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+      imgProfile.setImageDrawable(theImage);
+      imgProfile2.setImageDrawable(theImage);
+    }
+    else {
+      loadProfilePicture();
+    }
+    if(!PROFILE_PICTURE){
+      imgProfile.setImageResource(R.drawable.defaultprofile);
+      imgProfile2.setImageResource(R.drawable.defaultprofile);
+    }
+
+    inflateRecycler();
+    toolbar.setTitle("My Profile");
+    return view;
   }
 
     @Override

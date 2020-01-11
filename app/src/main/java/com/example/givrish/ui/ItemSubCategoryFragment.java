@@ -34,13 +34,11 @@ import com.example.givrish.viewmodel.ItemSubCategoryViewModel;
 import com.example.givrish.R;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.PUT;
 
 public class ItemSubCategoryFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private Toolbar toolbar;
@@ -62,7 +60,7 @@ public class ItemSubCategoryFragment extends Fragment implements SwipeRefreshLay
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-            callBackListener = (CallBackListener) context;
+        callBackListener = (CallBackListener) context;
 
     }
 
@@ -142,7 +140,7 @@ public class ItemSubCategoryFragment extends Fragment implements SwipeRefreshLay
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == android.R.id.home){
-            callBackListener.onBackClick(ItemCategoryAdapter.sub_cATEGORIES_fRAGMENT_fLAG);
+            callBackListener.onBackClick(ItemCategoryAdapter.SUB_CATEGORIES_FRAGMENT_fLAG);
         }
         return super.onOptionsItemSelected(item);
 

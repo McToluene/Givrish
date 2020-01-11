@@ -4,7 +4,6 @@ package com.example.givrish.ui;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -88,7 +87,7 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
   }
 
   private void getSimilarItems() {
-    ApiKey apiKey = new ApiKey("test");
+    ApiKey apiKey = new ApiKey("test", categoryId, subCategory);
     Gson gson = new Gson();
 
     String stringApiKey = gson.toJson(apiKey);
@@ -98,7 +97,7 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
       public void onResponse(@NonNull Call<AllItemsResponse> call, @NonNull Response<AllItemsResponse> response) {
         if (response.isSuccessful()) {
           if (response.body() != null && response.body().getResponseCode().equals("1")) {
-            event.filterItems(response.body().getData());
+            event.removeTop(response.body().getData());
             similarLoading.setVisibility(View.INVISIBLE);
           }
         }
@@ -114,21 +113,6 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
   }
 
 
-  @Override
-  public void filterItems(final List<AllItemsResponseData> items) {
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        List <AllItemsResponseData> similarItems = new ArrayList<>();
-        for (AllItemsResponseData item : items) {
-          if ((item.getItem_category_id().equals(categoryId) || item.getItem_sub_category_id().equals(subCategory))) {
-            similarItems.add(item);
-          }
-        }
-        event.removeTop(similarItems);
-      }
-    });
-  }
 
   // Get the top 20 items
   @Override
@@ -136,9 +120,9 @@ public class SimilarFragment extends Fragment implements SimilarItemsCallBack {
     executor.execute(new Runnable() {
       @Override
       public void run() {
-        if (similarItems.size() > 10){
+        if (similarItems.size() > 20){
           int lastIndex = similarItems.size();
-          int fromIndex = lastIndex - 10;
+          int fromIndex = lastIndex - 20;
           event.loadItems(similarItems.subList(fromIndex, lastIndex));
         }
       }
