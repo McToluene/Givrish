@@ -9,9 +9,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.Manifest;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -21,7 +18,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -33,15 +29,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.ProgressBar;
 
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
 import com.example.givrish.UserDataPreference;
-import com.example.givrish.database.Constants;
-import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.interfaces.ListCallBackEvent;
 import com.example.givrish.models.AllItemsResponse;
 import com.example.givrish.models.AllItemsResponseData;
@@ -54,8 +47,6 @@ import com.example.givrish.viewmodel.ListViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import java.io.IOException;
-import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
@@ -72,12 +63,11 @@ import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
 import static com.example.givrish.database.Constants.CURRENT_USER_ID;
 import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
-import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 
 public class ListFragment extends Fragment implements ListCallBackEvent {
 
   public static final String CATEGORIES_FRAGMENT_FLAG= "4";
-  public static final String SEARCH_FRAGMENT_FLAG = "6";
+  private static final String SEARCH_FRAGMENT_FLAG = "6";
 
   private ListViewModel mViewModel;
   private CircleImageView profile;
@@ -88,11 +78,9 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private ListCallBackEvent listCallBackEvent;
   private RecyclerView listRecyclerView;
   private LocationClass locationClass;
-    private LocationClass.LocationResult locationResult;
-    boolean check = false;
-    Drawable drawable;
-    Executor executor;
-    private String[] locationData;
+  private Executor executor;
+  private String filterValue = "";
+
 
   public static ListFragment newInstance() {
     return new ListFragment();
@@ -101,12 +89,12 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-      setConstants();
+    setConstants();
     mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
     setHasOptionsMenu(true);
     listCallBackEvent = this;
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    getAllItems();
+    getAllItems("");
   }
 
   @Override
@@ -121,17 +109,11 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.items_swipe_refresh);
 
     swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-    swipeRefreshLayout.post(new Runnable() {
-      @Override
-      public void run() {
-        getAllItems();
-      }
-    });
 
     swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override
       public void onRefresh() {
-        getAllItems();
+        getAllItems(filterValue);
         swipeRefreshLayout.setRefreshing(false);
       }
     });
@@ -140,12 +122,12 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     }
 
-      mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
-          @Override
-          public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
-              listItemAdapter.setAllItemsResponseData(allItemsResponseData);
-          }
-      });
+//      mViewModel.getItems().observe(this, new Observer<List<AllItemsResponseData>>() {
+//          @Override
+//          public void onChanged(List<AllItemsResponseData> allItemsResponseData) {
+//              listItemAdapter.setAllItemsResponseData(allItemsResponseData);
+//          }
+//      });
 
       profile.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -170,7 +152,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
               });
           } else{
               if(PROFILE_PICTURE) {
-                  drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
+                Drawable drawable = Drawable.createFromPath(CURRENT_USER_PROFILE_PICTURE);
                   profile.setImageDrawable(drawable);
               }
               else{
@@ -188,7 +170,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
 
-    private void loadProfilePicture() {
+  private void loadProfilePicture() {
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
         String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
@@ -206,29 +188,33 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private void inflateRecycler() {
     listItemAdapter = new ListItemAdapter(getContext());
     listRecyclerView.setAdapter(listItemAdapter);
-      listRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+    listRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
   }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setConstants();
+  @Override
+  public void onResume() {
+    super.onResume();
+    setConstants();
+  }
+
+  private void setConstants() {
+    CURRENT_USER_ID = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
+    CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
+    CURRENT_USER_EMAIL = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_email_Keystore));
+    CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
+    CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_picture));
+    PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.PicAvailable)));
+
+  }
+  private void getAllItems(String subCategory) {
+    ApiKey apiKey;
+    if (!subCategory.isEmpty()) {
+      apiKey = new ApiKey("test", "", subCategory);
+    } else {
+      apiKey = new ApiKey("test");
     }
 
-    private void setConstants() {
-        CURRENT_USER_ID = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
-        CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
-        CURRENT_USER_EMAIL = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_email_Keystore));
-        CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
-        CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_picture));
-        PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.PicAvailable)));
-
-    }
-
-    private void getAllItems() {
-    ApiKey apiKey = new ApiKey("test");
     Gson gson = new Gson();
-
     String stringApiKey = gson.toJson(apiKey);
     Call<AllItemsResponse> call = apiService.getAllItems(stringApiKey);
     call.enqueue(new Callback<AllItemsResponse>() {
@@ -244,8 +230,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       @Override
       public void onFailure(@NonNull Call<AllItemsResponse> call, @NonNull Throwable t) {
         if (getView() != null)
-        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT)
-                .show();
+        Snackbar.make(getView(), "Please check your network", Snackbar.LENGTH_SHORT).show();
       }
     });
   }
@@ -290,6 +275,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     mViewModel.insertAllItems(getNewItems(items));
     listItemAdapter.setAllItemsResponseData(items);
     loading.setVisibility(View.INVISIBLE);
+    listRecyclerView.setVisibility(View.VISIBLE);
   }
 
   // This get new items into database by selecting last 20;
@@ -303,17 +289,16 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
   private void displayLocation() {
-      LocationClass.LocationResult locationResult = new LocationClass.LocationResult() {
+    LocationClass.LocationResult locationResult = new LocationClass.LocationResult() {
 
-          @Override
+      @Override
       public void gotLocation(Location location) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            DecimalFormat df = new DecimalFormat("#.###");
+          DecimalFormat df = new DecimalFormat("#.###");
 
-            String lng = df.format(addressList.get(0).getLongitude());
+          String lng = df.format(addressList.get(0).getLongitude());
           String lat = df.format(addressList.get(0).getLatitude());
 
           listItemAdapter.setLongitude(lng);
@@ -326,7 +311,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
       }
     };
 
-    check = locationClass.getLocation(getContext(), locationResult);
+    boolean check = locationClass.getLocation(getContext(), locationResult);
 
     if(!check)
       //Ask for permission
@@ -335,4 +320,10 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
 
   }
 
+  public void filter(String subCategoryId) {
+    this.filterValue = subCategoryId;
+    loading.setVisibility(View.VISIBLE);
+    listRecyclerView.setVisibility(View.INVISIBLE);
+    getAllItems(subCategoryId);
+  }
 }

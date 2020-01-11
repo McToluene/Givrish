@@ -9,38 +9,34 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.interfaces.ICategoriesListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.network.ApiEndpointInterface;
-import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.AddItemFragment;
+import com.example.givrish.ui.CategoryFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
 import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.example.givrish.database.Constants.*;
+import static com.example.givrish.database.Constants.COME_ONE;
 import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
 import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
 import static com.example.givrish.database.Constants.CURRENT_USER_ID;
 import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
+import static com.example.givrish.database.Constants.IS_MORE_ITEM;
+import static com.example.givrish.database.Constants.ITEM_COUNT_MORE;
 import static com.example.givrish.database.Constants.PROFILE_PICTURE;
 import static com.example.givrish.database.Constants.allItemsResponseData;
 
-public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
+public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener, ICategoriesListener {
 
   public static final String LIST_ITEM_FRAGMENT_FLAG = "1";
   public static final String ADD_ITEM_FRAGMENT_FLAG = "2";
@@ -77,10 +73,10 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
           CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
       }
       //for profile item loading
-    ITEM_COUNT_MORE=0;
-    IS_MORE_ITEM=false;
-    COME_ONE=false;
-    allItemsResponseData=null;
+      ITEM_COUNT_MORE=0;
+      IS_MORE_ITEM=false;
+      COME_ONE=false;
+      allItemsResponseData=null;
 
     bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -140,8 +136,8 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   }
 
   private void loadFragments(Fragment fragment, String tag) {
-    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-    transaction.replace(R.id.frame_container, fragment, tag);
+      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+      transaction.replace(R.id.frame_container, fragment, tag);
       transaction.addToBackStack(null);
       transaction.commit();
   }
@@ -170,17 +166,35 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
       getTransaction.commit();
   }
 
-  @Override
-  public void onCloseItem(String tag) {
-      FragmentManager manager = getSupportFragmentManager();
-      Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+    @Override
+    public void onCloseFragment(String tag) {
+        FragmentManager manager = getSupportFragmentManager();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
 
-      if (fragment != null){
-          manager.beginTransaction().remove(fragment).commit();
-      }
+        if (fragment != null){
+            manager.beginTransaction().remove(fragment).commit();
+        }
+        fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+        FLAG = 0;
+    }
 
-      fab.setImageDrawable(getDrawable(R.drawable.gift_box));
-      FLAG = 0;
-  }
+    @Override
+    public void loadSub(String subCategoryId) {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ListFragment.CATEGORIES_FRAGMENT_FLAG);
+        CategoryFragment categoryFragment = (CategoryFragment) fragment;
+        if (categoryFragment != null ){
+            categoryFragment.inflateSubCategories(subCategoryId);
+        }
+    }
+
+    @Override
+    public void filterList(String subCategoryId) {
+        onCloseFragment(ListFragment.CATEGORIES_FRAGMENT_FLAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LIST_ITEM_FRAGMENT_FLAG);
+        if (fragment != null) {
+            ListFragment listFragment = (ListFragment) fragment;
+            listFragment.filter(subCategoryId);
+        }
+    }
 
 }

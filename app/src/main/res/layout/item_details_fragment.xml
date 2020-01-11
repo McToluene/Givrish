@@ -45,7 +45,7 @@
       <com.synnapps.carouselview.CarouselView
           android:id="@+id/carouselView"
           android:layout_width="match_parent"
-          android:layout_height="250dp"
+          android:layout_height="300dp"
           android:adjustViewBounds="true"
           android:scaleType="fitCenter"
           app:fillColor="#FFFFFFFF"
@@ -63,13 +63,13 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginStart="8dp"
-          android:layout_marginTop="8dp"
+          android:layout_marginTop="290dp"
           android:layout_marginEnd="8dp"
           app:cardCornerRadius="0dp"
           app:cardElevation="2sp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/carouselView">
+          app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -112,13 +112,13 @@
 
           <com.google.android.material.button.MaterialButton
               android:id="@+id/callButton"
+              style="@style/detailsButton"
               android:layout_width="0dp"
               android:layout_height="55dp"
               android:layout_marginTop="16dp"
               android:text="@string/call_giver"
               android:textAllCaps="false"
               app:icon="@drawable/call_icon"
-              style="@style/detailsButton"
               app:layout_constraintEnd_toStartOf="@+id/messageButton"
               app:layout_constraintHorizontal_chainStyle="spread"
               app:layout_constraintStart_toStartOf="@+id/tv_itemDesc"
@@ -126,13 +126,13 @@
 
           <com.google.android.material.button.MaterialButton
               android:id="@+id/messageButton"
+              style="@style/detailsButton"
               android:layout_width="0dp"
               android:layout_height="55dp"
               android:layout_marginStart="8dp"
               android:layout_marginTop="16dp"
               android:text="@string/i_want"
               android:textAllCaps="false"
-              style="@style/detailsButton"
               app:icon="@drawable/message_icon"
               app:layout_constraintEnd_toEndOf="@+id/tv_itemName"
               app:layout_constraintStart_toEndOf="@+id/callButton"
@@ -214,6 +214,7 @@
       </com.google.android.material.card.MaterialCardView>
 
       <com.google.android.material.card.MaterialCardView
+          android:id="@+id/similar_items_card"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginTop="16dp"

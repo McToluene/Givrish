@@ -161,9 +161,9 @@ public class AddItemFragment extends Fragment {
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
 
     if(getArguments()!=null){
@@ -324,14 +324,13 @@ public class AddItemFragment extends Fragment {
       }
 
       @Override
-      public void onFailure(Call<ItemSubCategoryResponse> call, Throwable t) {
+      public void onFailure(@NonNull Call<ItemSubCategoryResponse> call, @NonNull Throwable t) {
         Toast.makeText(getActivity(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
       }
     });
   }
 
   private void getSub(ItemCategoryData selected) {
-    Log.i("SELECT", selected.getItem_category_id());
     final List<ItemSubCategoryData> subCategoryOfCategory = new ArrayList<>();
     for (int i = 0; i < itemSubCategoryDataList.size(); i++) {
       if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())){
@@ -388,16 +387,17 @@ public class AddItemFragment extends Fragment {
 
     }else{
       if(requestCode==123)
-        Toast.makeText(getContext(), "phone permission granted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Phone permission granted", Toast.LENGTH_SHORT).show();
       displayLocation();
 
     }
   }
 
   private void loadImage(ArrayList<String> returnValue) {
-    layout = getActivity().findViewById(R.id.addImageLinearLayout);
-    for(int i=0;i<returnValue.size();i++)
-    {
+    if (getActivity() != null)
+      layout = getActivity().findViewById(R.id.addImageLinearLayout);
+
+    for (int i=0;i<returnValue.size();i++) {
       ImageView image = new ImageView(getActivity());
       image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150,150));
       image.setPaddingRelative(4,4,4,4);
@@ -507,8 +507,6 @@ public class AddItemFragment extends Fragment {
     call.enqueue(new Callback<List<AddItemResponse>>() {
       @Override
       public void onResponse(@NonNull Call<List<AddItemResponse>> call,@NonNull Response<List<AddItemResponse>> response) {
-        String message = response.body().get(0).getResponseCode();
-        Log.i("MESSAGE", response.body().get(0).getResponseCode());
         if (response.body() != null)
         Log.i("RES", response.body().get(0).getResponseStatus());
       }
@@ -518,7 +516,7 @@ public class AddItemFragment extends Fragment {
         Log.i("ERROR", t.toString());
       }
     });
-    Log.i("WE", "HERE");
+
   }
 
   private void displayLocation() {
@@ -530,8 +528,7 @@ public class AddItemFragment extends Fragment {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
 
         try {
-          List<Address> addressList = geocoder.getFromLocation(location.getLatitude(),
-                  location.getLongitude(), 1);
+          List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
           String country = addressList.get(0).getCountryName();
           String state = addressList.get(0).getAdminArea();

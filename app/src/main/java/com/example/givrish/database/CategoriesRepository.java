@@ -1,7 +1,6 @@
 package com.example.givrish.database;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -24,14 +23,13 @@ public class CategoriesRepository {
     GivrishDatabase db = GivrishDatabase.getDatabase(application);
     categoriesDao = db.categoriesDao();
 
-
     listLiveDataCategories = categoriesDao.getAllCategories();
     listLiveDataSub = categoriesDao.getAllSub();
 
     count = categoriesDao.getCount();
     subCount = categoriesDao.getSubCount();
 
-     sub = categoriesDao.getSub(ItemSubCategoryFragment.ademi);
+    sub = categoriesDao.getCategorySub(ItemSubCategoryFragment.ademi);
 
   }
 
@@ -48,8 +46,10 @@ public class CategoriesRepository {
   public ItemCategoryData getCategory(String id) {
     return categoriesDao.getCategory(id);
   }
+
   public ItemSubCategoryData getSubCategory(String id) {return categoriesDao.getSubCategory(id); }
 
+  public LiveData<List<ItemSubCategoryData>> getCategorySub(String id) {return categoriesDao.getCategorySub(id);}
 
   public void insert(final List<ItemCategoryData> itemCategoryData) {
     GivrishDatabase.databaseWriteExecutor.execute(new Runnable() {

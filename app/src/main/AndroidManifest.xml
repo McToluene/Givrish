@@ -23,13 +23,10 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.LAUNCHER" />
           </intent-filter>
-
-
         </activity>
         <activity android:name=".PhoneLoginActivity" />
         <activity android:name=".PhoneVerifyActivity"/>
         <activity android:name=".MainActivity">
-
 
         </activity>
         <activity android:name=".SignUpActivity"/>
