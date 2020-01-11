@@ -51,6 +51,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
   private SwipeRefreshLayout refreshLayout;
   private ProgressBar catProgressBar;
   private Context context;
+  private  int pageFlag = 0;
 
 
   public static CategoryFragment newInstance() {
@@ -106,6 +107,17 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
     // TODO: Use the ViewModel
     loadCategoryItems(api_key);
 
+    initiateCategories();
+    getCategories();
+
+  }
+
+  private void getCategories() {
+    pageFlag = 0;
+    itemCategoryAdapter = new ItemCategoryAdapter(context);
+    recyclerView.setAdapter(itemCategoryAdapter);
+    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
     mViewModel.getAllCategories().observe(this, new Observer<List<ItemCategoryData>>() {
       @Override
       public void onChanged(List<ItemCategoryData> itemCategoryData) {
@@ -114,8 +126,6 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
         itemCategoryAdapter.setCategories(itemCategoryData);
       }
     });
-    initiateCategories();
-
   }
 
   private void initiateCategories() {
@@ -123,13 +133,10 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
       recyclerView = getActivity().findViewById(R.id.listItemCategory);
       recyclerView.setHasFixedSize(true);
     }
-
-    itemCategoryAdapter = new ItemCategoryAdapter(context);
-    recyclerView.setAdapter(itemCategoryAdapter);
-    recyclerView.setLayoutManager(new LinearLayoutManager(context));
   }
 
   public void inflateSubCategories(String subCategoryId) {
+    pageFlag = 1;
     final ItemSubCategoryAdapter itemSubCategoryAdapter = new ItemSubCategoryAdapter(getContext());
     recyclerView.setAdapter(itemSubCategoryAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));;
@@ -174,8 +181,12 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    if (item.getItemId() == android.R.id.home){
-      callBackListener.onBackClick(ListFragment.CATEGORIES_FRAGMENT_FLAG);
+    if (item.getItemId() == android.R.id.home) {
+      if (pageFlag == 0)
+        callBackListener.onBackClick(ListFragment.CATEGORIES_FRAGMENT_FLAG);
+      else if (pageFlag == 1) {
+        getCategories();
+      }
     }
     return super.onOptionsItemSelected(item);
   }
