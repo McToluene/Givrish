@@ -11,7 +11,6 @@ import com.example.givrish.models.ItemSubCategoryData;
 
 public class ItemDetailsViewModel extends AndroidViewModel {
   private CategoriesRepository categoriesRepository;
-  private ItemCategoryData categoryName;
 
   public ItemDetailsViewModel(@NonNull Application application) {
     super(application);

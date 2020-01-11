@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +21,19 @@ import com.example.givrish.R;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.interfaces.OnCategoryFetchListener;
 import com.example.givrish.models.AllItemsResponseData;
+import com.example.givrish.models.AllItemsResponseImageData;
 import com.example.givrish.models.ItemCategoryData;
 import com.example.givrish.models.ItemSubCategoryData;
 import com.example.givrish.viewmodel.ItemDetailsViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
 import com.squareup.picasso.Picasso;
+import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -49,6 +51,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
   private MaterialTextView tvSubCate;
   private String subCategoryId;
   private String categoryId;
+  private CarouselView carouselView;
 
   public static ItemDetailsFragment newInstance() {
     return new ItemDetailsFragment();
@@ -86,11 +89,11 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
       }
     });
 
-
-    String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
+    carouselView = view.findViewById(R.id.carouselView);
     MaterialTextView tvItemName = view.findViewById(R.id.tv_itemName);
+    MaterialTextView tvItemDescription = view.findViewById(R.id.tv_itemDesc);
     MaterialTextView tvLocation = view.findViewById(R.id.tv_itemLocation);
-    ImageView itemImage = view.findViewById(R.id.items_image);
+//    ImageView itemImage = view.findViewById(R.id.items_image);
     tvCate = view.findViewById(R.id.tv_ItemCate);
     tvSubCate = view.findViewById(R.id.tv_itemSubCat);
     MaterialTextView tvDateAdded = view.findViewById(R.id.tv_dateAdded);
@@ -108,14 +111,18 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
 
       if (item != null) {
         tvItemName.setText(item.getItem_title());
+        tvItemDescription.setText(item.getItem_description());
         tvDateAdded.setText(extractDate(item.getItem_joined()));
         getCategory(item.getItem_category_id());
         getSubCategory(item.getItem_sub_category_id());
 
-        if (item.getItem_images().size() != 0) {
-          String uri = url + item.getItem_images().get(0).getItemLargeImageName();
-          Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(itemImage);
-        }
+        inflateCarousel(item.getItem_images());
+
+
+//        if (item.getItem_images().size() != 0) {
+//          String uri = url + item.getItem_images().get(0).getItemLargeImageName();
+//          Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(itemImage);
+//        }
 
         phone.setOnClickListener(new View.OnClickListener() {
           @Override
@@ -139,6 +146,20 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
       }
     }
     return view;
+  }
+
+  private void inflateCarousel(final List<AllItemsResponseImageData> item_images) {
+    final String url = "http://givrishapi.divinepagetech.com/uploadzuqwhdassigc6762373yughsbcjshd/";
+    carouselView.setPageCount(item_images.size());
+    ImageListener imageListener = new ImageListener() {
+      @Override
+      public void setImageForPosition(int position, ImageView imageView) {
+         final String uri = url + item_images.get(position).getItemLargeImageName();
+         Picasso.get().load(uri).fit().placeholder(R.drawable.download).into(imageView);
+      }
+    };
+
+    carouselView.setImageListener(imageListener);
   }
 
 
@@ -174,10 +195,8 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
           fetchListener.onSubCategory(itemSubCategoryData.getItem_sub_category_name());
         else
           fetchListener.onSubCategory("Others");
-
       }
     });
-
 
   }
 

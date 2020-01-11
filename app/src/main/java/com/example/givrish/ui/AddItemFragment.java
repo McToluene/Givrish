@@ -44,6 +44,7 @@ import com.example.givrish.Dashboard;
 import com.example.givrish.UserDataPreference;
 import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.ItemModel;
@@ -108,8 +109,12 @@ public class AddItemFragment extends Fragment {
   private String subId;
   private int imageCount = 5;
   private TextView clearImageSelection;
-  private MenuItem clearAllselection;
+  private ItemModel itemModel;
+  private AddItemViewModel addItemViewModel;
 
+
+  public AddItemFragment() {
+  }
 
   public static AddItemFragment newInstance() {
     return new AddItemFragment();
@@ -120,6 +125,15 @@ public class AddItemFragment extends Fragment {
     super.onAttach(context);
     if (context instanceof CallBackListener)
       listener = (CallBackListener) context;
+  }
+
+
+  public static AddItemFragment newParcelableInstance(ItemModel itemModel){
+    Bundle args=new Bundle();
+    args.putParcelable("msg", itemModel);
+    AddItemFragment fragment=new AddItemFragment();
+    fragment.setArguments(args);
+    return fragment;
   }
 
 
@@ -141,7 +155,6 @@ public class AddItemFragment extends Fragment {
     itemName = view.findViewById(R.id.item_name);
     itemDesc = view.findViewById(R.id.item_desc);
     clearImageSelection = view.findViewById(R.id.clear_image_selection);
-    clearAllselection = view.findViewById(R.id.menu_hamburger);
 
     addButton = view.findViewById(R.id.addImagebtn);
 
@@ -153,6 +166,17 @@ public class AddItemFragment extends Fragment {
       ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
     }
+
+    if(getArguments()!=null){
+      itemModel = getArguments().getParcelable("msg");
+    }
+
+    if(itemModel!=null) {
+     itemName.setText(itemModel.getItem_title());
+     itemDesc.setText(itemModel.getItem_description());
+     //get all the rest
+    }
+
     return view;
   }
 
@@ -221,9 +245,15 @@ public class AddItemFragment extends Fragment {
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         categoryId = itemCategoryDataList.get(position).getItem_category_id();
         try {
-          ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
-          getSub(selectedItem);
-
+//          ItemCategoryData selectedItem =  itemCategoryDataList.get(position);
+//          getSub(selectedItem);
+          String selectedItem = null;
+          for (int i=0; i<itemCategoryDataList.size();i++) {
+            if(itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString())|| itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString()+" ")){
+            selectedItem = itemCategoryDataList.get(i).getItem_category_id();
+            getSub(selectedItem);
+            break;}
+          }
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -232,7 +262,7 @@ public class AddItemFragment extends Fragment {
     subCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        subId = itemSubCategoryDataList.get(position).getItem_category_id();
+        subId = itemSubCategoryDataList.get(position).getItem_sub_category_id();
       }
     });
   }
@@ -307,11 +337,11 @@ public class AddItemFragment extends Fragment {
     });
   }
 
-  private void getSub(ItemCategoryData selected) {
-    Log.i("SELECT", selected.getItem_category_id());
+  private void getSub(String selected) {
+//    Log.i("SELECT", selected.getItem_category_id());
     final List<ItemSubCategoryData> subCategoryOfCategory = new ArrayList<>();
     for (int i = 0; i < itemSubCategoryDataList.size(); i++) {
-      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected.getItem_category_id())){
+      if (itemSubCategoryDataList.get(i).getItem_category_id().equals(selected)){
         subCategoryOfCategory.add(itemSubCategoryDataList.get(i));
       }
     }
@@ -435,17 +465,17 @@ public class AddItemFragment extends Fragment {
     String color = colorSpinner.getText().toString();
     String userId = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
 
-    if (!name.isEmpty() && !desc.isEmpty()) {
+    if (!name.isEmpty() && !desc.isEmpty() && imagePaths.size()!=0) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
       ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
+
       String itemString = gson.toJson(itemModel);
 
-      Log.i("Item", itemString);
       Call<List<AddItemResponse>> call = apiService.addItem(itemString);
       call.enqueue(new Callback<List<AddItemResponse>>() {
         @Override
         public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
-          Log.i("RES", response.body().get(0).getResponseCode());
+
           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
             Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
             AddItemResponseData data = response.body().get(0).getData();
@@ -474,9 +504,6 @@ public class AddItemFragment extends Fragment {
   private void uploadImage(String path, String id) {
     File file = new File(path);
 
-//    File file = FileUtils.getFile( getContext(), Uri.parse(path));
-
-    //Request body
     RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
 
     MultipartBody.Part part = MultipartBody.Part.createFormData("file[]", file.getName(), fileReqBody);
