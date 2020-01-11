@@ -78,6 +78,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.example.givrish.viewmodel.AddItemViewModel;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -450,6 +451,19 @@ public class AddItemFragment extends Fragment {
     image.setImageBitmap(theImage);
     return image;
   }
+  // TODO: 1/11/2020 after you get merge update 
+//  private void loadProfilePic() {
+//    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+//    String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
+//
+//    try {
+//      String uri =  
+//      Picasso.get().load(uri);
+//    }
+//    catch (Exception e){
+//      e.printStackTrace();
+//    }
+//  }
 
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
