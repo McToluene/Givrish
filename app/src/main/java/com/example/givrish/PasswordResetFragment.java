@@ -78,7 +78,7 @@ public class PasswordResetFragment extends DialogFragment {
         //setStyle(DialogFragment.STYLE_NORMAL,android.R.style.Theme_Light_NoTitleBar_Fullscreen);
     }
 
-    //Todo 1
+    //Todo 2
 
     private void sendVerificationCode(String numToFirebase) {
         progressBar.setVisibility(View.VISIBLE);
