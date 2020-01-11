@@ -79,6 +79,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   private RecyclerView listRecyclerView;
   private LocationClass locationClass;
   private Executor executor;
+  private String filterValue = "";
 
 
   public static ListFragment newInstance() {
@@ -93,7 +94,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     setHasOptionsMenu(true);
     listCallBackEvent = this;
     apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    getAllItems(null);
+    getAllItems("");
   }
 
   @Override
@@ -108,17 +109,11 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.items_swipe_refresh);
 
     swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-//    swipeRefreshLayout.post(new Runnable() {
-//      @Override
-//      public void run() {
-//        getAllItems(null);
-//      }
-//    });
 
     swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override
       public void onRefresh() {
-        getAllItems(null);
+        getAllItems(filterValue);
         swipeRefreshLayout.setRefreshing(false);
       }
     });
@@ -175,7 +170,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
 
-    private void loadProfilePicture() {
+  private void loadProfilePicture() {
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
         String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
         String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
@@ -196,25 +191,24 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
     listRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
   }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setConstants();
-    }
+  @Override
+  public void onResume() {
+    super.onResume();
+    setConstants();
+  }
 
-    private void setConstants() {
-        CURRENT_USER_ID = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
-        CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
-        CURRENT_USER_EMAIL = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_email_Keystore));
-        CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
-        CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_picture));
-        PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.PicAvailable)));
+  private void setConstants() {
+    CURRENT_USER_ID = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
+    CURRENT_USER_FULLNAME = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_fullname_Keystore));
+    CURRENT_USER_EMAIL = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_email_Keystore));
+    CURRENT_USER_PHONE_NUMBER = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_phone_number_Keystore));
+    CURRENT_USER_PROFILE_PICTURE = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_picture));
+    PROFILE_PICTURE = Boolean.valueOf(UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.PicAvailable)));
 
-    }
-
-    private void getAllItems(String subCategory) {
+  }
+  private void getAllItems(String subCategory) {
     ApiKey apiKey;
-    if (subCategory != null) {
+    if (!subCategory.isEmpty()) {
       apiKey = new ApiKey("test", "", subCategory);
     } else {
       apiKey = new ApiKey("test");
@@ -327,6 +321,7 @@ public class ListFragment extends Fragment implements ListCallBackEvent {
   }
 
   public void filter(String subCategoryId) {
+    this.filterValue = subCategoryId;
     loading.setVisibility(View.VISIBLE);
     listRecyclerView.setVisibility(View.INVISIBLE);
     getAllItems(subCategoryId);
