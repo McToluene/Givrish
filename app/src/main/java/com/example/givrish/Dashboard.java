@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -25,6 +26,12 @@ import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static com.example.givrish.database.Constants.COME_ONE;
 import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
 import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
@@ -36,7 +43,7 @@ import static com.example.givrish.database.Constants.ITEM_COUNT_MORE;
 import static com.example.givrish.database.Constants.PROFILE_PICTURE;
 import static com.example.givrish.database.Constants.allItemsResponseData;
 
-public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener, ICategoriesListener {
+public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
 
   public static final String LIST_ITEM_FRAGMENT_FLAG = "1";
   public static final String ADD_ITEM_FRAGMENT_FLAG = "2";
@@ -45,8 +52,8 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
   public static final String PROFILE_PAGE_FLAG="7";
   public static final String PROFILE_EDIT_FLAG="8";
-    public static final String PICTURE_FULLSCREEN_FLAG="9";
-    public static final String USER_ITEM_MENU_DIALOG="10";
+  public static final String PICTURE_FULLSCREEN_FLAG="9";
+  public static final String USER_ITEM_MENU_DIALOG="10";
 
 
   private static int FLAG = 0;
@@ -72,6 +79,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
           Bundle bundle = getIntent().getExtras();
           CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
       }
+
       //for profile item loading
       ITEM_COUNT_MORE=0;
       IS_MORE_ITEM=false;
@@ -166,35 +174,8 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
       getTransaction.commit();
   }
 
-    @Override
-    public void onCloseFragment(String tag) {
-        FragmentManager manager = getSupportFragmentManager();
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+  @Override
+  public void onCloseItem(String tag) {
 
-        if (fragment != null){
-            manager.beginTransaction().remove(fragment).commit();
-        }
-        fab.setImageDrawable(getDrawable(R.drawable.gift_box));
-        FLAG = 0;
-    }
-
-    @Override
-    public void loadSub(String subCategoryId) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ListFragment.CATEGORIES_FRAGMENT_FLAG);
-        CategoryFragment categoryFragment = (CategoryFragment) fragment;
-        if (categoryFragment != null ){
-            categoryFragment.inflateSubCategories(subCategoryId);
-        }
-    }
-
-    @Override
-    public void filterList(String subCategoryId) {
-        onCloseFragment(ListFragment.CATEGORIES_FRAGMENT_FLAG);
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LIST_ITEM_FRAGMENT_FLAG);
-        if (fragment != null) {
-            ListFragment listFragment = (ListFragment) fragment;
-            listFragment.filter(subCategoryId);
-        }
-    }
-
+  }
 }

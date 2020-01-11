@@ -13,31 +13,37 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.givrish.R;
 import com.example.givrish.interfaces.CallBackListener;
-import com.example.givrish.interfaces.ICategoriesListener;
+import com.example.givrish.ui.CategoryFragment;
 import com.example.givrish.ui.ItemSubCategoryFragment;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ItemCategoryHolder>{
+public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapter.ItemCategoryHolder>  implements CallBackListener{
     private List<ItemCategoryData> itemCategoryData;
     private Context context;
     private LayoutInflater inflater;
-    private ICategoriesListener listener;
+    CallBackListener callBackListener;
 
-    public static final String SUB_CATEGORIES_FRAGMENT_fLAG = "2001";
+    public static final String sub_cATEGORIES_fRAGMENT_fLAG= "2001";
 
 
     public ItemCategoryAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
-        listener = (ICategoriesListener) context;
+        callBackListener = (CallBackListener) context;
+    }
 
+    public ItemCategoryAdapter(List<ItemCategoryData> itemCategoryData, Context context) {
+        this.itemCategoryData = itemCategoryData;
+        this.context = context;
     }
 
     @NonNull
@@ -51,7 +57,7 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
     public void onBindViewHolder(@NonNull ItemCategoryAdapter.ItemCategoryHolder holder, int position) {
         holder.itemCatTitle.setText(itemCategoryData.get(position).getItem_category_name());
         holder.fTitle.setText(itemCategoryData.get(position).getItem_category_name().subSequence(0,1));
-        holder.position = position;
+        holder.Position = position;
 
         GradientDrawable drawable = (GradientDrawable) holder.fTitle.getBackground();
         Random randomColor = new Random();
@@ -76,7 +82,7 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
 
         private TextView fTitle;
         private AppCompatTextView itemCatTitle;
-        private int position;
+        private int Position;
 
         public ItemCategoryHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,13 +91,12 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("ITEMM",itemCategoryData.get(Position).getItem_category_id());
-//                    bundle.putInt("ITEM",Position);
-//                    ItemSubCategoryFragment itemSub = new ItemSubCategoryFragment();
-//                    itemSub.setArguments(bundle);
-//                    loadSub(itemSub, SUB_CATEGORIES_FRAGMENT_fLAG);
-                    listener.loadSub(itemCategoryData.get(position).getItem_category_id());
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ITEMM",itemCategoryData.get(Position).getItem_category_id());
+                    bundle.putInt("ITEM",Position);
+                    ItemSubCategoryFragment itemSub = new ItemSubCategoryFragment();
+                    itemSub.setArguments(bundle);
+                    loadSub(itemSub,sub_cATEGORIES_fRAGMENT_fLAG);
                 }
 
                 private void loadSub(Fragment itemSub, String tag) {
@@ -106,4 +111,8 @@ public class ItemCategoryAdapter extends RecyclerView.Adapter<ItemCategoryAdapte
 
     }
 
+    @Override
+    public void onBackClick(String tag) {
+
+    }
 }

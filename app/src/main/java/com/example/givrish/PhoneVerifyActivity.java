@@ -2,9 +2,7 @@ package com.example.givrish;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,10 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.givrish.models.AuthResponseDto;
-import com.example.givrish.models.UserRegisterModel;
-import com.example.givrish.network.ApiEndpointInterface;
-import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,13 +24,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PhoneVerifyActivity extends AppCompatActivity {
     public static final String phoneverifyKey = "com.example.givrish.KeyVerify";
@@ -73,12 +62,12 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
          mAuth = FirebaseAuth.getInstance();
         //Todo
-        progressBar = findViewById(R.id.progressBar);
-        edtPhoneNumber = findViewById(R.id.ed_phoneNumber);
-        edtPhoneCode = findViewById(R.id.edt_phoneCode);
-        TextView otpMessage = findViewById(R.id.tv_otpMessage);
+        progressBar = findViewById(R.id.fPassProgressBar);
+        edtPhoneNumber = findViewById(R.id.edt_otp_fgPass);
+        edtPhoneCode = findViewById(R.id.edt_newPass);
+        TextView otpMessage = findViewById(R.id.tv_otpPassMsg);
 
-        resendCode = findViewById(R.id.tv_resend_code);
+        resendCode = findViewById(R.id.tv_resend_code_fgPass);
          phonenumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKeyFirebase);
          if(phonenumber != null) {
            edtPhoneNumber.setText(phonenumber);
@@ -106,7 +95,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
         //todo
 
-      btnVerify = findViewById(R.id.btn_phoneVerify);
+      btnVerify = findViewById(R.id.btn_verifyPass);
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

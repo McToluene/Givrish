@@ -49,7 +49,6 @@ import com.example.givrish.models.UserProfileAdapter;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 
-import com.example.givrish.PhotoFullPopupWindow;
 import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -131,12 +130,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     return super.onOptionsItemSelected(item);
   }
 
-    @Override
+  /*  @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.setGroupVisible(R.id.menu_main, false);
+        menu.setGroupVisible(R.id.menu, false);
         super.onPrepareOptionsMenu(menu);
-    }
-
+    }*/
 
     @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
