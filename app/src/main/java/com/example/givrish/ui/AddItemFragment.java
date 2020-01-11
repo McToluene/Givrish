@@ -42,9 +42,7 @@ import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.UserDataPreference;
-import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
-import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.models.AddItemResponse;
 import com.example.givrish.models.AddItemResponseData;
 import com.example.givrish.models.ItemModel;
@@ -81,6 +79,8 @@ import retrofit2.Response;
 
 import com.example.givrish.viewmodel.AddItemViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 public class AddItemFragment extends Fragment {
 
   private AddItemViewModel mViewModel;
@@ -111,6 +111,8 @@ public class AddItemFragment extends Fragment {
   private TextView clearImageSelection;
   private ItemModel itemModel;
   private AddItemViewModel addItemViewModel;
+  private int receivedItem;
+  private int receivedSubItem;
 
 
   public AddItemFragment() {
@@ -158,7 +160,7 @@ public class AddItemFragment extends Fragment {
 
     addButton = view.findViewById(R.id.addImagebtn);
 
-    toolbar.setTitle("Add Item");
+    toolbar.setTitle("Add receivedItem");
 
     if(getActivity() != null) {
       ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -172,8 +174,24 @@ public class AddItemFragment extends Fragment {
     }
 
     if(itemModel!=null) {
+      for (int i=0; i<itemCategoryDataList.size();i++) {
+        if(itemCategoryDataList.get(i).getItem_category_id().equals(itemModel.getItem_category_id())){
+          receivedItem = i;
+          categoryId = itemModel.getItem_category_id();
+          break;}
+      }
+      for (int i=0; i<itemSubCategoryDataList.size();i++) {
+        if(itemSubCategoryDataList.get(i).getItem_sub_category_id().equals(itemModel.getItem_sub_category_id())){
+          receivedSubItem = i;
+          subId = itemModel.getItem_sub_category_id();
+          break;}
+      }
      itemName.setText(itemModel.getItem_title());
      itemDesc.setText(itemModel.getItem_description());
+     mainCategory.setSelection(receivedItem);
+     subCategory.setSelection(receivedSubItem);
+     colorSpinner.setText(itemModel.getItem_color());
+
      //get all the rest
     }
 
@@ -249,7 +267,7 @@ public class AddItemFragment extends Fragment {
 //          getSub(selectedItem);
           String selectedItem = null;
           for (int i=0; i<itemCategoryDataList.size();i++) {
-            if(itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString())|| itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString()+" ")){
+            if(itemCategoryDataList.get(i).getItem_category_name().equals(mainCategory.getText().toString())){
             selectedItem = itemCategoryDataList.get(i).getItem_category_id();
               categoryId = itemCategoryDataList.get(i).getItem_category_id();
                       getSub(selectedItem);
@@ -406,21 +424,27 @@ public class AddItemFragment extends Fragment {
     layout = getActivity().findViewById(R.id.addImageLinearLayout);
     for(int i=0;i<returnValue.size();i++)
     {
-      ImageView image = new ImageView(getActivity());
-      image.setLayoutParams(new android.view.ViewGroup.LayoutParams(150,150));
-      image.setPaddingRelative(4,4,4,4);
-      image.setMaxHeight(100);
-      image.setMaxWidth(100);
-      image.setMinimumHeight(100);
-      image.setMaxHeight(100);
-      image.setScaleType(ImageView.ScaleType.FIT_XY);
-      Bitmap theImage = BitmapFactory.decodeFile(returnValue.get(i));
-      image.setImageBitmap(theImage);
+      ImageView image = createImageFunction(returnValue.get(i));
       // Adds the view to the layout
       layout.addView(image);
       imagePaths.add(returnValue.get(i));
 
     }
+  }
+
+  @NotNull
+  private ImageView createImageFunction(String imagePath) {
+    ImageView image = new ImageView(getActivity());
+    image.setLayoutParams(new ViewGroup.LayoutParams(150,150));
+    image.setPaddingRelative(4,4,4,4);
+    image.setMaxHeight(100);
+    image.setMaxWidth(100);
+    image.setMinimumHeight(100);
+    image.setMaxHeight(100);
+    image.setScaleType(ImageView.ScaleType.FIT_XY);
+    Bitmap theImage = BitmapFactory.decodeFile(imagePath);
+    image.setImageBitmap(theImage);
+    return image;
   }
 
   @Override
@@ -478,7 +502,7 @@ public class AddItemFragment extends Fragment {
         public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
 
           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-            Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "receivedItem added successfully", Toast.LENGTH_LONG).show();
             AddItemResponseData data = response.body().get(0).getData();
             String id = data.getRecord();
             Log.i("ID", id);
