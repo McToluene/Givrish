@@ -50,7 +50,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private Fragment fragment = new ListFragment();
   private FloatingActionButton fab;
-  ApiEndpointInterface apiService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -159,15 +158,16 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
 
   @Override
   public void onCloseFragment(String tag) {
-      FragmentManager manager = getSupportFragmentManager();
-      Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+    FragmentManager manager = getSupportFragmentManager();
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
 
-      if (fragment != null){
-          manager.beginTransaction().remove(fragment).commit();
-      }
-      fab.setImageDrawable(getDrawable(R.drawable.gift_box));
-      FLAG = 0;
+    if (fragment != null){
+      manager.beginTransaction().remove(fragment).commit();
+    }
+    fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+    FLAG = 0;
   }
+
 
   @Override
   public void loadSub(String subCategoryId) {
@@ -185,6 +185,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     if (fragment != null) {
       ListFragment listFragment = (ListFragment) fragment;
       listFragment.filter(subCategoryId);
+
     }
   }
 }

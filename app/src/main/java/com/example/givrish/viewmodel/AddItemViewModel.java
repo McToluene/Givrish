@@ -37,4 +37,7 @@ public class AddItemViewModel extends AndroidViewModel {
   public void insertAllSub (List<ItemSubCategoryData> itemSubCategoryData) {
     categoriesRepository.insertSub(itemSubCategoryData);
   }
+  public ItemSubCategoryData getSubCategory(String id) {
+    return categoriesRepository.getSubCategory(id);
+  }
 }
