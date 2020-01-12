@@ -9,26 +9,22 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.givrish.interfaces.CallBackListener;
+import com.example.givrish.interfaces.ICategoriesListener;
 import com.example.givrish.interfaces.ItemSelectedListener;
 import com.example.givrish.network.ApiEndpointInterface;
-import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.ui.AddItemFragment;
+import com.example.givrish.ui.CategoryFragment;
 import com.example.givrish.ui.FavouritesFragment;
 import com.example.givrish.ui.ListFragment;
 import com.example.givrish.ui.MessagesFragment;
 import com.example.givrish.ui.RequestsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
 import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
@@ -37,7 +33,7 @@ import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
 import static com.example.givrish.database.Constants.PROFILE_PICTURE;
 
-public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener {
+public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener, ICategoriesListener {
 
   public static final String LIST_ITEM_FRAGMENT_FLAG = "1";
   public static final String ADD_ITEM_FRAGMENT_FLAG = "2";
@@ -46,7 +42,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
   public static final String PROFILE_PAGE_FLAG="7";
   public static final String PROFILE_EDIT_FLAG="8";
-    public static final String PICTURE_FULLSCREEN_FLAG="9";
+  public static final String PICTURE_FULLSCREEN_FLAG="9";
 
 
   private static int FLAG = 0;
@@ -54,7 +50,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   private final AddItemFragment addItemFragment = new AddItemFragment();
   private Fragment fragment = new ListFragment();
   private FloatingActionButton fab;
-  ApiEndpointInterface apiService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +128,8 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   private void loadFragments(Fragment fragment, String tag) {
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.frame_container, fragment, tag);
-      transaction.addToBackStack(null);
-      transaction.commit();
+    transaction.addToBackStack(null);
+    transaction.commit();
   }
 
   @Override
@@ -162,15 +157,35 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   }
 
   @Override
-  public void onCloseItem(String tag) {
-      FragmentManager manager = getSupportFragmentManager();
-      Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+  public void onCloseFragment(String tag) {
+    FragmentManager manager = getSupportFragmentManager();
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
 
-      if (fragment != null){
-          manager.beginTransaction().remove(fragment).commit();
-      }
+    if (fragment != null){
+      manager.beginTransaction().remove(fragment).commit();
+    }
+    fab.setImageDrawable(getDrawable(R.drawable.gift_box));
+    FLAG = 0;
+  }
 
-      fab.setImageDrawable(getDrawable(R.drawable.gift_box));
-      FLAG = 0;
+
+  @Override
+  public void loadSub(String subCategoryId) {
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag(ListFragment.CATEGORIES_FRAGMENT_FLAG);
+    CategoryFragment categoryFragment = (CategoryFragment) fragment;
+    if (categoryFragment != null ){
+      categoryFragment.inflateSubCategories(subCategoryId);
+    }
+  }
+
+  @Override
+  public void filterList(String subCategoryId) {
+    onCloseFragment(ListFragment.CATEGORIES_FRAGMENT_FLAG);
+    Fragment fragment = getSupportFragmentManager().findFragmentByTag(LIST_ITEM_FRAGMENT_FLAG);
+    if (fragment != null) {
+      ListFragment listFragment = (ListFragment) fragment;
+      listFragment.filter(subCategoryId);
+
+    }
   }
 }
