@@ -69,6 +69,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -162,6 +164,8 @@ public class AddItemFragment extends Fragment {
     clearImageSelection.setVisibility(View.INVISIBLE);
     addButton = view.findViewById(R.id.addImagebtn);
 
+    apiCategoryList(apiKey);
+    apiSubCategory(apiKey);
     toolbar.setTitle(toolbarTitle);
 
     if(getActivity() != null) {
@@ -221,10 +225,6 @@ public class AddItemFragment extends Fragment {
         mainCategory.setAdapter(arrayAdapter);
       }
     });
-
-
-    apiCategoryList(apiKey);
-    apiSubCategory(apiKey);
 
     itemSubCategoryDataList = mViewModel.getLiveSubCategories().getValue();
     mViewModel.getLiveSubCategories().observe(this, new Observer<List<ItemSubCategoryData>>() {
@@ -520,7 +520,7 @@ public class AddItemFragment extends Fragment {
         public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
 
           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-            Toast.makeText(getContext(), "receivedItem added successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
             AddItemResponseData data = response.body().get(0).getData();
             String id = data.getRecord();
             Log.i("ID", id);
