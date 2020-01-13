@@ -20,8 +20,6 @@ public class ItemSubCategoryData {
 	private String ref_code;
 	private String item_sub_category_date;
 
-	public ItemSubCategoryData() {
-	}
 
 	public ItemSubCategoryData(@NonNull String item_sub_category_id, String item_category_id, String item_sub_category_name, String item_sub_category_descp, String item_sub_category_status, String ref_code, String item_sub_category_date) {
 		this.item_sub_category_id = item_sub_category_id;

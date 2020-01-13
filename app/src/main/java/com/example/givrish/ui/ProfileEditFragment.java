@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,36 +16,25 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.FileUtils;
-import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
-import com.example.givrish.PhotoFullPopupWindow;
 import com.example.givrish.R;
 import com.example.givrish.UserDataPreference;
-import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
-import com.example.givrish.models.AddItemResponse;
-import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.AuthResponseDto;
 import com.example.givrish.models.ProfileEditResponse;
-import com.example.givrish.models.UserData;
 import com.example.givrish.models.UserId;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
-import com.fxn.utility.ImageQuality;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -190,9 +178,8 @@ public class ProfileEditFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.profile_imageEdit:
-               //loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
-               //new PhotoFullPopupWindow(, R.layout.picture_fullscreen_layout, imgProfile, CURRENT_USER_PROFILE_PICTURE, null);
-                break;
+
+                      break;
         }
     }
 

@@ -85,7 +85,7 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     detailsToolbar.setNavigationOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        listener.onCloseItem(ITEM_DETAILS_TAG);
+        listener.onCloseFragment(ITEM_DETAILS_TAG);
       }
     });
 

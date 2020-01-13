@@ -4,6 +4,7 @@ package com.example.givrish.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -53,6 +54,7 @@ import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.imageviewer.StfalconImageViewer;
 
 
 import java.util.List;
@@ -271,8 +273,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     switch (v.getId()){
         case R.id.profile_image:
 
-          //loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
-          //  new PhotoFullPopupWindow(this.getContext(), R.layout.picture_fullscreen_layout, imgProfile, CURRENT_USER_PROFILE_PICTURE, null);
+       /*     StfalconImageViewer.Builder<Image>(getContext(), images) { view, image ->
+                Picasso.get().load(image.url).into(view)
+        }.show();*/
 
             break;
     }
