@@ -11,10 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.models.LoginResponse;
-import com.example.givrish.models.UserData;
 import com.example.givrish.models.UserLoginModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
+import com.example.givrish.ui.PasswordResetFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -29,10 +29,12 @@ public class LoginActivity extends AppCompatActivity {
   private TextInputEditText password;
   private  MaterialButton loginBtn;
   private ProgressBar progressBar;
-   private TextView newUserRegistration;
   private String incomingNumber;
+    private TextView forgotPassword;
+    private PasswordResetFragment passwordResetFragment;
+    private String toFireBase;
 
-  @Override
+    @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_login);
@@ -40,15 +42,17 @@ public class LoginActivity extends AppCompatActivity {
     password = findViewById(R.id.ed_password);
     loginBtn = findViewById(R.id.btn_login);
     progressBar = findViewById(R.id.progressBar2);
-    newUserRegistration = findViewById(R.id.new_user_reg);
+        forgotPassword = findViewById(R.id.forgot_pass);
 
     progressBar.setVisibility(View.INVISIBLE);
     getNumber();
+    //todo
 
-    newUserRegistration.setOnClickListener(new View.OnClickListener() {
+    forgotPassword.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            startActivity(new Intent(LoginActivity.this,PhoneLoginActivity.class));
+             passwordResetFragment = PasswordResetFragment.newInstance(incomingNumber,toFireBase);
+            passwordResetFragment.show(getSupportFragmentManager(),"forgotPassword");
         }
     });
 
@@ -124,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
   private void getNumber() {
     incomingNumber = getIntent().getStringExtra(PhoneLoginActivity.phoneLoginKey);
+      toFireBase = getIntent().getStringExtra("forgotPassword");
 
   }
 
