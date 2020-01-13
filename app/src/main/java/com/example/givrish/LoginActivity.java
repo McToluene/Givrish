@@ -11,10 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.givrish.models.LoginResponse;
-import com.example.givrish.models.UserData;
 import com.example.givrish.models.UserLoginModel;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
+import com.example.givrish.ui.PasswordResetFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
   private ProgressBar progressBar;
   private String incomingNumber;
     private TextView forgotPassword;
-    private  PasswordResetFragment passwordResetFragment;
+    private PasswordResetFragment passwordResetFragment;
     private String toFireBase;
 
     @Override

@@ -138,7 +138,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
     pageFlag = 1;
     final ItemSubCategoryAdapter itemSubCategoryAdapter = new ItemSubCategoryAdapter(getContext());
     recyclerView.setAdapter(itemSubCategoryAdapter);
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));;
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
     mViewModel.getCategorySub(subCategoryId).observe(this, new Observer<List<ItemSubCategoryData>>() {
       @Override
@@ -147,6 +147,8 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
       }
     });
   }
+
+
 
   private void loadCategoryItems(String api_key) {
     final ApiKey apiKey = new ApiKey(api_key);

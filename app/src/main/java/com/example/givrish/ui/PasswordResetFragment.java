@@ -1,4 +1,4 @@
-package com.example.givrish;
+package com.example.givrish.ui;
 
 
 import android.app.Dialog;
@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.givrish.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskExecutors;
@@ -204,11 +205,10 @@ public class PasswordResetFragment extends DialogFragment {
        });
 
 
-
+         theMAn = notYet;
         materialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                theMAn =notYet;
             String code = txtOtp.getText().toString().trim();
              if(code.isEmpty() || code.length() != 6){
                  Snackbar.make(v,getResources().getString(R.string.valid_number_error),Snackbar.LENGTH_LONG).show();
