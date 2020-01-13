@@ -26,12 +26,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
+import static com.example.givrish.database.Constants.COME_ONE;
 import static com.example.givrish.database.Constants.CURRENT_USER_EMAIL;
 import static com.example.givrish.database.Constants.CURRENT_USER_FULLNAME;
 import static com.example.givrish.database.Constants.CURRENT_USER_ID;
 import static com.example.givrish.database.Constants.CURRENT_USER_PHONE_NUMBER;
 import static com.example.givrish.database.Constants.CURRENT_USER_PROFILE_PICTURE;
+import static com.example.givrish.database.Constants.IS_MORE_ITEM;
+import static com.example.givrish.database.Constants.ITEM_COUNT_MORE;
 import static com.example.givrish.database.Constants.PROFILE_PICTURE;
+import static com.example.givrish.database.Constants.allItemsResponseData;
 
 public class Dashboard extends AppCompatActivity implements CallBackListener, BottomNavigationView.OnNavigationItemSelectedListener, ItemSelectedListener, ICategoriesListener {
 
@@ -42,7 +46,8 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
   public static final String REQUESTS_FRAGMENT_FLAG = "6";
   public static final String PROFILE_PAGE_FLAG="7";
   public static final String PROFILE_EDIT_FLAG="8";
-  public static final String PICTURE_FULLSCREEN_FLAG="9";
+    public static final String PICTURE_FULLSCREEN_FLAG="9";
+  public static final String USER_ITEM_MENU_DIALOG ="10" ;
 
 
   private static int FLAG = 0;
@@ -68,7 +73,13 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
           CURRENT_USER_PROFILE_PICTURE = bundle.getString("pic");
       }
 
-    bottomNavigationView = findViewById(R.id.navigation);
+      //for profile item loading
+      ITEM_COUNT_MORE=0;
+      IS_MORE_ITEM=false;
+      COME_ONE=false;
+      allItemsResponseData=null;
+
+      bottomNavigationView = findViewById(R.id.navigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(this);
     fab = findViewById(R.id.fab);
     fab.setColorFilter(getResources().getColor(R.color.white));
@@ -185,6 +196,7 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     if (fragment != null) {
       ListFragment listFragment = (ListFragment) fragment;
       listFragment.filter(subCategoryId);
+
     }
   }
 }

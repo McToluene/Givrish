@@ -4,6 +4,7 @@ package com.example.givrish.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import com.example.givrish.Dashboard;
 import com.example.givrish.R;
-import com.example.givrish.database.Constants;
 import com.example.givrish.interfaces.CallBackListener;
 import com.example.givrish.interfaces.IUserItemCallBackEvent;
 
@@ -55,10 +54,10 @@ import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.stfalcon.imageviewer.StfalconImageViewer;
 
 
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -101,6 +100,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         setHasOptionsMenu(true);
         listCallBackEvent = this;
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+        if(ITEM_COUNT_MORE==0)
         getAllItems();
     }
 
@@ -132,48 +132,54 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     return super.onOptionsItemSelected(item);
   }
 
-  @Override
+  /*  @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.setGroupVisible(R.id.menu, false);
+        super.onPrepareOptionsMenu(menu);
+    }*/
+
+    @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
     View view=inflater.inflate(R.layout.profile_fragment, container, false);
 
-    Toolbar toolbar=view.findViewById(R.id.profile_toolbar);
-    toolbar.setTitle("My Profile");
+        Toolbar toolbar=view.findViewById(R.id.profile_toolbar);
 
-    if(getActivity() != null) {
-      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
-    }
-
-    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getContext(), Dashboard.class);
-            intent.putExtra("pic", CURRENT_USER_PROFILE_PICTURE);
-            startActivity(intent);
+        if(getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_icon);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-    });
 
-    recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
-    recyclerView.setHasFixedSize(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Dashboard.class);
+                intent.putExtra("pic", CURRENT_USER_PROFILE_PICTURE);
+                startActivity(intent);
+            }
+        });
 
-    txtUserNameProfile=view.findViewById(R.id.id_username);
-    txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
+        recyclerView = view.findViewById(R.id.recyclerMyGiftOut);
+        recyclerView.setHasFixedSize(true);
 
-    txtItemCount = view.findViewById(R.id.txtItemAdded);
+        txtUserNameProfile = view.findViewById(R.id.id_username);
+        txtUserNameProfile.setText(CURRENT_USER_FULLNAME);
 
-    imgProfile=view.findViewById(R.id.profile_image);
-      imgProfile2=view.findViewById(R.id.profile_image2);
-    imgProfile.setOnClickListener(this);
+        txtItemCount = view.findViewById(R.id.txtItemAdded);
+
+        imgProfile = view.findViewById(R.id.profile_image);
+        imgProfile2 = view.findViewById(R.id.profile_image2);
+        imgProfile.setOnClickListener(this);
 
         mViewModel.getItems().observe(this, new Observer<List<GetUserItemResponseData>>() {
             @Override
-            public void onChanged(List<GetUserItemResponseData> getUserItemResponseData) {
+            public void onChanged(final List<GetUserItemResponseData> getUserItemResponseData) {
                 profileAdapter.setUserItemsResponseData(getUserItemResponseData);
             }
         });
+
 
         if(getArguments() != null){
             CURRENT_USER_PROFILE_PICTURE=getArguments().getString("pic");
@@ -184,11 +190,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
         else {
             loadProfilePicture();
         }
-        if(PROFILE_PICTURE == false){
+        if(!PROFILE_PICTURE){
             imgProfile.setImageResource(R.drawable.defaultprofile);
             imgProfile2.setImageResource(R.drawable.defaultprofile);
         }
+
         inflateRecycler();
+        toolbar.setTitle("My Profile");
         return view;
   }
 
@@ -196,7 +204,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
     public void onResume() {
         super.onResume();
         apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-        getAllItems();
+        if(ITEM_COUNT_MORE==0) {
+            getAllItems();
+        }
         inflateRecycler();
     }
 
@@ -243,6 +253,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
           String uri =  picUrl + CURRENT_USER_PROFILE_PICTURE;
           Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile);
           Picasso.get().load(uri).resize(100, 100).noFade().into(imgProfile2);
+          PROFILE_PICTURE =true;
       }
       catch (Exception e){
           e.printStackTrace();
@@ -261,13 +272,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, I
   public void onClick(View v) {
     switch (v.getId()){
         case R.id.profile_image:
-            PictureFullScreen pictureFullScreen =new PictureFullScreen();
-            if(CURRENT_USER_PROFILE_PICTURE!=null) {
-                Bundle  bundle = new Bundle();
-                bundle.putString("pic", CURRENT_USER_PROFILE_PICTURE);
-                pictureFullScreen.setArguments(bundle);
-            }
-            loadFragment(pictureFullScreen, Dashboard.PICTURE_FULLSCREEN_FLAG);
+
+       /*     StfalconImageViewer.Builder<Image>(getContext(), images) { view, image ->
+                Picasso.get().load(image.url).into(view)
+        }.show();*/
+
             break;
     }
   }

@@ -30,6 +30,7 @@ import com.example.givrish.models.ApiKey;
 import com.example.givrish.models.ItemCategoryResponse;
 import com.example.givrish.models.ItemSubCategoryAdapter;
 import com.example.givrish.models.ItemSubCategoryData;
+import com.example.givrish.models.ItemSubCategoryResponse;
 import com.example.givrish.network.ApiEndpointInterface;
 import com.example.givrish.network.RetrofitClientInstance;
 import com.example.givrish.viewmodel.CategoryViewModel;
@@ -51,6 +52,8 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
   private ProgressBar catProgressBar;
   private Context context;
   private  int pageFlag = 0;
+  private ApiEndpointInterface apiService;
+  private Gson gson;
 
 
   public static CategoryFragment newInstance() {
@@ -108,6 +111,7 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     initiateCategories();
     getCategories();
+    apiSubCategory("test");
 
   }
 
@@ -150,8 +154,8 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
 
   private void loadCategoryItems(String api_key) {
     final ApiKey apiKey = new ApiKey(api_key);
-    ApiEndpointInterface apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
-    Gson gson = new Gson();
+    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
+    gson = new Gson();
     String itemString = gson.toJson(apiKey);
     Call<ItemCategoryResponse> callItem = apiService.getCategory(itemString);
     callItem.enqueue(new Callback<ItemCategoryResponse>() {
@@ -170,6 +174,25 @@ public class CategoryFragment extends Fragment implements SwipeRefreshLayout.OnR
       }
     });
 
+  }
+
+  private void apiSubCategory(final String apiKey) {
+    ApiKey itemCategoryModel = new ApiKey(apiKey);
+    String itemString = gson.toJson(itemCategoryModel);
+    Call<ItemSubCategoryResponse> call = apiService.getSubCategory(itemString);
+    call.enqueue(new Callback<ItemSubCategoryResponse>() {
+      @Override
+      public void onResponse(@NonNull Call<ItemSubCategoryResponse> call,@NonNull Response<ItemSubCategoryResponse> response) {
+        if (response.body() != null && response.body().getResponseCode().equals("1")){
+          mViewModel.insertAllSub(response.body().getData());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<ItemSubCategoryResponse> call, Throwable t) {
+        Toast.makeText(getActivity(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
   @Override
