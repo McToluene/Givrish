@@ -182,22 +182,24 @@ public class AddItemFragment extends Fragment {
     if(itemModel!=null) {
 
       toolbarTitle = "Edit Item";
-      for (int i=0; i<itemCategoryDataList.size();i++) {
-        if(itemCategoryDataList.get(i).getItem_category_id().equals(itemModel.getItem_category_id())){
-          receivedItem = i;
-          categoryId = itemModel.getItem_category_id();
-          break;}
-      }
-      for (int i=0; i<itemSubCategoryDataList.size();i++) {
-        if(itemSubCategoryDataList.get(i).getItem_sub_category_id().equals(itemModel.getItem_sub_category_id())){
-          receivedSubItem = i;
-          subId = itemModel.getItem_sub_category_id();
-          break;}
-      }
+//      for (int i=0; i<itemCategoryDataList.size();i++) {
+//        if(itemCategoryDataList.get(i).getItem_category_id().equals(itemModel.getItem_category_id())){
+//          receivedItem = i;
+//          categoryId = itemModel.getItem_category_id();
+//          break;}
+//      }
+//      for (int i=0; i<itemSubCategoryDataList.size();i++) {
+//        if(itemSubCategoryDataList.get(i).getItem_sub_category_id().equals(itemModel.getItem_sub_category_id())){
+//          receivedSubItem = i;
+//          subId = itemModel.getItem_sub_category_id();
+//          break;}
+//      }
      itemName.setText(itemModel.getItem_title());
      itemDesc.setText(itemModel.getItem_description());
-     mainCategory.setSelection(receivedItem);
-     subCategory.setSelection(receivedSubItem);
+     mainCategory.setText(addItemViewModel.getCategory(itemModel.getItem_category_id()).toString());
+     categoryId= addItemViewModel.getCategory(itemModel.getItem_category_id()).toString();
+     subCategory.setText(addItemViewModel.getSubCategory(itemModel.getItem_sub_category_id()).toString());
+     subId = addItemViewModel.getSubCategory(itemModel.getItem_sub_category_id()).toString();
      colorSpinner.setText(itemModel.getItem_color());
 
      //get all the rest
