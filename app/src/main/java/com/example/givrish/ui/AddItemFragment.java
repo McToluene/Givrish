@@ -69,6 +69,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -474,7 +476,7 @@ public class AddItemFragment extends Fragment {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           Pix.start(getActivity(), Options.init().setRequestCode(100));
         } else {
-          Toast.makeText(getContext(), "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
+          Toast.makeText(getContext(), "approve permissions to open gallery", Toast.LENGTH_LONG).show();
         }
         break;
       }case 1: {
@@ -503,43 +505,54 @@ public class AddItemFragment extends Fragment {
 
   public void addItem() {
 
-    String name = itemName.getText().toString();
-    String desc = itemDesc.getText().toString();
-    String color = colorSpinner.getText().toString();
-    String userId = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
+    final String name = itemName.getText().toString();
+    final String desc = itemDesc.getText().toString();
+    final String color = colorSpinner.getText().toString();
+    final String userId = UserDataPreference.getInstance(getContext()).retrievePreference(getString(R.string.user_id));
 
     if (!name.isEmpty() && !desc.isEmpty() && imagePaths.size()!=0) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
-      ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+               try {
+                   ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
 
-      String itemString = gson.toJson(itemModel);
+                   String itemString = gson.toJson(itemModel);
 
-      Call<List<AddItemResponse>> call = apiService.addItem(itemString);
-      call.enqueue(new Callback<List<AddItemResponse>>() {
-        @Override
-        public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
+                   Call<List<AddItemResponse>> call = apiService.addItem(itemString);
+                   call.enqueue(new Callback<List<AddItemResponse>>() {
+                       @Override
+                       public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
 
-          if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-            Toast.makeText(getContext(), "receivedItem added successfully", Toast.LENGTH_LONG).show();
-            AddItemResponseData data = response.body().get(0).getData();
-            String id = data.getRecord();
-            Log.i("ID", id);
-            for (int i = 0; i < imagePaths.size(); i++) {
-              Log.i("USER", id);
-              uploadImage(imagePaths.get(i), id);
+                           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
+                               Toast.makeText(getContext(), "receivedItem added successfully", Toast.LENGTH_LONG).show();
+                               AddItemResponseData data = response.body().get(0).getData();
+                               String id = data.getRecord();
+                               Log.i("ID", id);
+                               for (int i = 0; i < imagePaths.size(); i++) {
+                                   Log.i("USER", id);
+                                   uploadImage(imagePaths.get(i), id);
+                               }
+                               clearFieldsFunction();
+                           }
+                       }
+
+                       @Override
+                       public void onFailure(@NonNull Call<List<AddItemResponse>> call, @NonNull Throwable t) {
+                           Toast.makeText(getContext(), "Check your network", Toast.LENGTH_LONG).show();
+                       }
+                   });
+               } catch (Exception e){
+                   Log.i("Additem", e.toString());
+               }
             }
-            clearFieldsFunction();
-          }
-        }
+        });
 
-        @Override
-        public void onFailure(@NonNull Call<List<AddItemResponse>> call, @NonNull Throwable t) {
-          Toast.makeText(getContext(), "Check your network", Toast.LENGTH_LONG).show();
-        }
-      });
 
     } else {
-      Toast.makeText(getContext(), "pls fill out all fields correctly", Toast.LENGTH_LONG).show();
+      Toast.makeText(getContext(), "Please fill out all fields correctly", Toast.LENGTH_LONG).show();
     }
 
 }
@@ -576,6 +589,7 @@ public class AddItemFragment extends Fragment {
       @Override
       public void gotLocation(Location location) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+
 
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);

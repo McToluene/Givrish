@@ -74,13 +74,13 @@ public class ItemModel implements Parcelable {
     this.item_category_id = item_category_id;
     this.item_sub_category_id = item_sub_category_id;
   }
-  public ItemModel(String user_id, String item_title, String item_color, String item_country, String item_state, String item_address) {
+  public ItemModel(String user_id, String item_title, String item_description, String item_category_id, String item_sub_category_id, String item_color) {
     this.user_id = user_id;
     this.item_title = item_title;
+    this.item_description = item_description;
+    this.item_category_id = item_category_id;
+    this.item_sub_category_id = item_sub_category_id;
     this.item_color = item_color;
-    this.item_country = item_country;
-    this.item_state = item_state;
-    this.item_address = item_address;
   }
 
   protected ItemModel(Parcel in) {
