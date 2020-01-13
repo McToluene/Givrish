@@ -185,7 +185,6 @@ public class Dashboard extends AppCompatActivity implements CallBackListener, Bo
     if (fragment != null) {
       ListFragment listFragment = (ListFragment) fragment;
       listFragment.filter(subCategoryId);
-
     }
   }
 }

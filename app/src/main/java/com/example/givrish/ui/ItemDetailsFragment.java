@@ -93,7 +93,6 @@ public class ItemDetailsFragment extends Fragment implements View.OnClickListene
     MaterialTextView tvItemName = view.findViewById(R.id.tv_itemName);
     MaterialTextView tvItemDescription = view.findViewById(R.id.tv_itemDesc);
     MaterialTextView tvLocation = view.findViewById(R.id.tv_itemLocation);
-//    ImageView itemImage = view.findViewById(R.id.items_image);
     tvCate = view.findViewById(R.id.tv_ItemCate);
     tvSubCate = view.findViewById(R.id.tv_itemSubCat);
     MaterialTextView tvDateAdded = view.findViewById(R.id.tv_dateAdded);
