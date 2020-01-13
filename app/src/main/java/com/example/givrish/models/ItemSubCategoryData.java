@@ -63,6 +63,7 @@ public class ItemSubCategoryData {
 		ItemSubCategoryData.itemSubCategoryDataComparator = itemSubCategoryDataComparator;
 	}
 
+	@NonNull
 	public String getItem_sub_category_id() {
 	return item_sub_category_id;
 }

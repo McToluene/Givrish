@@ -26,11 +26,19 @@ public class CategoryViewModel extends AndroidViewModel {
   }
 
   public LiveData<List<ItemCategoryData>> getAllCategories() {return itemCategories;}
+
   public void insert(List<ItemCategoryData> itemCategoryData) {categoriesRepository.insert(itemCategoryData);}
+
   public LiveData<Integer> getCount() { return categoriesRepository.getCount();}
+
   public LiveData<List<ItemSubCategoryData>> getCategorySub(String id) {
     return categoriesRepository.getCategorySub(id);
   }
+
+  public void insertAllSub (List<ItemSubCategoryData> itemSubCategoryData) {
+    categoriesRepository.insertSub(itemSubCategoryData);
+  }
+
   public LiveData<List<ItemSubCategoryData>> getAllSub() {
     return itemSubCategories;
   }
