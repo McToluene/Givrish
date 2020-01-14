@@ -201,6 +201,7 @@ public class AddItemFragment extends Fragment {
      subCategory.setText(addItemViewModel.getSubCategory(itemModel.getItem_sub_category_id()).toString());
      subId = addItemViewModel.getSubCategory(itemModel.getItem_sub_category_id()).toString();
      colorSpinner.setText(itemModel.getItem_color());
+     //imagePaths = itemModel.getItem_image_paths()
 
      //get all the rest
     }

@@ -54,7 +54,7 @@ import com.example.givrish.viewmodel.ProfileViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.stfalcon.imageviewer.StfalconImageViewer;
+//import com.stfalcon.imageviewer.StfalconImageViewer;
 
 
 import java.util.List;
