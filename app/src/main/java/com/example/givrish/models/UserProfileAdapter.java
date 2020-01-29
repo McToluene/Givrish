@@ -1,6 +1,7 @@
 package com.example.givrish.models;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.givrish.Dashboard;
 import com.example.givrish.R;
 import com.example.givrish.database.Constants;
 import com.example.givrish.ui.AddItemFragment;
+import com.example.givrish.ui.MenuProfileDialog;
 import com.example.givrish.ui.ProfileFragment;
 import com.squareup.picasso.Picasso;
 
@@ -48,13 +52,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
-            if (allItemsResponseData != null && theAllItemsResponseData != null) {
-                if (allItemsResponseData.size() == 1) {
-                    item = allItemsResponseData.get(position);
-                }
-                if (theAllItemsResponseData.size() > 1) {
-                    item = theAllItemsResponseData.get(position);
-                }
+                item = allItemsResponseData.get(position);
                 holder.txtList.setText(item.getItem_title().toUpperCase());
                 holder.txtLocation.setText(item.getItem_address());
 
@@ -71,7 +69,6 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
                     holder.productImgAdp.setImageResource(R.drawable.download);
                 }
                 ProfileFragment.txtItemCount.setText(String.valueOf(ITEM_COUNT_MORE));
-            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -84,20 +81,26 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
 
     public void setUserItemsResponseData(List<GetUserItemResponseData> getUserItemResponseData) {
         int count=getUserItemResponseData.size();
-        if(count==1 && ITEM_COUNT_MORE==1){
+        if(count==1 && ITEM_COUNT_MORE==1 && COME_ONE==false && (allItemsResponseData==null || count>allItemsResponseData.size())){
             allItemsResponseData = getUserItemResponseData;
-            notifyDataSetChanged();
-        }else if(ITEM_COUNT_MORE>1 && IS_MORE_ITEM==false) {
+            COME_ONE=true;
+            if(IS_MORE_ITEM==false)
+                notifyDataSetChanged();
+        }else if(ITEM_COUNT_MORE>1 && IS_MORE_ITEM==false && (allItemsResponseData==null || count > allItemsResponseData.size())) {
             allItemsResponseData = getUserItemResponseData;
-            theAllItemsResponseData=getUserItemResponseData;
-            notifyDataSetChanged();
+            allItemsResponseData=getUserItemResponseData;
             IS_MORE_ITEM=true;
+            if(COME_ONE==false){
+                notifyDataSetChanged();
+                COME_ONE=true;
+            }
         }
         else if(count==1 && ITEM_COUNT_MORE==0){
             ITEM_COUNT_MORE=count;
         }else if(count>1){
-            ITEM_COUNT_MORE=count ;
+            ITEM_COUNT_MORE=count;
         }
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -106,8 +109,6 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
         ImageView productImgAdp;
         TextView txtLocation;
         private final ImageButton btnItemMenu;
-        private ConstraintLayout tvMenu;
-        private ImageButton btnEdit, btnDelete, btnViewed;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -116,49 +117,24 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
             txtLocation = itemView.findViewById(R.id.txtProdLocMyProfile);
 
             btnItemMenu =itemView.findViewById(R.id.imgBtnUserItemList);
-            tvMenu = itemView.findViewById(R.id.tv_menuShow);
-            btnEdit=itemView.findViewById(R.id.btnEditItemProfile);
-            btnDelete=itemView.findViewById(R.id.btnDeleteItemProfile);
-            btnViewed=itemView.findViewById(R.id.btnViewedItemProfile);
-
             btnItemMenu.setOnClickListener(this);
-            btnEdit.setOnClickListener(this);
-            btnDelete.setOnClickListener(this);
-            btnViewed.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.imgBtnUserItemList:
-                    if(tvMenu.getVisibility()==View.GONE) {
-                        tvMenu.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        tvMenu.setVisibility(View.GONE);
-                    }
-                    break;
-                case R.id.btnEditItemProfile:
                     GetUserItemResponseData clickItem = allItemsResponseData.get(getAdapterPosition());
-                    ItemModel itemModel=new ItemModel(clickItem.getUser_id(), clickItem.getItem_title(), clickItem.getItem_color(), clickItem.getItem_description(), clickItem.getItem_category_id(), clickItem.getItem_sub_category_id());
-                    AddItemFragment addItemFragment=AddItemFragment.newParcelableInstance(itemModel);
-                    loadDetail(addItemFragment);
-                    break;
-                case R.id.btnViewedItemProfile:
-                    Toast.makeText(context, "Go to view details", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.btnDeleteItemProfile:
-                    Toast.makeText(context, "Go to delete confirmation", Toast.LENGTH_SHORT).show();
-                    break;
+                    ItemModel itemModel=new ItemModel(clickItem.getUser_id(), clickItem.getItem_title(), clickItem.getItem_color(), clickItem.getItem_description(), clickItem.getItem_category_id(), clickItem.getItem_sub_category_id(), clickItem.getItem_images());
+                    showDialog(itemModel);
+                   break;
             }
         }
     }
 
-    private void loadDetail(Fragment itemDetails) {
+    void showDialog(ItemModel itemModel) {
         FragmentTransaction transaction = ((FragmentActivity) context).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.dashboard_layout, itemDetails);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        DialogFragment newFragment = MenuProfileDialog.newInstance(itemModel);
+        newFragment.show(transaction, Dashboard.USER_ITEM_MENU_DIALOG);
     }
-
 }

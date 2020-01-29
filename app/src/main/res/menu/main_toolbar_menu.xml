@@ -3,16 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-    <item
-        android:id="@+id/search_menu"
-        android:icon="@drawable/ic_search_icon"
-        android:title="@string/categories"
-        app:showAsAction="ifRoom" />
+    <group android:id="@+id/menu_main">
 
-    <item
-        android:id="@+id/menu_hamburger"
-        android:title="@string/categories"
-        android:icon="@drawable/ic_menu_icon"
-        app:showAsAction="always"/>
+        <item
+            android:id="@+id/search_menu"
+            android:icon="@drawable/ic_search_icon"
+            android:title="@string/categories"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/menu_hamburger"
+            android:title="@string/categories"
+            android:icon="@drawable/ic_menu_icon"
+            app:showAsAction="ifRoom"/>
+
+    </group>
 
 </menu>

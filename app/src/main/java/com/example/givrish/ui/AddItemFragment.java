@@ -164,6 +164,8 @@ public class AddItemFragment extends Fragment {
     clearImageSelection.setVisibility(View.INVISIBLE);
     addButton = view.findViewById(R.id.addImagebtn);
 
+    apiCategoryList(apiKey);
+    apiSubCategory(apiKey);
     toolbar.setTitle(toolbarTitle);
 
     if(getActivity() != null) {
@@ -180,23 +182,26 @@ public class AddItemFragment extends Fragment {
     if(itemModel!=null) {
 
       toolbarTitle = "Edit Item";
-      for (int i=0; i<itemCategoryDataList.size();i++) {
-        if(itemCategoryDataList.get(i).getItem_category_id().equals(itemModel.getItem_category_id())){
-          receivedItem = i;
-          categoryId = itemModel.getItem_category_id();
-          break;}
-      }
-      for (int i=0; i<itemSubCategoryDataList.size();i++) {
-        if(itemSubCategoryDataList.get(i).getItem_sub_category_id().equals(itemModel.getItem_sub_category_id())){
-          receivedSubItem = i;
-          subId = itemModel.getItem_sub_category_id();
-          break;}
-      }
+//      for (int i=0; i<itemCategoryDataList.size();i++) {
+//        if(itemCategoryDataList.get(i).getItem_category_id().equals(itemModel.getItem_category_id())){
+//          receivedItem = i;
+//          categoryId = itemModel.getItem_category_id();
+//          break;}
+//      }
+//      for (int i=0; i<itemSubCategoryDataList.size();i++) {
+//        if(itemSubCategoryDataList.get(i).getItem_sub_category_id().equals(itemModel.getItem_sub_category_id())){
+//          receivedSubItem = i;
+//          subId = itemModel.getItem_sub_category_id();
+//          break;}
+//      }
      itemName.setText(itemModel.getItem_title());
      itemDesc.setText(itemModel.getItem_description());
-     mainCategory.setSelection(receivedItem);
-     subCategory.setSelection(receivedSubItem);
+     mainCategory.setText(addItemViewModel.getCategory(itemModel.getItem_category_id()).toString());
+     categoryId= addItemViewModel.getCategory(itemModel.getItem_category_id()).toString();
+     subCategory.setText(addItemViewModel.getSubCategory(itemModel.getItem_sub_category_id()).toString());
+     subId = addItemViewModel.getSubCategory(itemModel.getItem_sub_category_id()).toString();
      colorSpinner.setText(itemModel.getItem_color());
+     //imagePaths = itemModel.getItem_image_paths()
 
      //get all the rest
     }
@@ -223,10 +228,6 @@ public class AddItemFragment extends Fragment {
         mainCategory.setAdapter(arrayAdapter);
       }
     });
-
-
-    apiCategoryList(apiKey);
-    apiSubCategory(apiKey);
 
     itemSubCategoryDataList = mViewModel.getLiveSubCategories().getValue();
     mViewModel.getLiveSubCategories().observe(this, new Observer<List<ItemSubCategoryData>>() {
@@ -453,7 +454,7 @@ public class AddItemFragment extends Fragment {
     image.setImageBitmap(theImage);
     return image;
   }
-  // TODO: 1/11/2020 after you get merge update
+  // TODO: 1/11/2020 after you get merge update 
 //  private void loadProfilePic() {
 //    apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiEndpointInterface.class);
 //    String picUrl = "http://givrishapi.divinepagetech.com/profilepix787539489ijkjfidj84u3i4kjrnfkdyeu4rijknfduui4jrkfd8948uijrkfjdfkjdk/";
@@ -512,44 +513,33 @@ public class AddItemFragment extends Fragment {
 
     if (!name.isEmpty() && !desc.isEmpty() && imagePaths.size()!=0) {
       //location[0] is country && location[1] is state && location[2] is address && location[3] is longitude && location[4] is latitude
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-               try {
-                   ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
+      ItemModel itemModel = new ItemModel(userId, name, color, locationData[0], locationData[1], locationData[2], locationData[3], locationData[4], desc, categoryId, subId);
 
-                   String itemString = gson.toJson(itemModel);
+      String itemString = gson.toJson(itemModel);
 
-                   Call<List<AddItemResponse>> call = apiService.addItem(itemString);
-                   call.enqueue(new Callback<List<AddItemResponse>>() {
-                       @Override
-                       public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
+      Call<List<AddItemResponse>> call = apiService.addItem(itemString);
+      call.enqueue(new Callback<List<AddItemResponse>>() {
+        @Override
+        public void onResponse(@NonNull Call<List<AddItemResponse>> call, @NonNull Response<List<AddItemResponse>> response) {
 
-                           if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
-                               Toast.makeText(getContext(), "receivedItem added successfully", Toast.LENGTH_LONG).show();
-                               AddItemResponseData data = response.body().get(0).getData();
-                               String id = data.getRecord();
-                               Log.i("ID", id);
-                               for (int i = 0; i < imagePaths.size(); i++) {
-                                   Log.i("USER", id);
-                                   uploadImage(imagePaths.get(i), id);
-                               }
-                               clearFieldsFunction();
-                           }
-                       }
-
-                       @Override
-                       public void onFailure(@NonNull Call<List<AddItemResponse>> call, @NonNull Throwable t) {
-                           Toast.makeText(getContext(), "Check your network", Toast.LENGTH_LONG).show();
-                       }
-                   });
-               } catch (Exception e){
-                   Log.i("Additem", e.toString());
-               }
+          if (response.body() != null && response.body().get(0).getResponseCode().equals("1")) {
+            Toast.makeText(getContext(), "Item added successfully", Toast.LENGTH_LONG).show();
+            AddItemResponseData data = response.body().get(0).getData();
+            String id = data.getRecord();
+            Log.i("ID", id);
+            for (int i = 0; i < imagePaths.size(); i++) {
+              Log.i("USER", id);
+              uploadImage(imagePaths.get(i), id);
             }
-        });
+            clearFieldsFunction();
+          }
+        }
 
+        @Override
+        public void onFailure(@NonNull Call<List<AddItemResponse>> call, @NonNull Throwable t) {
+          Toast.makeText(getContext(), "Check your network", Toast.LENGTH_LONG).show();
+        }
+      });
 
     } else {
       Toast.makeText(getContext(), "Please fill out all fields correctly", Toast.LENGTH_LONG).show();
@@ -589,7 +579,6 @@ public class AddItemFragment extends Fragment {
       @Override
       public void gotLocation(Location location) {
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-
 
         try {
           List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
